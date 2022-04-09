@@ -8,12 +8,12 @@ public class CreateQuiz {
         System.out.println("Hello teacher. What would you like to do?");
         int options = scan.nextInt();
 
-        //assuming option 1 for teachers is to create a quiz
+        // assuming option 1 for teachers is to create a quiz
         if (options == 1) {
             System.out.println("What would you like to name this quiz?");
             scan.nextLine();
             String quizName = scan.nextLine();
-            ArrayList<Questions> quiz = new ArrayList<>();
+            ArrayList<Question> quiz = new ArrayList<>();
 
             System.out.println("How many questions will there be in this quiz?");
             int numOfQuestions = scan.nextInt();
@@ -35,7 +35,7 @@ public class CreateQuiz {
                 System.out.println("How many points is this question worth?");
                 int points = scan.nextInt();
 
-                quiz.add(new Questions(question, option1, option2, option3, option4, answer, points));
+                quiz.add(new Question(question, option1, option2, option3, option4, answer, points));
 
             }
 
