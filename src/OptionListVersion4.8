@@ -1,0 +1,380 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class OptionList {
+
+    public static void main(String[] args) {
+
+        // Ian's main method + updated initialization for ArrayList<Questions> quiz = new ArrayList<>();
+        //updated parts:
+        ArrayList<Questions> quiz = null;
+        ArrayList<String> studentAnswer = null;
+        ArrayList<String> correctAnswer = new ArrayList<String>();
+        ArrayList<Quizzes> quizzes = new ArrayList<>();
+        String grade = "";
+
+        Scanner scan = new Scanner(System.in);
+        boolean teacher = true;
+        //WILL READ QUIZINFO.TXT AND ADD PREVIOUS QUIZZES TO "quizzes" ARRAYLIST
+        try {
+            File fi = new File("QuizInfo.txt");
+            fi.createNewFile();
+            if (fi.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(fi));
+                            /*while ((p = br.readLine()) != null) {
+                                log.add(p);
+                            }*/
+                String p = "";
+                while ((p = br.readLine()) != null) {
+                    if (p.length() > 0) {
+                        String quizName = p;
+                        ArrayList<Questions> tempQuestions = new ArrayList<>();
+                        for (int i = 0; i < 1; i++) {
+                            String question = br.readLine();
+                            String option1 = br.readLine();
+                            String option2 = br.readLine();
+                            String option3 = br.readLine();
+                            String option4 = br.readLine();
+                            String answer = br.readLine();
+                            int points = Integer.parseInt(br.readLine());
+                            if (br.readLine().equals("END OF QUIZ")) {
+                                continue;
+                            } else {
+                                i--;
+                            }
+                            tempQuestions.add(new Questions(question, option1, option2, option3, option4, answer, points));
+                        }
+                        quizzes.add(new Quizzes(tempQuestions, quizName));
+                    }
+                }
+                //writer.write("END OF QUIZ\n");
+                br.close();
+                //writer.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //will be changed when we have a way to identify users
+        String user = "student";
+
+        if (user == "student") {
+            System.out.println("Hello teacher");
+            while (teacher) {
+                System.out.println("What would you like to do?");
+                //updated parts:
+                System.out.println("1. Quit the application\n" + "2. Create a new quiz\n" + "3. Edit a quiz\n" + "4. Delete a quiz\n" + "5. View submissions");
+                int options = scan.nextInt();
+                scan.nextLine();
+
+                //assuming option 1 for teachers is to create a quiz
+                //updated: added a while loop for user to choose option until they want to quit
+
+                //TEACHER CHOOSES TO QUIT
+                if (options == 1) {
+                    System.out.println("Goodbye!");
+                    teacher = false;
+                }
+                //while (options != 0) {
+                //TEACHER CHOOSES TO CREATE A QUIZ
+                else if (options == 2) {
+                    quiz = new ArrayList<Questions>();
+                    System.out.println("What would you like to name this quiz?");
+                    String quizName = scan.nextLine();
+
+                    System.out.println("How many questions will there be in this quiz?");
+                    int numOfQuestions = scan.nextInt();
+
+                    for (int i = 1; i <= numOfQuestions; i++) {
+                        System.out.println("What is question " + i + "?");
+                        scan.nextLine();
+                        String question = scan.nextLine();
+                        System.out.println("What is option 1?");
+                        String option1 = scan.nextLine();
+                        System.out.println("What is option 2?");
+                        String option2 = scan.nextLine();
+                        System.out.println("What is option 3?");
+                        String option3 = scan.nextLine();
+                        System.out.println("What is option 4?");
+                        String option4 = scan.nextLine();
+                        System.out.println("Which option is the correct answer");
+                        String answer = scan.nextLine();
+                        System.out.println("How many points is this question worth?");
+                        int points = scan.nextInt();
+
+                        quiz.add(new Questions(question, option1, option2, option3, option4, answer, points));
+                        correctAnswer.add(answer);
+                        //just for test:
+                        //studentAnswer.add(answer);
+                    }
+                    quizzes.add(new Quizzes(quiz, quizName));
+                    try {
+                        File f = new File("QuizInfo.txt");
+                        f.createNewFile();
+                        if (f.exists()) {
+                            /*BufferedReader br = new BufferedReader(new FileReader(f));
+                            while ((p = br.readLine()) != null) {
+                                log.add(p);
+                            }*/
+                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", true)));
+                            int quizIndex = 0;
+                            for (int i = 0; i < quizzes.size(); i++) {
+                                if (quizzes.get(i).getName().equals(quizName)) {
+                                    quizIndex = i;
+                                    break;
+                                }
+                            }
+                            writer.write(quizzes.get(quizIndex).getName() + "\n");
+                            for (int i = 0; i < quizzes.get(quizIndex).getQuestions().size(); i++) {
+                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getQuestion() + "\n");
+                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption1() + "\n");
+                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption2() + "\n");
+                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption3() + "\n");
+                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption4() + "\n");
+                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getAnswer() + "\n");
+                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getPoints() + "\n");
+                            }
+                            writer.write("END OF QUIZ\n");
+                            //br.close();
+                            writer.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Quiz created!");
+                }
+                //IF A TEACHER WOULD LIKE TO EDIT A QUIZ
+                else if (options == 3) {
+                    String quizName = "";
+                    if (quizzes.size() != 0) {
+                        System.out.println("What is the name of the quiz you would like to edit?");
+                        quizName = scan.nextLine();
+                    }
+                    for (int i = 0; i < quizzes.size(); i++) {
+                        if (quizzes.get(i).getName().equalsIgnoreCase(quizName)) {
+                            System.out.println("What would you like to change?");
+                            System.out.println("1. Name\n2. Question");
+                            int alter = scan.nextInt();
+                            //TO CHANGE THE NAME OF A QUIZ
+                            if (alter == 1) {
+                                System.out.println("What name would you like to change it to?");
+                                scan.nextLine();
+                                String newName = scan.nextLine();
+                                quizzes.get(i).setName(newName);
+                                System.out.println("Name changed!");
+                                //System.out.println(quizzes.toArray());
+                                //break;
+                                //TO CHANGE AN ENTIRE QUESTION ON A QUIZ
+                            } else if (alter == 2) {
+                                System.out.println("Which question would you like to change?");
+                                int qnum = scan.nextInt();
+                                System.out.println("What should this question be?");
+                                scan.nextLine();
+                                String question = scan.nextLine();
+                                System.out.println("What is option 1?");
+                                String option1 = scan.nextLine();
+                                System.out.println("What is option 2?");
+                                String option2 = scan.nextLine();
+                                System.out.println("What is option 3?");
+                                String option3 = scan.nextLine();
+                                System.out.println("What is option 4?");
+                                String option4 = scan.nextLine();
+                                System.out.println("Which option is the correct answer");
+                                String answer = scan.nextLine();
+                                System.out.println("How many points is this question worth?");
+                                int points = scan.nextInt();
+
+                                quizzes.get(i).getQuestions().get(qnum - 1).setQuestion(question);
+                                quizzes.get(i).getQuestions().get(qnum - 1).setOption1(option1);
+                                quizzes.get(i).getQuestions().get(qnum - 1).setOption2(option2);
+                                quizzes.get(i).getQuestions().get(qnum - 1).setOption3(option3);
+                                quizzes.get(i).getQuestions().get(qnum - 1).setOption4(option4);
+                                quizzes.get(i).getQuestions().get(qnum - 1).setAnswer(answer);
+                                quizzes.get(i).getQuestions().get(qnum - 1).setPoints(points);
+                                //quiz.set(qnum - 1, new Questions(question, option1, option2, option3, option4, answer, points));
+                                correctAnswer.set(qnum - 1, answer);
+                                //just for test:
+                                //studentAnswer.set(qnum - 1, answer);
+                                //quizzes.add(new Quizzes(quiz, quizName));
+                                System.out.println("Quiz edited!");
+                                //break;
+                            }
+
+                            try {
+                                File f = new File("QuizInfo.txt");
+                                f.createNewFile();
+                                if (f.exists()) {
+
+                                    //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
+                                    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", false)));
+                                    for (int j = 0; j < quizzes.size(); j++) {
+                                        writer.write(quizzes.get(j).getName() + "\n");
+                                        for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
+                                            writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() + "\n");
+                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption1() + "\n");
+                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption2() + "\n");
+                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption3() + "\n");
+                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption4() + "\n");
+                                            writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() + "\n");
+                                            writer.write(quizzes.get(j).getQuestions().get(k).getPoints() + "\n");
+
+                                        }
+                                    }
+                                    /*
+                                    writer.write(quizzes.get(quizIndex).getName() + "\n");
+                                    for (int i = 0; i < quizzes.get(quizIndex).getQuestions().size(); i++) {
+                                        writer.write(quizzes.get(quizIndex).getQuestions().get(i).getQuestion() + "\n");
+                                        writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption1() + "\n");
+                                        writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption2() + "\n");
+                                        writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption3() + "\n");
+                                        writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption4() + "\n");
+                                        writer.write(quizzes.get(quizIndex).getQuestions().get(i).getAnswer() + "\n");
+                                        writer.write(quizzes.get(quizIndex).getQuestions().get(i).getPoints() + "\n");*/
+                                    writer.write("END OF QUIZ\n");
+                                    //br.close();
+                                    writer.close();
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+
+
+                            //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
+                        } else if (i == quizzes.size() - 1) {
+                            System.out.println("That is not a name of a current quiz!");
+                        }
+                    }
+                    //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
+                    if (quizzes.size() == 0) {
+                        System.out.println("You need to create a quiz before you can edit one!");
+                    }
+
+                }
+                //IF A TEACHER WOULD LIKE TO DELETE AN ENTIRE QUIZ
+                else if (options == 4) {
+                    String quizName2 = "";
+                    if (quizzes.size() != 0) {
+                        System.out.println("What is the name of the quiz you would like to delete?");
+                        quizName2 = scan.nextLine();
+                    }
+                    int p = -1;
+                    for (int i = 0; i < quizzes.size(); i++) {
+                        if (quizzes.get(i).getName().equalsIgnoreCase(quizName2)) {
+                            System.out.println("Are you sure you would like to delete this quiz?");
+                            String sure = scan.nextLine();
+                            if (!sure.equalsIgnoreCase("no") || !sure.equalsIgnoreCase("n")) {
+                                quizzes.remove(i);
+                                System.out.println("Quiz deleted!");
+                                try {
+                                    File f = new File("QuizInfo.txt");
+                                    f.createNewFile();
+                                    if (f.exists()) {
+
+                                        //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
+                                        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", false)));
+                                        for (int j = 0; j < quizzes.size(); j++) {
+                                            writer.write(quizzes.get(j).getName() + "\n");
+                                            for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() + "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption1() + "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption2() + "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption3() + "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption4() + "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() + "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getPoints() + "\n");
+
+                                            }
+                                        }
+                                        writer.write("END OF QUIZ\n");
+                                        writer.close();
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            } else {
+                                System.out.println("Okay. Your quiz will not be deleted.");
+                            }
+                            p = i;
+                            break;
+                            //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
+                        } else if (i == quizzes.size() - 1) {
+                            System.out.println("That is not a name of a current quiz!");
+                        }
+                        p = i;
+                    }
+                    //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
+                    if (quizzes.size() == 0 && p != 0) {
+                        System.out.println("You need to create a quiz before you can delete one!");
+                    }
+                } else {
+                    System.out.println("That is not a valid option! Please enter a number 1-4.");
+                }
+
+            }
+        }
+        boolean student = true;
+        if (user == "student") {
+            System.out.println("Hello student");
+            while (student) {
+                System.out.println("What would you like to do?");
+                System.out.println("1. Quit the application\n" + "2. Take a quiz");
+                int options = scan.nextInt();
+                scan.nextLine();
+                //STUDENT CHOOSES TO QUIT
+                if (options == 1) {
+                    System.out.println("Goodbye!");
+                    student = false;
+                    //STUDENT CHOOSES TO TAKE A QUIZ
+                } else if (options == 2) {
+                    System.out.println("Which quiz would you like to take?");
+                    //PRINTS LIST OF QUIZZES BY NAME
+                    for (int i = 0; i < quizzes.size(); i++) {
+                        System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                    }
+                    int quizNum = scan.nextInt();
+                    scan.nextLine();
+                    studentAnswer = new ArrayList<String>();
+                    //PRINTS EACH QUESTION AND OPTIONS, THEN STORES STUDENTS ANSWERS IN ARRAYLIST "STUDENTANSWER"
+                    for (int i = 0; i < quizzes.get(quizNum - 1).getQuestions().size(); i++) {
+                        System.out.println("Question " + (i + 1) + ":");
+                        System.out.println(quizzes.get(quizNum - 1).getQuestions().get(i).getQuestion());
+                        System.out.println("a) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption1());
+                        System.out.println("b) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption2());
+                        System.out.println("c) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption3());
+                        System.out.println("d) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption4());
+                        String guess = scan.nextLine();
+                        studentAnswer.add(guess);
+                    }
+                    try {
+                        File f = new File("StudentQuizInfo.txt");
+                        f.createNewFile();
+                        if (f.exists()) {
+
+                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("StudentQuizInfo.txt", true)));
+
+                            writer.write(quizzes.get(quizNum - 1).getName() + "\n");
+                            for (int i = 0; i < studentAnswer.size(); i++) {
+                                writer.write(studentAnswer.get(i) + "\n");
+                            }
+                            //NEED TO PRINT SCORE
+                            writer.write("END OF QUIZ\n");
+                            //br.close();
+                            writer.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public static double gradeQuiz() {
+        return 0;
+    }
+}
