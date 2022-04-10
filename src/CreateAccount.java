@@ -11,6 +11,13 @@ public class CreateAccount {
         } else {
             writer.println("student");
         }
+
+        String submissionSpacer = "--------------------------------------------------";
+        writer.println(submissionSpacer);
+
+        String accountSpacer = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+        writer.println(accountSpacer);
+
         writer.close();
     }
 }
