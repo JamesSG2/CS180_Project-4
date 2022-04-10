@@ -1,0 +1,56 @@
+import java.io.*;
+import java.util.ArrayList;
+
+public class Login {
+    public String userName;
+    public String password;
+    private boolean valid;
+    private boolean teacher;
+    private boolean student;
+    public ArrayList<String> accountsData;
+    private int accountIndex;
+
+    public Login(String userName, String password) throws IOException {
+        this.userName = userName;
+        this.password = password;
+        accountsData = new ArrayList<>();
+        File f = new File("AccountsData.txt");
+        BufferedReader br = new BufferedReader(new FileReader(f));
+        String line = " ";
+        try {
+            while ((line = br.readLine()) != null) {
+                accountsData.add(line);
+                //line = br.readLine();
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        br.close();
+
+        for (int i = 0; i < accountsData.size(); i++) {
+            if (accountsData.get(i).equals(userName + password)) {
+                accountIndex = i;
+                valid = true;
+                break;
+            }
+        }
+
+        if (accountsData.get(accountIndex + 1).equalsIgnoreCase("Teacher")) {
+            teacher = true;
+        } else if (accountsData.get(accountIndex + 1).equalsIgnoreCase("Student")) {
+            student = true;
+        }
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public boolean isTeacher() {
+        return teacher;
+    }
+
+    public boolean isStudent() {
+        return student;
+    }
+}
