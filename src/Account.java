@@ -1,6 +1,16 @@
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Account
+ *
+ * Handles the personal information of students and teachers as well as their past submissions.
+ *
+ * @author James Gilliam, L15
+ *
+ * @version 4/10/2022
+ *
+ */
 public class Account {
     private boolean valid;
     private boolean teacher;
