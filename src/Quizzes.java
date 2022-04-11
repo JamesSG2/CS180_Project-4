@@ -2,14 +2,13 @@ import java.util.ArrayList;
 
 /**
  * Question
- *
+ * <p>
  * Creates a constructor containing the information for one quiz
  *
  * @author Ian Fienberg, L15
- *
  * @version 4/11/2022
- *
  */
+
 public class Quizzes {
     public ArrayList<Questions> questions;
     public String name;

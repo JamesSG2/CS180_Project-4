@@ -153,7 +153,7 @@ public class Account {
     private void writeAccountsDataFile() throws IOException {
         File f = new File("AccountsData.txt");
         PrintWriter writer = new PrintWriter(f);
-        
+
         for (String line : accountsData) {
             writer.println(line);
         }
