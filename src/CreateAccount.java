@@ -27,9 +27,9 @@ public class CreateAccount {
 
         accountsData.add(userName + password);
         if (isTeacher) {
-            accountsData.add("teacher");
+            accountsData.add("Status: teacher");
         } else {
-            accountsData.add("student");
+            accountsData.add("Status: student");
         }
 
         String submissionSpacer = "--------------------------------------------------";

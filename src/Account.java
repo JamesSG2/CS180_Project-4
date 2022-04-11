@@ -31,9 +31,9 @@ public class Account {
         int accountIndex = getAccountIndex(userName, password);
 
         if (accountsData.size() > 0) {
-            if (accountsData.get(accountIndex + 1).equals("teacher")) {
+            if (accountsData.get(accountIndex + 1).equals("Status: teacher")) {
                 teacher = true;
-            } else if (accountsData.get(accountIndex + 1).equals("student")) {
+            } else if (accountsData.get(accountIndex + 1).equals("Status: student")) {
                 student = true;
             }
         }

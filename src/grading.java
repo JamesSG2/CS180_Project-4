@@ -14,8 +14,6 @@ import java.util.ArrayList;
  * @version 4/11/2022
  *
  */
-
-
 public class Grading {
     //public boolean[] isCorrect;
     public ArrayList<Questions> questions;
@@ -129,12 +127,62 @@ public class Grading {
                     //System.out.println("test of loop num " + d);
                     //System.out.println();
 
+                    if (stuTempAns.indexOf("/") >= 0) {
+
+                        //int count = 0;
+                        String replace = stuTempAns;
+                        System.out.println("the whole String: " + stuTempAns);
+
+
+                        int count = 0;
+
+                        for(char y : stuTempAns.toCharArray()){
+                            if(y == '/'){
+                                count++;
+                            }
+                        }
+
+                        System.out.println("count: " + count);
+
+                        for (int l = 0; l < count; l++) {
+
+                            int temp = replace.indexOf("/");
+                            String upload = replace.substring(0, temp);
+
+                            if (l == 0) {
+                                //System.out.println("upload: " + upload);
+                                submission.add("The student's answer: ");
+                                submission.add(upload);
+
+                                replace = stuTempAns.substring(temp + 1);
+                                //System.out.println("replace: " + replace);
+                            } else {
+                                //System.out.println("upload: " + upload);
+                                submission.add(upload);
+
+                                temp = replace.indexOf("/");
+
+                                replace = replace.substring(temp + 1);
+                                //System.out.println("replace: " + replace);
+
+                            }
+
+                        }
+
+                    } else {
+                        submission.add("The student's answer: " + stuTempAns);
+                    }
+
+                    submission.add("The correct answer: " + answer.get(i));
+
                 }
+
+
                 String percent = "%";
                 String score = String.format("Student " + stuName + "'s grade: %.2f", (pointsEarned/pointsTotal) * 100);
                 String combo = score + percent;
-
                 submission.add(combo);
+
 
                 br.close();
 
