@@ -1,13 +1,13 @@
 /**
  * Questions
- * <p>
+ *
  * Creates a constructor containing the information for one question
  *
  * @author Ian Fienberg, L15
+ *
  * @version 4/11/2022
+ *
  */
-
-
 public class Questions {
     public String question;
     public String option1;

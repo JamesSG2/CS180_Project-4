@@ -4,14 +4,14 @@ import java.util.Scanner;
 
 /**
  * OptionList
- * <p>
+ *
  * Handles the input and output via scanners. Contains main method
  *
  * @author Ian Fienberg, L15
+ *
  * @version 4/11/2022
+ *
  */
-
-
 public class OptionList {
 
     public static void main(String[] args) throws IOException {

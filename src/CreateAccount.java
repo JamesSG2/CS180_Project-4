@@ -4,8 +4,8 @@ import java.util.ArrayList;
 /**
  * CreateAccount
  *
- * Creates an account and stores the username, password and teacher/student status in the AccountsData.txt to be
- * accessed later
+ * Creates an account and stores the username, password and teacher/student status in the
+ * AccountsData.txt to be accessed later
  *
  * @author James Gilliam, L15
  *
@@ -19,29 +19,27 @@ public class CreateAccount {
     public CreateAccount(String userName, String password, boolean isTeacher) throws IOException {
         readAccountsDataFile();
         for (String line : accountsData) {
-            if (line.substring(userName.length()).equals(userName)) {
-                created = true;
-                break;
+            if (line.substring(0, userName.length()).equals(userName)) {
+                created = false;
+                return;
             }
         }
 
-        File f = new File("AccountsData.txt");
-        PrintWriter writer = new PrintWriter(f);
-
-        writer.println(userName + password);
+        accountsData.add(userName + password);
         if (isTeacher) {
-            writer.println("teacher");
+            accountsData.add("teacher");
         } else {
-            writer.println("student");
+            accountsData.add("student");
         }
 
         String submissionSpacer = "--------------------------------------------------";
-        writer.println(submissionSpacer);
+        accountsData.add(submissionSpacer);
 
         String accountSpacer = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
-        writer.println(accountSpacer);
+        accountsData.add(accountSpacer);
 
-        writer.close();
+        writeAccountsDataFile();
+        created = true;
     }
 
     private void readAccountsDataFile() throws IOException {
@@ -53,6 +51,16 @@ public class CreateAccount {
             line = br.readLine();
         }
         br.close();
+    }
+
+    private void writeAccountsDataFile() throws IOException {
+        File f = new File("AccountsData.txt");
+        PrintWriter writer = new PrintWriter(f);
+
+        for (String line : accountsData) {
+            writer.println(line);
+        }
+        writer.close();
     }
 
     public boolean isCreated() {

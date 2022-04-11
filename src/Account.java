@@ -40,7 +40,7 @@ public class Account {
     }
 
     public void addSubmission(ArrayList<String> submission) throws IOException {
-        //readAccountsDataFile();
+        readAccountsDataFile();
 
         int i = getAccountIndex(userName, password);
         while (i < accountsData.size() && !(accountsData.get(i).equals(accountSpacer))) {
@@ -55,8 +55,9 @@ public class Account {
         writeAccountsDataFile();
     }
 
-    public ArrayList<String> getSubmission(String quizTitle, String userName, String password, int attemptNumber) throws IOException {
-        //readAccountsDataFile();
+    public ArrayList<String> getSubmission(String quizTitle, String userName, String password,
+                                           int attemptNumber) throws IOException {
+        readAccountsDataFile();
         Account user = new Account(userName, password);
         if (!user.isValid()) {
             return null;
@@ -64,7 +65,8 @@ public class Account {
 
         int i = getAccountIndex(userName, password);
         int j = 1;
-        while (!((accountsData.get(i).equals(quizTitle) && (j == attemptNumber)) || ((i + 1) == accountsData.size()))) {
+        while (!((accountsData.get(i).equals(quizTitle) && (j == attemptNumber)) ||
+                ((i + 1) == accountsData.size()))) {
             if (accountsData.get(i).equals(quizTitle)) {
                 j++;
             }
