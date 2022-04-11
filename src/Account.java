@@ -3,13 +3,11 @@ import java.util.ArrayList;
 
 /**
  * Account
- *
+ * <p>
  * Handles the personal information of students and teachers as well as their past submissions.
  *
  * @author James Gilliam, L15
- *
  * @version 4/10/2022
- *
  */
 public class Account {
     private boolean valid;
@@ -30,20 +28,23 @@ public class Account {
 
         int accountIndex = getAccountIndex(userName, password);
 
-        if (accountsData.get(accountIndex + 1).equals("teacher")) {
-            teacher = true;
-        } else if (accountsData.get(accountIndex + 1).equals("student")) {
-            student = true;
+        if (accountsData.size() > 0) {
+            if (accountsData.get(accountIndex + 1).equals("teacher")) {
+                teacher = true;
+            } else if (accountsData.get(accountIndex + 1).equals("student")) {
+                student = true;
+            }
         }
     }
 
     public void addSubmission(ArrayList<String> submission) throws IOException {
-        readAccountsDataFile();
+        //readAccountsDataFile();
 
         int i = getAccountIndex(userName, password);
-        while (!accountsData.get(i).equals(accountSpacer)) {
+        while (i < accountsData.size() && !(accountsData.get(i).equals(accountSpacer))) {
             i++;
         }
+
         for (int j = 0; j < submission.size(); j++) {
             accountsData.add(i + j, submission.get(j));
         }
@@ -53,7 +54,7 @@ public class Account {
     }
 
     public ArrayList<String> getSubmission(String quizTitle, String userName, String password, int attemptNumber) throws IOException {
-        readAccountsDataFile();
+        //readAccountsDataFile();
         Account user = new Account(userName, password);
         if (!user.isValid()) {
             return null;
@@ -116,6 +117,7 @@ public class Account {
     private void writeAccountsDataFile() throws IOException {
         File f = new File("AccountsData.txt");
         PrintWriter writer = new PrintWriter(f);
+        writer.write("poop\n");
         for (String line : accountsData) {
             writer.println(line);
         }
