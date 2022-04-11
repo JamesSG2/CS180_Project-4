@@ -49,6 +49,7 @@ public class CreateAccount {
     private void readAccountsDataFile() throws IOException {
         File f = new File("AccountsData.txt");
         BufferedReader br = new BufferedReader(new FileReader(f));
+        accountsData = new ArrayList<>();
         String line = br.readLine();
         while (line != null) {
             accountsData.add(line);
@@ -60,6 +61,11 @@ public class CreateAccount {
     private void writeAccountsDataFile() throws IOException {
         File f = new File("AccountsData.txt");
         PrintWriter writer = new PrintWriter(f);
+
+        readAccountsDataFile();
+        for (String line : accountsData) {
+            writer.append(null);
+        }
 
         for (String line : accountsData) {
             writer.println(line);
