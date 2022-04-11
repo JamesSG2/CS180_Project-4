@@ -4,14 +4,14 @@ import java.util.Scanner;
 
 /**
  * OptionList
- *
+ * <p>
  * Handles the input and output via scanners. Contains main method
  *
  * @author Ian Fienberg, L15
- *
  * @version 4/11/2022
- *
  */
+
+
 public class OptionList {
 
     public static void main(String[] args) throws IOException {
@@ -43,7 +43,6 @@ public class OptionList {
         String password = "";
         Account lo = new Account(userName, password);
 
-
         boolean start = true;
         while (start) {
             System.out.println("What would you like to do?\n1. Sign up\n2. Log in");
@@ -60,7 +59,15 @@ public class OptionList {
                 if (ts == 1) {
                     type = true;
                 }
-                new CreateAccount(userName, password, type);
+
+                CreateAccount ca = new CreateAccount(userName, password, type);
+
+                boolean create = ca.isCreated();
+                if (!create) {
+                    System.out.println("The username is already taken! Account was not created.");
+                }
+
+
             }
             System.out.println("LOG IN");
             System.out.println("What is your username?");
@@ -513,11 +520,55 @@ public class OptionList {
                     }
                     //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0) {
-                        System.out.println("You need to create a quiz before you can grade one!");
+                        System.out.println("You need to create a quiz before you can see one!");
+                    }
+
+
+
+                } else if (options == 7) {
+
+                    String quizName3 = "";
+                    if (quizzes.size() != 0) {
+                       System.out.println("Which quiz would you like to manually grade?");
+                      //PRINTS LIST OF QUIZZES BY NAME
+                       for (int i = 0; i < quizzes.size(); i++) {
+                           System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                        }
+                       int quizNum1 = scan.nextInt();
+                       scan.nextLine();
+
+                       System.out.println("Please input the student's name: ");
+                       String name = scan.nextLine();
+                       System.out.println("Please input the student's password: ");
+                       String key = scan.nextLine();
+                       System.out.println("Please input the student's attempt number: ");
+                       int i = scan.nextInt();
+
+                       if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+
+                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+
+                            System.out.println("Attempt: " + i);
+
+                            for (String v : sub) {
+                                System.out.println(v);
+                            }
+
+
+                       } else {
+                           System.out.println("ERROR! THE INFORMATION IS INVALID!");
+                       }
+
+                    //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
+                    //}
+                    }
+                    //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
+                    if (quizzes.size() == 0) {
+                       System.out.println("You need to create a quiz before you can grade one!");
                     }
 
                 } else {
-                    System.out.println("That is not a valid option! Please enter a number 1-6.");
+                    System.out.println("That is not a valid option! Please enter a number 1-7.");
                 }
 
             }
