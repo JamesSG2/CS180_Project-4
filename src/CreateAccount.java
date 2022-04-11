@@ -20,11 +20,14 @@ public class CreateAccount {
         accountsData = new ArrayList<>();
         readAccountsDataFile();
         for (String line : accountsData) {
-            if (line.substring(0, userName.length()).equals(userName)) {
-                created = false;
-                return;
+            if (line.length() >= userName.length()) {
+                if (line.substring(0, userName.length()).equals(userName)) {
+                    created = false;
+                    return;
+                }
             }
         }
+
 
         accountsData.add(userName + password);
         if (isTeacher) {
