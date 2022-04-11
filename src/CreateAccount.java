@@ -17,6 +17,7 @@ public class CreateAccount {
     private ArrayList<String> accountsData;
 
     public CreateAccount(String userName, String password, boolean isTeacher) throws IOException {
+        accountsData = new ArrayList<>();
         readAccountsDataFile();
         for (String line : accountsData) {
             if (line.substring(0, userName.length()).equals(userName)) {
