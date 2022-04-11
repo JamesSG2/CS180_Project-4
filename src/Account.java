@@ -119,7 +119,7 @@ public class Account {
         return student;
     }
 
-    public int getAccountIndex(String userName, String password) {
+    private int getAccountIndex(String userName, String password) {
         int accountIndex = 0;
         for (int i = 0; i < accountsData.size(); i++) {
             if (accountsData.get(i).equals(userName + password)) {
