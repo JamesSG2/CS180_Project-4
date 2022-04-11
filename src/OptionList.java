@@ -15,6 +15,24 @@ public class OptionList {
         ArrayList<Quizzes> quizzes = new ArrayList<>();
         String grade = "";
         String user = "";
+        //updated by Zonglin:
+        ArrayList<String> submission = new ArrayList<String>();
+        ArrayList<String> sub = new ArrayList<String>();
+        ArrayList<Integer> attemptNum = new ArrayList<Integer>(3);
+        attemptNum.add(1);
+        attemptNum.add(1);
+        attemptNum.add(1);
+        attemptNum.ensureCapacity(500);
+
+        for (int i : attemptNum) {
+            i = 1;
+        }
+
+        //changed by Zonglin:
+        String userName = "";
+        String password = "";
+        Account lo = new Account(userName, password);
+
 
         boolean start = true;
         while (start) {
@@ -23,9 +41,9 @@ public class OptionList {
             if (sl == 1) {
                 System.out.println("What would like your username to be?");
                 scan.nextLine();
-                String userName = scan.nextLine();
+                userName = scan.nextLine();
                 System.out.println("What would like your password to be?");
-                String password = scan.nextLine();
+                password = scan.nextLine();
                 boolean type = false;
                 System.out.println("Are you a teacher or student?\n1. Teacher\n2. Student");
                 int ts = scan.nextInt();
@@ -37,10 +55,10 @@ public class OptionList {
             System.out.println("LOG IN");
             System.out.println("What is your username?");
             scan.nextLine();
-            String userName = scan.nextLine();
+            userName = scan.nextLine();
             System.out.println("What is your password?");
-            String password = scan.nextLine();
-            Account lo = new Account(userName, password);
+            password = scan.nextLine();
+            lo = new Account(userName, password);
             boolean valid = lo.isValid();
             boolean teach = lo.isTeacher();
             boolean stud = lo.isStudent();
@@ -444,6 +462,59 @@ public class OptionList {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else if (options == 6) {
+
+                    String quizName3 = "";
+                    if (quizzes.size() != 0) {
+                        System.out.println("Which quiz would you like to see?");
+                        //PRINTS LIST OF QUIZZES BY NAME
+                        for (int i = 0; i < quizzes.size(); i++) {
+                            System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                        }
+                        int quizNum1 = scan.nextInt();
+                        scan.nextLine();
+
+                        //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
+
+                            //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName, password, k)) {
+
+                        System.out.println("Please input the student's name: ");
+                        String name = scan.nextLine();
+                        System.out.println("Please input the student's password: ");
+                        String key = scan.nextLine();
+                        System.out.println("Please input the student's attempt number: ");
+                        int i = scan.nextInt();
+                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+
+                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+
+                            System.out.println("Attempt: " + i);
+
+                            for (String v : sub) {
+                                System.out.println(v);
+                            }
+
+                        } else {
+                            System.out.println("ERROR! THE INFORMATION IS INVALID!");
+                        }
+
+                            //}
+
+
+                        //System.out.println("below is the getSubmission");
+                        /*for (int k = 0; k < quizzes.get(quizNum1 - 1).getQuestions().size(); k++) {
+                            System.out.println(sub.get(k));
+                        }
+
+
+                         */
+                        //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
+                        //}
+                    }
+                    //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
+                    if (quizzes.size() == 0) {
+                        System.out.println("You need to create a quiz before you can grade one!");
+                    }
 
                 } else {
                     System.out.println("That is not a valid option! Please enter a number 1-6.");
@@ -452,6 +523,9 @@ public class OptionList {
             }
         }
         boolean student = true;
+
+        //int count = 0; //count for attemptNum
+
         if (user.equals("Student")) {
             System.out.println("Hello student");
             while (student) {
@@ -472,6 +546,8 @@ public class OptionList {
                     }
                     int quizNum = scan.nextInt();
                     scan.nextLine();
+
+
                     if (quizNum > 0 && quizNum <= quizzes.size()) {
                         studentAnswer = new ArrayList<String>();
                         //PRINTS EACH QUESTION AND OPTIONS, THEN STORES STUDENTS ANSWERS IN ARRAYLIST "STUDENTANSWER"
@@ -487,6 +563,13 @@ public class OptionList {
                         }
                         System.out.println("Would you like to submit?");
                         String submit = scan.nextLine();
+
+                        //updated attemptNum in case student makes multiple attempts to the same quiz
+                        //System.out.println("count: " + count);
+
+                        attemptNum.set(quizNum - 1, attemptNum.get(quizNum - 1) + 1);
+
+
                         if (submit.equalsIgnoreCase("no") || submit.equalsIgnoreCase("n")) {
                             System.out.println("Alright. Your quiz will not be submitted.");
                             //studentAnswers.remove(index);
@@ -507,6 +590,31 @@ public class OptionList {
                                     writer.write("END OF QUIZ\n");
                                     //br.close();
                                     writer.close();
+
+
+                                    String quizName3 = "";
+
+                                    ArrayList<String> tempAnswerList = new ArrayList<String>();
+                                    ArrayList<Integer> tempPointList = new ArrayList<Integer>();
+
+                                    //System.out.println("quizzes.get(quizNum1 - 1).getQuestions().size() " + quizzes.get(quizNum1 - 1).getQuestions().size());
+
+                                    for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
+
+                                        tempAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
+                                        tempPointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
+                                    }
+
+                                    grading testGrade = new grading(quizzes.get(quizNum - 1).getQuestions(), tempAnswerList, tempPointList);
+                                    submission = testGrade.gradeAnswer("StudentQuizInfo.txt", quizzes.get(quizNum - 1).getName(), userName);
+                                    //System.out.println("Testing Grade: " + testGrade.getGrade());
+
+                                    //for (String a : submission) {
+                                    //    System.out.println(a);
+                                    //}
+
+                                    lo.addSubmission(submission);
+
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();

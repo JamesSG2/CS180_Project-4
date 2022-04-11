@@ -1,15 +1,24 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 public class grading {
     //public boolean[] isCorrect;
-    public ArrayList<Questions> quiz;
+    public ArrayList<Questions> questions;
     public ArrayList<String> answer;
+    public ArrayList<Integer> points;
+    public ArrayList<String> gradeAnswer;
     public double grade;
 
-    public grading(ArrayList<Questions> quiz, ArrayList<String> answer) {
-        this.quiz = quiz;
+    public grading(ArrayList<Questions> questions, ArrayList<String> answer, ArrayList<Integer> points) {
+        this.questions = questions;
         this.answer = answer;
+        this.points = points;
         grade = 0;
     }
+
+
 
     public void setAnswer(ArrayList<String> answer) {
         this.answer = answer;
@@ -20,13 +29,13 @@ public class grading {
     }
 
     public void setQuiz(ArrayList<Questions> quiz) {
-        this.quiz = quiz;
+        this.questions = questions;
     }
 
     //public void setIsCorrect
 
     public ArrayList<Questions> getQuiz() {
-        return quiz;
+        return questions;
     }
 
     public ArrayList<String> getAnswer() {
@@ -37,23 +46,85 @@ public class grading {
         return grade;
     }
 
-    public void checkAnswer(ArrayList<String> importAnswers) {
 
-        //System.out.println("check answer: " + answer.get(0));
+    public ArrayList<String> gradeAnswer(String studentFileName, String quizName, String stuName) {
 
-        for (int i = 0; i < quiz.size(); i++) {
-            Questions temp = quiz.get(i);
-            //String trueAnswer = temp.getAnswer();
-            String trueAnswer = answer.get(0);
-            //test method
-            //System.out.println("check trueAnswer: " + answer.get(0));
 
-            if (trueAnswer.equals(importAnswers.get(i))) {
-                grade += temp.getPoints();
-                //test method
-                //System.out.println("check grade: " + grade);
+        //read the correct answer from the input fileName of quiz
+        //while the OptionList give the constructor correct answers and questions and points
+        //this readFile method could be omitted
+        //read the student's answer from the input fileName
+
+        ArrayList<String> submission = new ArrayList<String>();
+        submission.add(quizName);
+
+        ArrayList<String> list = new ArrayList<String>();
+        int g = 0;
+        int temp1 = 0;
+        int temp2 = 0;
+
+        try {
+            File fi = new File(studentFileName);
+            fi.createNewFile();
+            if (fi.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(fi));
+
+                String line = br.readLine();
+                while (line != null) {
+                    list.add(line);
+                    line = br.readLine();
+                    g++;
+                }
+
+                int c = 0;
+                int d = 0;
+                int f = 0;
+
+                for (int j = 0; j < g; j++) {
+                    if (list.get(j).contains(quizName)) {
+
+                        f = j;
+
+                    }
+                }
+
+                //System.out.println("test of list's start = " + list.get(f));
+
+                for (int i = 0; i < questions.size(); i++) {
+
+                    if (f == 0) {
+                        temp2 = 1;
+                    } else {
+                        temp1 = i + 1;
+                        temp2 = temp1 + f;
+                    }
+
+                    String stuTempAns = list.get(temp2);
+
+                    if (answer.get(i).equals(stuTempAns)) {
+                        c++;
+                        grade += points.get(i);
+
+                        //System.out.println("correct answer count: " + c);
+                    }
+
+                    d = i + 1;
+                    //System.out.println("test of loop num " + d);
+                    //System.out.println();
+
+                }
+
+                submission.add("Student " + stuName + "'s grade: " + grade);
+
+                br.close();
+
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return submission;
     }
+
 
 }
