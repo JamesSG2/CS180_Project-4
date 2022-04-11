@@ -88,10 +88,18 @@ public class Account {
         writeAccountsDataFile();
     }
 
-    public void editAccount(String newUsername, String newPassword) throws IOException {
+    public boolean editAccount(String newUsername, String newPassword) throws IOException {
         readAccountsDataFile();
+        if (newUsername != userName) {
+            for (String line : accountsData) {
+                if (line.substring(newUsername.length()).equals(newUsername)) {
+                    return false;
+                }
+            }
+        }
         accountsData.set(getAccountIndex(userName, password), newUsername + newPassword);
         writeAccountsDataFile();
+        return true;
     }
 
     private void readAccountsDataFile() throws IOException {
