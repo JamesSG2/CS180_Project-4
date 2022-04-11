@@ -40,7 +40,7 @@ public class OptionList {
             String userName = scan.nextLine();
             System.out.println("What is your password?");
             String password = scan.nextLine();
-            Login lo = new Login(userName, password);
+            Account lo = new Account(userName, password);
             boolean valid = lo.isValid();
             boolean teach = lo.isTeacher();
             boolean stud = lo.isStudent();
@@ -53,7 +53,7 @@ public class OptionList {
                 }
                 start = false;
             } else {
-                System.out.println("That is not a valid account! Try again.");
+                System.out.println("That is not a valid account!");
             }
         }
 
@@ -112,7 +112,8 @@ public class OptionList {
             while (teacher) {
                 System.out.println("What would you like to do?");
                 //updated parts:
-                System.out.println("1. Log out\n" + "2. Create a new quiz\n" + "3. Edit a quiz\n" + "4. Delete a quiz\n" + "5. View submissions");
+                System.out.println("1. Log out\n" + "2. Create a new quiz\n" + "3. Edit a quiz\n" + "4. Delete a quiz\n"
+                        + "5. Upload a quiz\n" + "6. View submissions");
                 int options = scan.nextInt();
                 scan.nextLine();
 
@@ -363,8 +364,89 @@ public class OptionList {
                     if (quizzes.size() == 0 && p != 0) {
                         System.out.println("You need to create a quiz before you can delete one!");
                     }
+                    //IF A TEACHER WOULD LIKE TO UPLOAD A QUIZ FILE
+                } else if (options == 5) {
+                    System.out.println("What is the name of the quiz file you would like to upload?");
+                    //System.out.println(quizzes.get(0).getQuestions().get(0).getQuestion());
+                    String fileName = scan.nextLine();
+                    //WILL READ QUIZINFO.TXT AND ADD PREVIOUS QUIZZES TO "quizzes" ARRAYLIST
+                    try {
+                        File fi = new File(fileName);
+                        fi.createNewFile();
+                        if (fi.exists()) {
+                            BufferedReader buf = new BufferedReader(new FileReader(fi));
+                            String p = buf.readLine();
+                            while (p != null) {
+                                if (p.length() > 0) {
+                                    String quizName = p;
+                                    String maybe = "";
+                                    boolean q = true;
+                                    ArrayList<Questions> tempQuestions = new ArrayList<>();
+                                    for (int i = 0; i < 1; i++) {
+                                        String question;
+                                        if (q) {
+                                            question = buf.readLine();
+                                        } else {
+                                            question = maybe;
+                                        }
+                                        String option1 = buf.readLine();
+                                        String option2 = buf.readLine();
+                                        String option3 = buf.readLine();
+                                        String option4 = buf.readLine();
+                                        String answer = buf.readLine();
+                                        int points = Integer.parseInt(buf.readLine());
+                                        maybe = buf.readLine();
+                                        if (maybe.equals("END OF QUIZ")) {
+                                        } else {
+                                            q = false;
+                                            i--;
+                                        }
+                                        tempQuestions.add(new Questions(question, option1, option2, option3, option4, answer, points));
+                                    }
+                                    quizzes.add(new Quizzes(tempQuestions, quizName));
+                                }
+                                p = buf.readLine();
+                            }
+                            //writer.write("END OF QUIZ\n");
+                            buf.close();
+                            //writer.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //System.out.println(quizzes.get(1).getQuestions().get(1).getQuestion());
+
+                    //WILL WRITE NEW QUIZ TO QUIZINFO.TXT
+                    try {
+                        File f = new File("QuizInfo.txt");
+                        f.createNewFile();
+                        if (f.exists()) {
+
+                            //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
+                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", true)));
+                            for (int j = 0; j < quizzes.size(); j++) {
+                                writer.write(quizzes.get(j).getName() + "\n");
+                                for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
+                                    writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() + "\n");
+                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption1() + "\n");
+                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption2() + "\n");
+                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption3() + "\n");
+                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption4() + "\n");
+                                    writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() + "\n");
+                                    writer.write(quizzes.get(j).getQuestions().get(k).getPoints() + "\n");
+                                }
+                                writer.write("END OF QUIZ\n");
+                            }
+                            writer.close();
+                            System.out.println("Quiz added!");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
-                    System.out.println("That is not a valid option! Please enter a number 1-4.");
+                    System.out.println("That is not a valid option! Please enter a number 1-6.");
                 }
 
             }
