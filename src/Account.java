@@ -3,11 +3,13 @@ import java.util.ArrayList;
 
 /**
  * Account
- * <p>
+ *
  * Handles the personal information of students and teachers as well as their past submissions.
  *
  * @author James Gilliam, L15
+ *
  * @version 4/10/2022
+ *
  */
 public class Account {
     private boolean valid;
