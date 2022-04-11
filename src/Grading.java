@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
@@ -71,6 +72,10 @@ public class Grading {
 
         ArrayList<String> submission = new ArrayList<String>();
         submission.add(quizName);
+
+        Long datetime = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(datetime);
+        submission.add("Current Time Stamp" + timestamp);
 
         ArrayList<String> list = new ArrayList<String>();
         int g = 0;
