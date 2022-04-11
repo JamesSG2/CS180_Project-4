@@ -63,7 +63,7 @@ public class Account {
             return null;
         }
 
-        int i = getAccountIndex(userName, password);
+        int i = user.getAccountIndex(userName, password);
         int j = 1;
         while (!((accountsData.get(i).equals(quizTitle) && (j == attemptNumber)) ||
                 ((i + 1) == accountsData.size()))) {
@@ -81,6 +81,38 @@ public class Account {
             i++;
         }
         return submission;
+    }
+
+    public boolean setSubmission(String quizTitle, int attemptNumber, String userName, String password,
+                              ArrayList<String> newSubmission) throws IOException {
+        readAccountsDataFile();
+        Account user = new Account(userName, password);
+        if (!user.isValid()) {
+            return false;
+        }
+
+        int i = user.getAccountIndex(userName, password);
+        int j = 1;
+        while (!((accountsData.get(i).equals(quizTitle) && (j == attemptNumber)) ||
+                ((i + 1) == accountsData.size()))) {
+            if (accountsData.get(i).equals(quizTitle)) {
+                j++;
+            }
+            i++;
+        }
+        if ((i + 1) == accountsData.size()) {
+            return false;
+        }
+
+        while (!accountsData.get(i).equals(submissionSpacer)) {
+            accountsData.remove(i);
+        }
+
+        for (int k = 0; k < newSubmission.size(); k++) {
+            accountsData.add((i + k), newSubmission.get(k));
+        }
+        writeAccountsDataFile();
+        return true;
     }
 
     public void deleteAccount() throws IOException {
