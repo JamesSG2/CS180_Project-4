@@ -16,7 +16,8 @@ public class Account {
     private boolean teacher;
     private boolean student;
     private ArrayList<String> accountsData;
-    private int accountIndex;
+    private String userName;
+    private String password;
     private String submissionSpacer = "--------------------------------------------------";
     private String accountSpacer = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 
@@ -24,13 +25,10 @@ public class Account {
         accountsData = new ArrayList<>();
         readAccountsDataFile();
 
-        for (int i = 0; i < accountsData.size(); i++) {
-            if (accountsData.get(i).equals(userName + password)) {
-                accountIndex = i;
-                valid = true;
-                break;
-            }
-        }
+        this.userName = userName;
+        this.password = password;
+
+        int accountIndex = getAccountIndex(userName, password);
 
         if (accountsData.get(accountIndex + 1).equals("teacher")) {
             teacher = true;
@@ -42,7 +40,7 @@ public class Account {
     public void addSubmission(ArrayList<String> submission) throws IOException {
         readAccountsDataFile();
 
-        int i = accountIndex;
+        int i = getAccountIndex(userName, password);
         while (!accountsData.get(i).equals(accountSpacer)) {
             i++;
         }
@@ -51,12 +49,7 @@ public class Account {
         }
         accountsData.add(i + submission.size(), submissionSpacer);
 
-        File f = new File("AccountsData.txt");
-        PrintWriter writer = new PrintWriter(f);
-        for (String line : accountsData) {
-            writer.println(line);
-        }
-        writer.close();
+        writeAccountsDataFile();
     }
 
     public ArrayList<String> getSubmission(String quizTitle, String userName, String password) throws IOException {
@@ -66,7 +59,7 @@ public class Account {
             return null;
         }
 
-        int i = user.getAccountIndex();
+        int i = getAccountIndex(userName, password);
         while (!accountsData.get(i).equals(quizTitle)) {
             i++;
         }
@@ -78,6 +71,22 @@ public class Account {
         return submission;
     }
 
+    public void deleteAccount() throws IOException {
+        readAccountsDataFile();
+        int i = getAccountIndex(userName, password);
+        while (!accountsData.get(i).equals(accountSpacer)) {
+            accountsData.remove(i);
+        }
+        accountsData.remove(i);
+        writeAccountsDataFile();
+    }
+
+    public void editAccount(String newUsername, String newPassword) throws IOException {
+        readAccountsDataFile();
+        accountsData.set(getAccountIndex(userName, password), newUsername + newPassword);
+        writeAccountsDataFile();
+    }
+
     private void readAccountsDataFile() throws IOException {
         File f = new File("AccountsData.txt");
         BufferedReader br = new BufferedReader(new FileReader(f));
@@ -87,6 +96,15 @@ public class Account {
             line = br.readLine();
         }
         br.close();
+    }
+
+    private void writeAccountsDataFile() throws IOException {
+        File f = new File("AccountsData.txt");
+        PrintWriter writer = new PrintWriter(f);
+        for (String line : accountsData) {
+            writer.println(line);
+        }
+        writer.close();
     }
 
     public boolean isValid() {
@@ -101,7 +119,15 @@ public class Account {
         return student;
     }
 
-    private int getAccountIndex() {
+    public int getAccountIndex(String userName, String password) {
+        int accountIndex = 0;
+        for (int i = 0; i < accountsData.size(); i++) {
+            if (accountsData.get(i).equals(userName + password)) {
+                accountIndex = i;
+                valid = true;
+                break;
+            }
+        }
         return accountIndex;
     }
 }
