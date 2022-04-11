@@ -128,7 +128,8 @@ public class OptionList {
                                 q = false;
                                 i--;
                             }
-                            tempQuestions.add(new Questions(question, option1, option2, option3, option4, answer, points));
+                            tempQuestions.add(new Questions(question, option1, option2, option3,
+                                    option4, answer, points));
                         }
                         quizzes.add(new Quizzes(tempQuestions, quizName));
                     }
@@ -148,7 +149,7 @@ public class OptionList {
                 System.out.println("What would you like to do?");
                 //updated parts:
                 System.out.println("1. Log out\n" + "2. Create a new quiz\n" + "3. Edit a quiz\n" + "4. Delete a quiz\n"
-                        + "5. Upload a quiz\n" + "6. View submissions");
+                        + "5. Upload a quiz\n" + "6. View submissions\n" + "7. Manually grade a quiz");
                 int options = scan.nextInt();
                 scan.nextLine();
 
@@ -203,7 +204,8 @@ public class OptionList {
                             while ((p = br.readLine()) != null) {
                                 log.add(p);
                             }*/
-                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", true)));
+                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
+                                    "QuizInfo.txt", true)));
                             int quizIndex = 0;
                             for (int i = 0; i < quizzes.size(); i++) {
                                 if (quizzes.get(i).getName().equals(quizName)) {
@@ -279,7 +281,8 @@ public class OptionList {
                                 quizzes.get(i).getQuestions().get(qnum - 1).setOption4(option4);
                                 quizzes.get(i).getQuestions().get(qnum - 1).setAnswer(answer);
                                 quizzes.get(i).getQuestions().get(qnum - 1).setPoints(points);
-                                //quiz.set(qnum - 1, new Questions(question, option1, option2, option3, option4, answer, points));
+                                //quiz.set(qnum - 1, new Questions(question, option1, option2, option3, option4,
+                                // answer, points));
                                 //ISNT USED YET
                                 //////////////correctAnswer.set(qnum - 1, answer);
                                 //just for test:
@@ -295,7 +298,8 @@ public class OptionList {
                                 if (f.exists()) {
 
                                     //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
-                                    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", false)));
+                                    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
+                                            "QuizInfo.txt", false)));
                                     for (int j = 0; j < quizzes.size(); j++) {
                                         writer.write(quizzes.get(j).getName() + "\n");
                                         for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
@@ -362,17 +366,25 @@ public class OptionList {
                                     if (f.exists()) {
 
                                         //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
-                                        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", false)));
+                                        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
+                                                "QuizInfo.txt", false)));
                                         for (int j = 0; j < quizzes.size(); j++) {
                                             writer.write(quizzes.get(j).getName() + "\n");
                                             for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() + "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption1() + "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption2() + "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption3() + "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption4() + "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() + "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getPoints() + "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() +
+                                                        "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption1() +
+                                                        "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption2() +
+                                                        "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption3() +
+                                                        "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption4() +
+                                                        "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() +
+                                                        "\n");
+                                                writer.write(quizzes.get(j).getQuestions().get(k).getPoints() +
+                                                        "\n");
 
                                             }
                                         }
@@ -436,7 +448,8 @@ public class OptionList {
                                             q = false;
                                             i--;
                                         }
-                                        tempQuestions.add(new Questions(question, option1, option2, option3, option4, answer, points));
+                                        tempQuestions.add(new Questions(question, option1, option2, option3, option4,
+                                                answer, points));
                                     }
                                     quizzes.add(new Quizzes(tempQuestions, quizName));
                                 }
@@ -458,7 +471,8 @@ public class OptionList {
                         if (f.exists()) {
 
                             //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
-                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("QuizInfo.txt", true)));
+                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
+                                    "QuizInfo.txt", true)));
                             for (int j = 0; j < quizzes.size(); j++) {
                                 writer.write(quizzes.get(j).getName() + "\n");
                                 for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
@@ -492,8 +506,8 @@ public class OptionList {
                         scan.nextLine();
 
                         //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
-
-                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName, password, k)) {
+                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName,
+                        // password, k)) {
 
                         System.out.println("Please input the student's name: ");
                         String name = scan.nextLine();
@@ -527,7 +541,6 @@ public class OptionList {
 
                 } else if (options == 7) {
 
-                    String quizName3 = "";
                     if (quizzes.size() != 0) {
                        System.out.println("Which quiz would you like to manually grade?");
                       //PRINTS LIST OF QUIZZES BY NAME
@@ -544,20 +557,57 @@ public class OptionList {
                        System.out.println("Please input the student's attempt number: ");
                        int i = scan.nextInt();
 
-                       if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+                        ArrayList<String> tempAnswerList = new ArrayList<String>();
+                        ArrayList<Integer> tempPointList = new ArrayList<Integer>();
+
+                        for (int j = 0; j < quizzes.get(quizNum1 - 1).getQuestions().size(); j++) {
+                            tempAnswerList.add(quizzes.get(quizNum1 - 1).getQuestions().get(j).getAnswer());
+                            tempPointList.add(quizzes.get(quizNum1 - 1).getQuestions().get(j).getPoints());
+                        }
+
+                        System.out.println("current submission of the student:");
+
+                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
 
                             sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
-
-                            System.out.println("Attempt: " + i);
 
                             for (String v : sub) {
                                 System.out.println(v);
                             }
 
+                            Grading newGrade = new Grading(quizzes.get(quizNum1 - 1).getQuestions(),
+                                    tempAnswerList, tempPointList);
 
-                       } else {
-                           System.out.println("ERROR! THE INFORMATION IS INVALID!");
-                       }
+                            System.out.println("How many points did the student earn?");
+                            double score = scan.nextDouble();
+                            System.out.println("How many points were there total?");
+                            double totalPoint = scan.nextDouble();
+
+                            newGrade.setPointsEarned(score);
+                            newGrade.setPointsTotal(totalPoint);
+
+                            submission = newGrade.gradeAnswer("StudentQuizInfo.txt",
+                                    quizzes.get(quizNum1 - 1).getName(), userName);
+
+                        }
+
+                        boolean success = lo.setSubmission(quizzes.get(quizNum1 - 1).getName(), i,
+                                name, key, submission);
+                        if (success = true) {
+
+                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+
+                            //System.out.println("Attempt);
+                            for (String v : sub) {
+                                System.out.println(v);
+                            }
+
+                            System.out.println("New grade is set to the student!");
+
+                        } else {
+                            System.out.println("ERROR! THE INFORMATION IS INVALID!");
+                        }
+
 
                     //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                     //}
@@ -668,7 +718,8 @@ public class OptionList {
                                 f.createNewFile();
                                 if (f.exists()) {
 
-                                    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("StudentQuizInfo.txt", true)));
+                                    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
+                                            "StudentQuizInfo.txt", true)));
 
                                     writer.write(quizzes.get(quizNum - 1).getName() + "\n");
                                     for (int i = 0; i < studentAnswer.size(); i++) {
@@ -684,15 +735,15 @@ public class OptionList {
                                     ArrayList<String> tempAnswerList = new ArrayList<String>();
                                     ArrayList<Integer> tempPointList = new ArrayList<Integer>();
 
-                                    //System.out.println("quizzes.get(quizNum1 - 1).getQuestions().size() " + quizzes.get(quizNum1 - 1).getQuestions().size());
-
                                     for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
                                         tempAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
                                         tempPointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
                                     }
 
-                                    Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(), tempAnswerList, tempPointList);
-                                    submission = testGrade.gradeAnswer("StudentQuizInfo.txt", quizzes.get(quizNum - 1).getName(), userName);
+                                    Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(),
+                                            tempAnswerList, tempPointList);
+                                    submission = testGrade.gradeAnswer("StudentQuizInfo.txt",
+                                            quizzes.get(quizNum - 1).getName(), userName);
                                     //System.out.println("Testing Grade: " + testGrade.getGrade());
 
                                     //for (String a : submission) {
@@ -725,7 +776,8 @@ public class OptionList {
 
                         //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
 
-                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName, password, k)) {
+                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(),
+                        // userName, password, k)) {
 
 
                         String name = userName;

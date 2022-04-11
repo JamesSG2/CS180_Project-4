@@ -43,11 +43,11 @@ public class Grading {
         this.pointsEarned = grade;
     }
 
+    public void setPointsTotal(double grade) { this. pointsTotal = grade; }
+
     public void setQuiz(ArrayList<Questions> quiz) {
         this.questions = questions;
     }
-
-    //public void setIsCorrect
 
     public ArrayList<Questions> getQuiz() {
         return questions;
@@ -64,11 +64,10 @@ public class Grading {
 
     public ArrayList<String> gradeAnswer(String studentFileName, String quizName, String stuName) {
 
-
         //read the correct answer from the input fileName of quiz
+        //read the student's answer from the input fileName
         //while the OptionList give the constructor correct answers and questions and points
         //this readFile method could be omitted
-        //read the student's answer from the input fileName
 
         ArrayList<String> submission = new ArrayList<String>();
         submission.add(quizName);
@@ -103,8 +102,6 @@ public class Grading {
                     }
                 }
 
-                //System.out.println("test of list's start = " + list.get(f));
-
                 for (int i = 0; i < questions.size(); i++) {
 
                     if (f == 0) {
@@ -121,20 +118,11 @@ public class Grading {
                     if (answer.get(i).equals(stuTempAns)) {
                         c++;
                         pointsEarned += points.get(i);
-
-                        //System.out.println("correct answer count: " + c);
                     }
-
-                    d = i + 1;
-                    //System.out.println("test of loop num " + d);
-                    //System.out.println();
 
                     if (stuTempAns.indexOf("/") >= 0) {
 
-                        //int count = 0;
                         String replace = stuTempAns;
-                        System.out.println("the whole String: " + stuTempAns);
-
 
                         int count = 0;
 
@@ -144,28 +132,24 @@ public class Grading {
                             }
                         }
 
-                        System.out.println("count: " + count);
-
                         for (int l = 0; l < count; l++) {
 
                             int temp = replace.indexOf("/");
                             String upload = replace.substring(0, temp);
 
                             if (l == 0) {
-                                //System.out.println("upload: " + upload);
                                 submission.add("The student's answer: ");
                                 submission.add(upload);
 
                                 replace = stuTempAns.substring(temp + 1);
-                                //System.out.println("replace: " + replace);
+
                             } else {
-                                //System.out.println("upload: " + upload);
+
                                 submission.add(upload);
 
                                 temp = replace.indexOf("/");
 
                                 replace = replace.substring(temp + 1);
-                                //System.out.println("replace: " + replace);
 
                             }
 
@@ -179,10 +163,10 @@ public class Grading {
 
                 }
 
-
                 String percent = "%";
                 String score = String.format("Student " + stuName + "'s grade: %.2f", (pointsEarned/pointsTotal) * 100);
                 String combo = score + percent;
+
                 submission.add(combo);
 
 
