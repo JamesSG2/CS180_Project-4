@@ -61,11 +61,14 @@ public class Account {
 
         int i = getAccountIndex(userName, password);
         int j = 1;
-        while (!(accountsData.get(i).equals(quizTitle) && (j == attemptNumber))) {
+        while (!((accountsData.get(i).equals(quizTitle) && (j == attemptNumber)) || ((i + 1) == accountsData.size()))) {
             if (accountsData.get(i).equals(quizTitle)) {
                 j++;
             }
             i++;
+        }
+        if ((i + 1) == accountsData.size()) {
+            return null;
         }
         ArrayList<String> submission = new ArrayList<>();
         while (!accountsData.get(i).equals(submissionSpacer)) {
