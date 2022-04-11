@@ -508,14 +508,6 @@ public class OptionList {
                             System.out.println("ERROR! THE INFORMATION IS INVALID!");
                         }
 
-                        //}
-
-
-                        //System.out.println("below is the getSubmission");
-                        /*for (int k = 0; k < quizzes.get(quizNum1 - 1).getQuestions().size(); k++) {
-                            System.out.println(sub.get(k));
-                        }
-                         */
                         //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         //}
                     }
@@ -557,6 +549,7 @@ public class OptionList {
 
 
                     if (quizNum > 0 && quizNum <= quizzes.size()) {
+                        String longString = "";
                         studentAnswer = new ArrayList<String>();
                         //PRINTS EACH QUESTION AND OPTIONS, THEN STORES STUDENTS ANSWERS IN ARRAYLIST "STUDENTANSWER"
                         for (int i = 0; i < quizzes.get(quizNum - 1).getQuestions().size(); i++) {
@@ -566,16 +559,52 @@ public class OptionList {
                             System.out.println("b) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption2());
                             System.out.println("c) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption3());
                             System.out.println("d) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption4());
+
+                            System.out.println("Please enter 'file' if you want to attach a file as your answer");
                             String guess = scan.nextLine();
-                            studentAnswer.add(guess);
+
+                            if (guess.equals("file")) {
+
+                                System.out.println("please input the name of the file");
+                                String file = scan.nextLine();
+
+                                ArrayList<String> list = new ArrayList<>();
+                                File f = new File(file);
+
+                                try {
+
+                                    FileReader fr = new FileReader(f);
+                                    BufferedReader bfr = new BufferedReader(fr);
+                                    String line = bfr.readLine();
+
+                                    while (line != null) {
+                                        list.add(line);
+                                        line = bfr.readLine();
+                                    }
+
+                                    bfr.close();
+
+                                } catch(FileNotFoundException e) {
+                                    throw e;
+                                }
+                                catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                for (String a : list) {
+                                    longString += a + "/";
+                                }
+
+                                studentAnswer.add(longString);
+
+                            } else {
+
+                                studentAnswer.add(guess);
+
+                            }
                         }
                         System.out.println("Would you like to submit?");
                         String submit = scan.nextLine();
-
-                        //updated attemptNum in case student makes multiple attempts to the same quiz
-                        //System.out.println("count: " + count);
-
-                        attemptNum.set(quizNum - 1, attemptNum.get(quizNum - 1) + 1);
 
 
                         if (submit.equalsIgnoreCase("no") || submit.equalsIgnoreCase("n")) {
@@ -600,15 +629,13 @@ public class OptionList {
                                     writer.close();
 
 
-                                    String quizName3 = "";
-
+                                    //to automatically grade
                                     ArrayList<String> tempAnswerList = new ArrayList<String>();
                                     ArrayList<Integer> tempPointList = new ArrayList<Integer>();
 
                                     //System.out.println("quizzes.get(quizNum1 - 1).getQuestions().size() " + quizzes.get(quizNum1 - 1).getQuestions().size());
 
                                     for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
-
                                         tempAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
                                         tempPointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
                                     }
@@ -619,6 +646,7 @@ public class OptionList {
 
                                     //for (String a : submission) {
                                     //    System.out.println(a);
+                                    //}
                                     //}
 
                                     lo.addSubmission(submission);
@@ -667,6 +695,7 @@ public class OptionList {
                         } else {
                             System.out.println("ERROR! THE INFORMATION IS INVALID!");
                         }
+
                     }
 
                 } else {
