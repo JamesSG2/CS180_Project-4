@@ -3,19 +3,34 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-public class grading {
+
+/**
+ * Grading
+ *
+ * Used to grade the quizzes
+ *
+ * @author Zonglin Jia, L15
+ *
+ * @version 4/11/2022
+ *
+ */
+
+
+public class Grading {
     //public boolean[] isCorrect;
     public ArrayList<Questions> questions;
     public ArrayList<String> answer;
     public ArrayList<Integer> points;
     public ArrayList<String> gradeAnswer;
-    public double grade;
+    public double pointsEarned;
+    public double pointsTotal;
 
-    public grading(ArrayList<Questions> questions, ArrayList<String> answer, ArrayList<Integer> points) {
+    public Grading(ArrayList<Questions> questions, ArrayList<String> answer, ArrayList<Integer> points) {
         this.questions = questions;
         this.answer = answer;
         this.points = points;
-        grade = 0;
+        pointsEarned = 0;
+        pointsTotal = 0;
     }
 
 
@@ -24,8 +39,8 @@ public class grading {
         this.answer = answer;
     }
 
-    public void setGrade(double grade) {
-        this.grade = grade;
+    public void setPointsEarned(double grade) {
+        this.pointsEarned = grade;
     }
 
     public void setQuiz(ArrayList<Questions> quiz) {
@@ -42,8 +57,8 @@ public class grading {
         return answer;
     }
 
-    public double getGrade() {
-        return grade;
+    public double getPointsEarned() {
+        return pointsEarned;
     }
 
 
@@ -101,9 +116,11 @@ public class grading {
 
                     String stuTempAns = list.get(temp2);
 
+                    pointsTotal += points.get(i);
+
                     if (answer.get(i).equals(stuTempAns)) {
                         c++;
-                        grade += points.get(i);
+                        pointsEarned += points.get(i);
 
                         //System.out.println("correct answer count: " + c);
                     }
@@ -113,8 +130,11 @@ public class grading {
                     //System.out.println();
 
                 }
+                String percent = "%";
+                String score = String.format("Student " + stuName + "'s grade: %.2f", (pointsEarned/pointsTotal) * 100);
+                String combo = score + percent;
 
-                submission.add("Student " + stuName + "'s grade: " + grade);
+                submission.add(combo);
 
                 br.close();
 
