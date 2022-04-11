@@ -52,7 +52,7 @@ public class Account {
         writeAccountsDataFile();
     }
 
-    public ArrayList<String> getSubmission(String quizTitle, String userName, String password) throws IOException {
+    public ArrayList<String> getSubmission(String quizTitle, String userName, String password, int attemptNumber) throws IOException {
         readAccountsDataFile();
         Account user = new Account(userName, password);
         if (!user.isValid()) {
@@ -60,7 +60,11 @@ public class Account {
         }
 
         int i = getAccountIndex(userName, password);
-        while (!accountsData.get(i).equals(quizTitle)) {
+        int j = 1;
+        while (!accountsData.get(i).equals(quizTitle) && (j == attemptNumber)) {
+            if (accountsData.get(i).equals(quizTitle)) {
+                j++;
+            }
             i++;
         }
         ArrayList<String> submission = new ArrayList<>();
