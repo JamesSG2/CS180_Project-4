@@ -2,6 +2,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * OptionList
+ * <p>
+ * Handles the input and output via scanners. Contains main method
+ *
+ * @author Ian Fienberg, L15
+ * @version 4/11/2022
+ */
+
+
 public class OptionList {
 
     public static void main(String[] args) throws IOException {
@@ -476,7 +486,7 @@ public class OptionList {
 
                         //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
 
-                            //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName, password, k)) {
+                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName, password, k)) {
 
                         System.out.println("Please input the student's name: ");
                         String name = scan.nextLine();
@@ -498,15 +508,13 @@ public class OptionList {
                             System.out.println("ERROR! THE INFORMATION IS INVALID!");
                         }
 
-                            //}
+                        //}
 
 
                         //System.out.println("below is the getSubmission");
                         /*for (int k = 0; k < quizzes.get(quizNum1 - 1).getQuestions().size(); k++) {
                             System.out.println(sub.get(k));
                         }
-
-
                          */
                         //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         //}
@@ -605,7 +613,7 @@ public class OptionList {
                                         tempPointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
                                     }
 
-                                    grading testGrade = new grading(quizzes.get(quizNum - 1).getQuestions(), tempAnswerList, tempPointList);
+                                    Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(), tempAnswerList, tempPointList);
                                     submission = testGrade.gradeAnswer("StudentQuizInfo.txt", quizzes.get(quizNum - 1).getName(), userName);
                                     //System.out.println("Testing Grade: " + testGrade.getGrade());
 
@@ -661,7 +669,6 @@ public class OptionList {
                         }
                     }
 
-
                 } else {
                     System.out.println("That is not a valid option! Please enter a number 1-3");
                 }
@@ -670,7 +677,4 @@ public class OptionList {
         }
     }
 
-    public static double gradeQuiz() {
-        return 0;
-    }
 }
