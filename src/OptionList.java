@@ -530,7 +530,7 @@ public class OptionList {
             System.out.println("Hello student");
             while (student) {
                 System.out.println("What would you like to do?");
-                System.out.println("1. Log out\n" + "2. Take a quiz");
+                System.out.println("1. Log out\n" + "2. Take a quiz\n" + "3. See your submission");
                 int options = scan.nextInt();
                 scan.nextLine();
                 //STUDENT CHOOSES TO QUIT
@@ -625,6 +625,45 @@ public class OptionList {
                     if (quizNum < 1 || quizNum > quizzes.size()) {
                         System.out.println("That is not a valid option!");
                     }
+                } else if (options == 3) {
+
+                    if (quizzes.size() != 0) {
+                        System.out.println("Which quiz would you like to see?");
+                        //PRINTS LIST OF QUIZZES BY NAME
+                        for (int i = 0; i < quizzes.size(); i++) {
+                            System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                        }
+                        int quizNum1 = scan.nextInt();
+                        scan.nextLine();
+
+                        //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
+
+                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName, password, k)) {
+
+
+                        String name = userName;
+                        //System.out.println("Please input the student's password: ");
+                        String key = password;
+                        System.out.println("Please input the attempt number: ");
+                        int i = scan.nextInt();
+                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+
+                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+
+                            System.out.println("Attempt: " + i);
+
+                            for (String v : sub) {
+                                System.out.println(v);
+                            }
+
+                        } else {
+                            System.out.println("ERROR! THE INFORMATION IS INVALID!");
+                        }
+                    }
+
+
+                } else {
+                    System.out.println("That is not a valid option! Please enter a number 1-3");
                 }
 
             }
