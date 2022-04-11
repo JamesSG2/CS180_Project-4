@@ -61,7 +61,7 @@ public class Account {
 
         int i = getAccountIndex(userName, password);
         int j = 1;
-        while (!accountsData.get(i).equals(quizTitle) && (j == attemptNumber)) {
+        while (!(accountsData.get(i).equals(quizTitle) && (j == attemptNumber))) {
             if (accountsData.get(i).equals(quizTitle)) {
                 j++;
             }
