@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * Used to grade the quizzes
  *
- * @author Zonglin Jia, L15
+ * @author Zonglin Jia, L15, Ian Fienberg, L15
  *
  * @version 4/11/2022
  *
@@ -165,6 +165,7 @@ public class Grading {
                     }
 
                     submission.add("The correct answer: " + answer.get(i));
+                    submission.add("The point value: " + points.get(i));
 
                 }
 
