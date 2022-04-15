@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * Account
+ * Accoun
  *
  * Handles the personal information of students and teachers as well as their past submissions.
  *
