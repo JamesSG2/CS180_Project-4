@@ -7,16 +7,14 @@ import java.util.ArrayList;
 
 /**
  * Grading
- *
+ * <p>
  * Used to grade the quizzes
  *
- * @author Zonglin Jia, L15, Ian Fienberg, L15
+ * @author Zonglin Jia, L15
  *
  * @version 4/11/2022
  *
  */
-
-
 public class Grading {
     //public boolean[] isCorrect;
     public ArrayList<Questions> questions;
@@ -34,8 +32,6 @@ public class Grading {
         pointsTotal = 0;
     }
 
-
-
     public void setAnswer(ArrayList<String> answer) {
         this.answer = answer;
     }
@@ -44,7 +40,9 @@ public class Grading {
         this.pointsEarned = grade;
     }
 
-    public void setPointsTotal(double grade) { this. pointsTotal = grade; }
+    public void setPointsTotal(double grade) {
+        this.pointsTotal = grade;
+    }
 
     public void setQuiz(ArrayList<Questions> quiz) {
         this.questions = questions;
@@ -62,7 +60,6 @@ public class Grading {
         return pointsEarned;
     }
 
-
     public ArrayList<String> gradeAnswer(String studentFileName, String quizName, String stuName) {
 
         //read the correct answer from the input fileName of quiz
@@ -72,10 +69,11 @@ public class Grading {
 
         ArrayList<String> submission = new ArrayList<String>();
         submission.add(quizName);
-
+        // print current time stamp
+        // added by Shruti
         Long datetime = System.currentTimeMillis();
         Timestamp timestamp = new Timestamp(datetime);
-        submission.add("Current Time Stamp" + timestamp);
+        submission.add("Time Stamp: " + timestamp);
 
         ArrayList<String> list = new ArrayList<String>();
         int g = 0;
@@ -84,7 +82,7 @@ public class Grading {
 
         try {
             File fi = new File(studentFileName);
-            fi.createNewFile();
+
             if (fi.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(fi));
 
@@ -101,9 +99,8 @@ public class Grading {
 
                 for (int j = 0; j < g; j++) {
                     if (list.get(j).contains(quizName)) {
-
                         f = j;
-
+                        break;
                     }
                 }
 
@@ -125,14 +122,17 @@ public class Grading {
                         pointsEarned += points.get(i);
                     }
 
+                    int qNum = i + 1;
+                    submission.add("Question #" + qNum + ":");
+
                     if (stuTempAns.indexOf("/") >= 0) {
 
                         String replace = stuTempAns;
 
                         int count = 0;
 
-                        for(char y : stuTempAns.toCharArray()){
-                            if(y == '/'){
+                        for (char y : stuTempAns.toCharArray()) {
+                            if (y == '/') {
                                 count++;
                             }
                         }
@@ -165,19 +165,20 @@ public class Grading {
                     }
 
                     submission.add("The correct answer: " + answer.get(i));
-                    submission.add("The point value: " + points.get(i));
-
+                    submission.add("Point Value: " + points.get(i));
                 }
 
                 String percent = "%";
-                String score = String.format("Student " + stuName + "'s grade: %.2f", (pointsEarned/pointsTotal) * 100);
+                String score = String.format("Student " + stuName + "'s grade: %.2f",
+                        (pointsEarned / pointsTotal) * 100);
                 String combo = score + percent;
 
                 submission.add(combo);
 
-
                 br.close();
 
+            } else {
+                System.out.println("Error! File Not Found.");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -185,6 +186,4 @@ public class Grading {
 
         return submission;
     }
-
-
 }

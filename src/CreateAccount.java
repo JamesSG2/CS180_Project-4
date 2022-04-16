@@ -17,7 +17,6 @@ public class CreateAccount {
     private ArrayList<String> accountsData;
 
     public CreateAccount(String userName, String password, boolean isTeacher) throws IOException {
-        accountsData = new ArrayList<>();
         readAccountsDataFile();
         for (String line : accountsData) {
             if (line.length() >= userName.length()) {
@@ -28,8 +27,7 @@ public class CreateAccount {
             }
         }
 
-
-        accountsData.add(userName + password);
+        accountsData.add(userName + " " + password);
         if (isTeacher) {
             accountsData.add("Status: teacher");
         } else {
@@ -49,6 +47,7 @@ public class CreateAccount {
     private void readAccountsDataFile() throws IOException {
         File f = new File("AccountsData.txt");
         BufferedReader br = new BufferedReader(new FileReader(f));
+        accountsData = new ArrayList<>();
         String line = br.readLine();
         while (line != null) {
             accountsData.add(line);

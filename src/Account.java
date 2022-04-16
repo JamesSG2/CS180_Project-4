@@ -22,7 +22,6 @@ public class Account {
     private String accountSpacer = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 
     public Account(String userName, String password) throws IOException {
-        accountsData = new ArrayList<>();
         readAccountsDataFile();
 
         this.userName = userName;
@@ -84,7 +83,7 @@ public class Account {
     }
 
     public boolean setSubmission(String quizTitle, int attemptNumber, String userName, String password,
-                              ArrayList<String> newSubmission) throws IOException {
+                                 ArrayList<String> newSubmission) throws IOException {
         readAccountsDataFile();
         Account user = new Account(userName, password);
         if (!user.isValid()) {
@@ -128,13 +127,21 @@ public class Account {
     public boolean editAccount(String newUsername, String newPassword) throws IOException {
         readAccountsDataFile();
         if (newUsername != userName) {
+            String prevLine = "";
             for (String line : accountsData) {
-                if (line.substring(newUsername.length()).equals(newUsername)) {
-                    return false;
+                if (prevLine.equals(accountSpacer)) {
+                    if (line.length() >= newUsername.length()) {
+                        if (line.substring(0, newUsername.length()).equals(newUsername)) {
+                            return false;
+                        }
+                    }
                 }
+                prevLine = line;
             }
         }
-        accountsData.set(getAccountIndex(userName, password), newUsername + newPassword);
+        accountsData.set(getAccountIndex(userName, password), newUsername + " " + newPassword);
+        userName = newUsername;
+        password = newPassword;
         writeAccountsDataFile();
         return true;
     }
@@ -154,11 +161,6 @@ public class Account {
     private void writeAccountsDataFile() throws IOException {
         File f = new File("AccountsData.txt");
         PrintWriter writer = new PrintWriter(f);
-
-        readAccountsDataFile();
-        for (String line : accountsData) {
-            writer.append(null);
-        }
 
         for (String line : accountsData) {
             writer.println(line);
@@ -181,7 +183,7 @@ public class Account {
     private int getAccountIndex(String userName, String password) {
         int accountIndex = 0;
         for (int i = 0; i < accountsData.size(); i++) {
-            if (accountsData.get(i).equals(userName + password)) {
+            if (accountsData.get(i).equals(userName + " " + password)) {
                 accountIndex = i;
                 valid = true;
                 break;
