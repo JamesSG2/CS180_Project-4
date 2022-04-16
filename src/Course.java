@@ -1,6 +1,16 @@
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Course
+ *
+ * Handles and stores the quiz information of quizzes made by teachers for a specific course
+ *
+ * @author James Gilliam, L15
+ *
+ * @version 4/15/2022
+ *
+ */
 public class Course {
     private String courseTitle;
     private ArrayList<String> coursesData;
