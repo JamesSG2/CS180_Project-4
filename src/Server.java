@@ -1,6 +1,16 @@
 import java.io.*;
 import java.net.*;
 
+/**
+ * Server
+ *
+ * Receives, stores and retrieves information for multiple Clients.
+ *
+ * @author James Gilliam, L15
+ *
+ * @version 4/18/2022
+ *
+ */
 public class Server {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException  {
