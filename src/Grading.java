@@ -45,6 +45,10 @@ public class Grading {
         this.pointsTotal = grade;
     }
 
+    public void setCorrectAnswer(ArrayList<String> correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
     public void setQuiz(ArrayList<Questions> quiz) {
         this.questions = questions;
     }
@@ -62,7 +66,7 @@ public class Grading {
     }
 
 
-    public ArrayList<String> gradeAnswer(ArrayList<String> studentsAnswer, String quizName, String stuName) {
+    public ArrayList<String> autoGrade (ArrayList<String> studentsAnswer, String quizName, String stuName) {
 
         //read the correct answer from the input fileName of quiz
         //read the student's answer from the input fileName
