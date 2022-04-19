@@ -117,6 +117,7 @@ public class Client {
         }
         // TODO: All Below Code needs to be updated to sync with Server
         // TODO: Update Below code to use Course.java instead directly using files
+        // TODO: Matching variable names for each option
 
         //WILL READ QUIZINFO.TXT AND ADD PREVIOUS QUIZZES TO "quizzes" ARRAYLIST
         try {
@@ -168,7 +169,7 @@ public class Client {
         }
 
         boolean teacher = true;
-        if (userType.equalsIgnoreCase("Teacher")) {
+        if (user.equalsIgnoreCase("Teacher")) {
             System.out.println("Hello teacher");
             while (teacher) {
                 System.out.println("What would you like to do?");
@@ -212,9 +213,23 @@ public class Client {
                         String option3 = scan.nextLine();
                         System.out.println("What is option 4?");
                         String option4 = scan.nextLine();
+
+                        //below is changed by Zonglin to prompt the teacher if they want files as submission
                         System.out.println("Which option is the correct answer (a, b, c, d, "
-                                + "or otherwise if file submission)");
+                                + "or otherwise if student should submit a file, please enter 'file')");
                         String answer = scan.nextLine();
+
+                        //if the teacher enter 'file', they should input a String of correct answer allowing AutoGrading
+                        if (answer.equals("file")) {
+                            System.out.println("/****************");
+                            System.out.println("*Please Add '/' for each new line. For example, " +
+                                    "the correct answer of:\n*Bright \n*space\n"  +
+                                    "*should be written as 'Bright/space/' as there are two lines");
+                            System.out.println("/****************");
+                            System.out.println("Please enter the correct answer:");
+                            answer = scan.nextLine();
+                        }
+
                         System.out.println("How many points is this question worth?");
                         int points = scan.nextInt();
 
@@ -300,9 +315,19 @@ public class Client {
                                 String option3 = scan.nextLine();
                                 System.out.println("What is option 4?");
                                 String option4 = scan.nextLine();
-                                System.out.println("Which option is the correct answer? (a, b, c, d, " +
-                                        "or otherwise if file submission)");
+                                System.out.println("Which option is the correct answer (a, b, c, d, "
+                                        + "or otherwise if student should submit a file, please enter 'file')");
                                 String answer = scan.nextLine();
+
+                                if (answer.equals("file")) {
+                                    System.out.println("/****************");
+                                    System.out.println("*Please Add '/' for each new line. For example, " +
+                                            "the correct answer of:\n*Bright \n*space\n"  +
+                                            "*should be written as 'Bright/space/' as there are two lines");
+                                    System.out.println("/****************");
+                                    System.out.println("Please enter the correct answer:");
+                                    answer = scan.nextLine();
+                                }
                                 System.out.println("How many points is this question worth?");
                                 int points = scan.nextInt();
 
@@ -541,7 +566,7 @@ public class Client {
                         scan.nextLine();
 
                         //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
-                        //for (ArrayList<String>() a : user.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName,
+                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName,
                         // password, k)) {
 
                         System.out.println("Please input the student's username: ");
@@ -550,9 +575,9 @@ public class Client {
                         String key = scan.nextLine();
                         System.out.println("Please input the student's attempt number: ");
                         int i = scan.nextInt();
-                        if (user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
 
-                            sub = user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
 
                             System.out.println("Attempt: " + i);
 
@@ -577,9 +602,9 @@ public class Client {
                     String newUser = scan.nextLine();
                     System.out.println("What would you like your new password to be?");
                     String newPass = scan.nextLine();
-                    user.editAccount(newUser, newPass);
+                    lo.editAccount(newUser, newPass);
                 } else if (options == 8) {
-                    user.deleteAccount();
+                    lo.deleteAccount();
                     System.out.println("Account Deleted.\nGoodbye!");
                     teacher = false;
                 } else {
@@ -592,7 +617,7 @@ public class Client {
 
         //int count = 0; //count for attemptNum
 
-        if (userType.equalsIgnoreCase("Student")) {
+        if (user.equalsIgnoreCase("Student")) {
             System.out.println("Hello student");
             while (student) {
                 System.out.println("What would you like to do?");
@@ -613,7 +638,6 @@ public class Client {
                     }
                     int quizNum = scan.nextInt();
                     scan.nextLine();
-
 
                     if (quizNum > 0 && quizNum <= quizzes.size()) {
                         String longString = "";
@@ -674,6 +698,8 @@ public class Client {
                                     e.printStackTrace();
                                 }
 
+                                //for each new line, a '/' is added for Grading.java to read
+                                //print longString to know the format of file submission of student
                                 for (String a : list) {
                                     longString += a + "/";
                                 }
@@ -689,58 +715,32 @@ public class Client {
                         System.out.println("Would you like to submit? (yes/no)");
                         String submit = scan.nextLine();
 
-
                         if (submit.equalsIgnoreCase("no") || submit.equalsIgnoreCase("n")) {
                             System.out.println("Alright. Your quiz will not be submitted.");
                             //studentAnswers.remove(index);
                             continue;
                         } else {
-                            try {
-                                File f = new File("StudentQuizInfo.txt");
-                                f.createNewFile();
-                                if (f.exists()) {
+                            //Setup input for the quiz to be automatically graded
+                            ArrayList<String> correctAnswerList = new ArrayList<String>();
+                            ArrayList<Integer> PointList = new ArrayList<Integer>();
 
-                                    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-                                            "StudentQuizInfo.txt", true)));
-
-                                    writer.write(quizzes.get(quizNum - 1).getName() + "\n");
-                                    for (int i = 0; i < studentAnswer.size(); i++) {
-                                        writer.write(studentAnswer.get(i) + "\n");
-                                    }
-                                    //NEED TO PRINT SCORE
-                                    writer.write("END OF QUIZ\n");
-                                    //br.close();
-                                    writer.close();
-
-                                    //to automatically grade
-                                    ArrayList<String> tempAnswerList = new ArrayList<String>();
-                                    ArrayList<Integer> tempPointList = new ArrayList<Integer>();
-
-                                    for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
-                                        tempAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
-                                        tempPointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
-                                    }
-
-                                    Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(),
-                                            tempAnswerList, tempPointList);
-                                    submission = testGrade.gradeAnswer("StudentQuizInfo.txt",
-                                            quizzes.get(quizNum - 1).getName(), userName);
-                                    //System.out.println("Testing Grade: " + testGrade.getGrade());
-
-                                    //for (String a : submission) {
-                                    //    System.out.println(a);
-                                    //}
-                                    //}
-
-                                    user.addSubmission(submission);
-
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                            for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
+                                correctAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
+                                PointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
                             }
-                            System.out.println("Quiz submitted!");
+
+                            Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(),
+                                    correctAnswerList, PointList);
+                            submission = testGrade.autoGrade(studentAnswer,
+                                    quizzes.get(quizNum - 1).getName(), userName);
+
+                            lo.addSubmission(submission);
+
                         }
+
+                        System.out.println("Quiz submitted!");
                     }
+
                     if (quizNum < 1 || quizNum > quizzes.size()) {
                         System.out.println("That is not a valid option!");
                     }
@@ -755,20 +755,14 @@ public class Client {
                         int quizNum1 = scan.nextInt();
                         scan.nextLine();
 
-                        //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
-
-                        //for (ArrayList<String>() a : user.getSubmission(quizzes.get(quizNum1 - 1).getName(),
-                        // userName, password, k)) {
-
-
                         String name = userName;
-                        //System.out.println("Please input the student's password: ");
                         String key = password;
+
                         System.out.println("Please input the attempt number: ");
                         int i = scan.nextInt();
-                        if (user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
 
-                            sub = user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
 
                             System.out.println("Attempt: " + i);
 
@@ -787,9 +781,9 @@ public class Client {
                     String newUser = scan.nextLine();
                     System.out.println("What would you like your new password to be?");
                     String newPass = scan.nextLine();
-                    user.editAccount(newUser, newPass);
+                    lo.editAccount(newUser, newPass);
                 } else if (options == 5) {
-                    user.deleteAccount();
+                    lo.deleteAccount();
                     System.out.println("Account Deleted.\nGoodbye!");
                     student = false;
                 } else {
@@ -797,9 +791,5 @@ public class Client {
                 }
             }
         }
-
-    writeToServer.close();
-    readServer.close();
-
     }
 }
