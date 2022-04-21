@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.Objects;
@@ -14,7 +15,52 @@ import java.util.Objects;
  *
  */
 
-public final class LoginPage {
+public class LoginPage {
+    public static void main (String[] args) {
+
+        JFrame frame = new JFrame();
+        JPanel panel = new JPanel();
+        JButton button = new JButton("Login");
+
+        frame.setSize(300, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setVisible(true);
+        frame.add(panel);
+
+        panel.setLayout(null);
+
+        JLabel label = new JLabel("Username");
+        label.setBounds(10, 20, 165, 25);
+        panel.add(label);
+
+        JTextField userText = new JTextField(20);
+        userText.setBounds(100, 20, 165, 25);
+        panel.add(userText);
+
+        JLabel passwordText = new JLabel ("Password");
+        passwordText.setBounds(10, 50, 80, 25);
+        panel.add(passwordText);
+
+        JPasswordField passwordInput = new JPasswordField();
+        passwordInput.setBounds (100, 50, 165, 25);
+        panel.add(passwordInput);
+
+        button.setBounds(10, 80, 80, 25);
+        panel.add(button);
+
+        JLabel valid = new JLabel("");
+        valid.setBounds(10, 110, 300, 25);
+        panel.add(valid);
+
+
+
+        frame.setVisible(true);
+    }
+
+}
+
+    /*
 
     private JFrame frame;
     private final JPanel panel;
@@ -25,7 +71,7 @@ public final class LoginPage {
     private final JButton signUp;
     private final JButton changePassword;
 
-    private LoginPage() {
+    LoginPage() {
         GridBagLayout layout = new GridBagLayout();
 
         this.panel = new JPanel(layout);
@@ -67,6 +113,7 @@ public final class LoginPage {
     public JButton getSignUp() {
         return this.signUp;
     }
+
 
     public JButton getChangePassword() {
         return this.changePassword;
@@ -127,6 +174,8 @@ public final class LoginPage {
         return login;
     }
 }
+
+     */
 
 
 
