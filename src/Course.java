@@ -80,6 +80,19 @@ public class Course {
         return quiz;
     }
 
+    public ArrayList<String> getCourseQuizTitles() throws IOException {
+        readCoursesDataFile();
+        ArrayList<String> quizzes = new ArrayList<>();
+        int i = getCourseIndex();
+        while (!coursesData.get(i).equals(courseSpacer)) {
+            if (coursesData.get(i - 1).equals(quizSpacer)) {
+                quizzes.add(coursesData.get(i));
+            }
+            i++;
+        }
+        return quizzes;
+    }
+
     public void deleteCourse() throws IOException {
         readCoursesDataFile();
         int i = getCourseIndex();
