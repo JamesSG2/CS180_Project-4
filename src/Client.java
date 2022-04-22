@@ -14,7 +14,7 @@ import java.util.Scanner;
  * @version 4/18/2022
  *
  */
-public class Client {
+public class ClientM {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Scanner scan = new Scanner(System.in);
@@ -134,45 +134,6 @@ public class Client {
         // FILLS THE QUIZZES ARRAYLIST WITH ALL THE QUIZZES IN THE COURSE.
         quizzes = (ArrayList<Quizzes>) serverObjectIn.readObject();
 
-        /*
-        String p = "";
-        while ((p = userCourse != null) {
-            if (p.length() > 0) {
-                String quizName = p;
-                String maybe = "";
-                boolean q = true;
-                ArrayList<Questions> tempQuestions = new ArrayList<>();
-                for (int i = 0; i < 1; i++) {
-                    String question;
-                    if (q) {
-                        question = br.readLine();
-                    } else {
-                        question = maybe;
-                    }
-                    String option1 = br.readLine();
-                    String option2 = br.readLine();
-                    String option3 = br.readLine();
-                    String option4 = br.readLine();
-                    String answer = br.readLine();
-                    int points = Integer.parseInt(br.readLine());
-                    maybe = br.readLine();
-                    if (maybe.equals("END OF QUIZ")) {
-                    } else {
-                        q = false;
-                        i--;
-                    }
-                    tempQuestions.add(new Questions(question, option1, option2, option3,
-                            option4, answer, points));
-                }
-                quizzes.add(new Quizzes(tempQuestions, quizName));
-            }
-        }
-        //writer.write("END OF QUIZ\n");
-        br.close();
-        //writer.close();
-        */
-
-
         boolean teacher = true;
         if (userType.equalsIgnoreCase("Teacher")) {
             System.out.println("Hello teacher");
@@ -185,6 +146,7 @@ public class Client {
                         + "7. Edit account\n" + "8. Delete account");
                 int options = scan.nextInt();
                 scan.nextLine();
+
                 writeToServer.println(options);  // Server needs option selected to follow the client
                 writeToServer.flush();
 
@@ -242,6 +204,7 @@ public class Client {
                             System.out.println("Please enter the correct answer:");
                             answer = scan.nextLine();
                         }
+
                         quizText.add(answer);
 
                         System.out.println("How many points is this question worth?");
@@ -254,6 +217,7 @@ public class Client {
                         //just for test:
                         //studentAnswer.add(answer);
                     }
+
                     //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
                     quizzes.add(new Quizzes(quiz, quizName));
 
@@ -269,43 +233,6 @@ public class Client {
                         System.out.println("Quiz created!");
                     }
 
-                    /*
-                    try {
-                        File f = new File("QuizInfo.txt");
-                        f.createNewFile();
-                        if (f.exists()) {
-                            /*BufferedReader br = new BufferedReader(new FileReader(f));
-                            while ((p = br.readLine()) != null) {
-                                log.add(p);
-                            }
-                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-                                    "QuizInfo.txt", true)));
-                            int quizIndex = 0;
-                            for (int i = 0; i < quizzes.size(); i++) {
-                                if (quizzes.get(i).getName().equals(quizName)) {
-                                    quizIndex = i;
-                                    break;
-                                }
-                            }
-                            //WRITES ENTIRE QUIZ TO QUIZINFO.TXT
-                            writer.write(quizzes.get(quizIndex).getName() + "\n");
-                            for (int i = 0; i < quizzes.get(quizIndex).getQuestions().size(); i++) {
-                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getQuestion() + "\n");
-                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption1() + "\n");
-                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption2() + "\n");
-                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption3() + "\n");
-                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getOption4() + "\n");
-                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getAnswer() + "\n");
-                                writer.write(quizzes.get(quizIndex).getQuestions().get(i).getPoints() + "\n");
-                            }
-                            writer.write("END OF QUIZ\n");
-                            //br.close();
-                            writer.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    */
                 }
                 // IF A TEACHER WOULD LIKE TO EDIT A QUIZ
                 else if (options == 3) {
@@ -337,6 +264,7 @@ public class Client {
                                 // System.out.println(quizzes.toArray());
                                 // break;
                                 // TO CHANGE AN ENTIRE QUESTION ON A QUIZ
+
                             } else if (alter == 2) {
                                 System.out.println("Which question would you like to change?");
                                 int qnum = scan.nextInt();
@@ -383,6 +311,7 @@ public class Client {
                                 quizzes.get(i).getQuestions().get(qnum - 1).setOption4(option4);
                                 quizzes.get(i).getQuestions().get(qnum - 1).setAnswer(answer);
                                 quizzes.get(i).getQuestions().get(qnum - 1).setPoints(points);
+
                                 // quiz.set(qnum - 1, new Questions(question, option1, option2, option3, option4,
                                 // answer, points));
                                 // ISNT USED YET
@@ -399,38 +328,6 @@ public class Client {
                             serverObjectOut.writeObject(quizzes);
                             serverObjectOut.flush();
 
-                            /*
-                            try {
-                                File f = new File("QuizInfo.txt");
-                                f.createNewFile();
-                                if (f.exists()) {
-
-                                    //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
-                                    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-                                            "QuizInfo.txt", false)));
-                                    for (int j = 0; j < quizzes.size(); j++) {
-                                        writer.write(quizzes.get(j).getName() + "\n");
-                                        for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
-                                            writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() + "\n");
-                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption1() + "\n");
-                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption2() + "\n");
-                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption3() + "\n");
-                                            writer.write(quizzes.get(j).getQuestions().get(k).getOption4() + "\n");
-                                            writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() + "\n");
-                                            writer.write(quizzes.get(j).getQuestions().get(k).getPoints() + "\n");
-
-                                        }
-                                        writer.write("END OF QUIZ\n");
-                                    }
-
-                                    writer.close();
-                                }
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            */
-
                             break;
 
                             // IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
@@ -438,12 +335,14 @@ public class Client {
                             System.out.println("That is not a name of a current quiz!");
                         }
                     }
+
                     // IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0) {
                         System.out.println("You need to create a quiz before you can edit one!");
                     }
 
                 }
+
                 // IF A TEACHER WOULD LIKE TO DELETE AN ENTIRE QUIZ
                 else if (options == 4) {
                     String quizName2 = "";
@@ -466,43 +365,6 @@ public class Client {
                                 quizzes.remove(i);
                                 // DELETES QUIZ FROM THE COURSE IN SERVER
                                 System.out.println("Quiz deleted!");
-                                /*
-                                try {
-                                    File f = new File("QuizInfo.txt");
-                                    f.createNewFile();
-                                    if (f.exists()) {
-
-                                        //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
-                                        PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-                                                "QuizInfo.txt", false)));
-                                        for (int j = 0; j < quizzes.size(); j++) {
-                                            writer.write(quizzes.get(j).getName() + "\n");
-                                            for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() +
-                                                        "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption1() +
-                                                        "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption2() +
-                                                        "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption3() +
-                                                        "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getOption4() +
-                                                        "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() +
-                                                        "\n");
-                                                writer.write(quizzes.get(j).getQuestions().get(k).getPoints() +
-                                                        "\n");
-
-                                            }
-                                        }
-                                        writer.write("END OF QUIZ\n");
-                                        writer.close();
-                                    }
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                */
 
                                 break;
                             } else {
@@ -510,12 +372,14 @@ public class Client {
                             }
                             p = i;
                             break;
+
                             // IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else if (i == quizzes.size() - 1) {
                             System.out.println("That is not a name of a current quiz!");
                         }
                         p = i;
                     }
+
                     // IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0 && p != 0) {
                         System.out.println("You need to create a quiz before you can delete one!");
@@ -538,7 +402,6 @@ public class Client {
                         File fi = new File(fileName);
                         writeToServer.println(fi.exists());
                         writeToServer.flush();
-
                         if (fi.exists()) {
                             BufferedReader buf = new BufferedReader(new FileReader(fi));
                             String p = buf.readLine();
@@ -609,38 +472,6 @@ public class Client {
                     }
                     //System.out.println(quizzes.get(1).getQuestions().get(1).getQuestion());
 
-                    /*
-                    //WILL WRITE NEW QUIZ TO QUIZINFO.TXT
-                    try {
-                        File f = new File("QuizInfo.txt");
-                        f.createNewFile();
-                        if (f.exists()) {
-
-                            //REPLACES CURRENT QUIZINFO.TXT WITH A CURRENT VERSION WITH CHANGES
-                            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(
-                                    "QuizInfo.txt", false)));
-                            for (int j = 0; j < quizzes.size(); j++) {
-                                writer.write(quizzes.get(j).getName() + "\n");
-                                for (int k = 0; k < quizzes.get(j).getQuestions().size(); k++) {
-                                    writer.write(quizzes.get(j).getQuestions().get(k).getQuestion() + "\n");
-                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption1() + "\n");
-                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption2() + "\n");
-                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption3() + "\n");
-                                    writer.write(quizzes.get(j).getQuestions().get(k).getOption4() + "\n");
-                                    writer.write(quizzes.get(j).getQuestions().get(k).getAnswer() + "\n");
-                                    writer.write(quizzes.get(j).getQuestions().get(k).getPoints() + "\n");
-                                }
-                                writer.write("END OF QUIZ\n");
-                            }
-                            writer.close();
-                            System.out.println("Quiz added!");
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    */
-
                     //IF TEACHER CHOOSES TO VIEW SUBMISSIONS
                 } else if (options == 6) {
                     // TODO: Option 6 to be done by Zonglin
@@ -687,6 +518,47 @@ public class Client {
                         System.out.println("You need to create a quiz before you can see one!");
                     }
 
+                    // TODO: All below needs to be connected with option 1-6 and James's code
+                } else if (options == 6) {
+
+                    String quizName3 = "";
+                    if (quizzes.size() != 0) {
+                        System.out.println("Which quiz would you like to see?");
+                        //PRINTS LIST OF QUIZZES BY NAME
+                        for (int i = 0; i < quizzes.size(); i++) {
+                            System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                        }
+                        int quizNum1 = scan.nextInt();
+                        scan.nextLine();
+
+
+                        System.out.println("Please input the student's username: ");
+                        String name = scan.nextLine();
+                        System.out.println("Please input the student's password: ");
+                        String key = scan.nextLine();
+                        System.out.println("Please input the student's attempt number: ");
+                        int i = scan.nextInt();
+                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+
+                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+
+                            System.out.println("Attempt: " + i);
+
+                            for (String v : sub) {
+                                System.out.println(v);
+                            }
+
+                        } else {
+                            System.out.println("ERROR! THE INFORMATION IS INVALID!");
+                        }
+
+                        //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
+                        //}
+                    }
+                    //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
+                    if (quizzes.size() == 0) {
+                        System.out.println("You need to create a quiz before you can see one!");
+                    }
                 } else if (options == 7) {
                     System.out.println("What would you like your new username to be?");
                     String newUser = scan.nextLine();
@@ -710,20 +582,25 @@ public class Client {
             }
         }
 
-        // TODO: All Below Code needs to be updated to sync with Server
-        // TODO: Update Below code to use Course.java instead directly using files
-        // TODO: Matching variable names for each option
 
+        // TODO: All codes below are for the student to input
         boolean student = true;
-        // int count = 0; //count for attemptNum
-        if (user.equalsIgnoreCase("Student")) {
+
+        //int count = 0; //count for attemptNum
+
+        if (userType.equalsIgnoreCase("Student")) {
             System.out.println("Hello student");
             while (student) {
                 System.out.println("What would you like to do?");
                 System.out.println("1. Log out\n" + "2. Take a quiz\n" + "3. See your submission\n" +
                         "4. Edit account\n" + "5. Delete account");
+
+                //OPTIONS of Student
                 int options = scan.nextInt();
                 scan.nextLine();
+                writeToServer.println(options);
+                writeToServer.flush();
+
                 //STUDENT CHOOSES TO QUIT
                 if (options == 1) {
                     System.out.println("Goodbye!");
@@ -735,8 +612,13 @@ public class Client {
                     for (int i = 0; i < quizzes.size(); i++) {
                         System.out.println((i + 1) + ". " + quizzes.get(i).getName());
                     }
+
+
+                    //QUIZ SELECTED BY STUDENT TO TAKE
                     int quizNum = scan.nextInt();
                     scan.nextLine();
+                    writeToServer.println(quizNum);
+                    writeToServer.flush();
 
                     if (quizNum > 0 && quizNum <= quizzes.size()) {
                         String longString = "";
@@ -761,7 +643,11 @@ public class Client {
                                 System.out.println("If you would like to attach a file as your answer, " +
                                         "enter \"file\", " +
                                         "otherwise, enter a, b, c or d");
+
+                                //CHOICE MADE BY THE STUDENT ON THE QUESTION
                                 guess = scan.nextLine();
+                                writeToServer.println(guess);
+                                writeToServer.flush();
 
                                 if (!(guess.equals("a") || guess.equals("b") || guess.equals("c") || guess.equals("d")
                                         || guess.equals("file"))) {
@@ -770,71 +656,30 @@ public class Client {
                                 }
                             } while (askAgain);
 
+                            //TODO: Upload a file to server
                             if (guess.equalsIgnoreCase("file")) {
+
+
+                                //FILE NAME TO BE UPLOADED BY THE STUDENT
 
                                 System.out.println("please input the name of the file");
                                 String file = scan.nextLine();
-
-                                ArrayList<String> list = new ArrayList<>();
-                                File f = new File(file);
-
-                                try {
-
-                                    FileReader fr = new FileReader(f);
-                                    BufferedReader bfr = new BufferedReader(fr);
-                                    String line = bfr.readLine();
-
-                                    while (line != null) {
-                                        list.add(line);
-                                        line = bfr.readLine();
-                                    }
-
-                                    bfr.close();
-
-                                } catch (FileNotFoundException e) {
-                                    throw e;
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                                //for each new line, a '/' is added for Grading.java to read
-                                //print longString to know the format of file submission of student
-                                for (String a : list) {
-                                    longString += a + "/";
-                                }
-
-                                studentAnswer.add(longString);
-
-                            } else {
-
-                                studentAnswer.add(guess);
+                                writeToServer.println(quizNum);
+                                writeToServer.flush();
 
                             }
                         }
+
+                        //
                         System.out.println("Would you like to submit? (yes/no)");
                         String submit = scan.nextLine();
+                        writeToServer.println(submit);
+                        writeToServer.flush();
 
                         if (submit.equalsIgnoreCase("no") || submit.equalsIgnoreCase("n")) {
                             System.out.println("Alright. Your quiz will not be submitted.");
                             //studentAnswers.remove(index);
                             continue;
-                        } else {
-                            //Setup input for the quiz to be automatically graded
-                            ArrayList<String> correctAnswerList = new ArrayList<String>();
-                            ArrayList<Integer> PointList = new ArrayList<Integer>();
-
-                            for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
-                                correctAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
-                                PointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
-                            }
-
-                            Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(),
-                                    correctAnswerList, PointList);
-                            submission = testGrade.autoGrade(studentAnswer,
-                                    quizzes.get(quizNum - 1).getName(), userName);
-
-                            lo.addSubmission(submission);
-
                         }
 
                         System.out.println("Quiz submitted!");
@@ -851,38 +696,49 @@ public class Client {
                         for (int i = 0; i < quizzes.size(); i++) {
                             System.out.println((i + 1) + ". " + quizzes.get(i).getName());
                         }
+
+                        //STUDENT'S CHOICE ON WHICH QUIZ TO SEE
                         int quizNum1 = scan.nextInt();
-                        scan.nextLine();
+                        writeToServer.println(quizNum1);
+                        writeToServer.flush();
 
                         String name = userName;
                         String key = password;
 
                         System.out.println("Please input the attempt number: ");
                         int i = scan.nextInt();
-                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
 
-                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+                        writeToServer.println(i);
+                        writeToServer.flush();
 
-                            System.out.println("Attempt: " + i);
+
+                        // TODO: check the condition for Client to print the right thing
+                        if (readServer.readLine().equals("validInfo")) {
+
+                            System.out.println(readServer.readLine());
 
                             for (String v : sub) {
-                                System.out.println(v);
+                                System.out.println(readServer.readLine());
                             }
 
                         } else {
                             System.out.println("ERROR! THE INFORMATION IS INVALID!");
                         }
-
                     }
 
                 } else if (options == 4) {
                     System.out.println("What would you like your new username to be?");
                     String newUser = scan.nextLine();
+                    writeToServer.println(newUser);
+                    writeToServer.flush();
                     System.out.println("What would you like your new password to be?");
                     String newPass = scan.nextLine();
-                    lo.editAccount(newUser, newPass);
+                    writeToServer.println(newPass);
+                    writeToServer.flush();
+
+                    //lo.editAccount(newUser, newPass);
                 } else if (options == 5) {
-                    lo.deleteAccount();
+                    //lo.deleteAccount();
                     System.out.println("Account Deleted.\nGoodbye!");
                     student = false;
                 } else {

@@ -16,8 +16,6 @@ public class OptionList {
 
     public static void main(String[] args) throws IOException {
 
-        // Ian's main method + updated initialization for ArrayList<Questions> quiz = new ArrayList<>();
-        //updated parts:
         Scanner scan = new Scanner(System.in);
         ArrayList<Questions> quiz = null;
         ArrayList<String> studentAnswer = null;
@@ -25,20 +23,9 @@ public class OptionList {
         ArrayList<Quizzes> quizzes = new ArrayList<>();
         String grade = "";
         String user = "";
-        //updated by Zonglin:
         ArrayList<String> submission = new ArrayList<String>();
         ArrayList<String> sub = new ArrayList<String>();
-        ArrayList<Integer> attemptNum = new ArrayList<Integer>(3);
-        attemptNum.add(1);
-        attemptNum.add(1);
-        attemptNum.add(1);
-        attemptNum.ensureCapacity(500);
 
-        for (int i : attemptNum) {
-            i = 1;
-        }
-
-        //changed by Zonglin:
         String userName = "";
         String password = "";
         Account lo = new Account(userName, password);
@@ -91,7 +78,6 @@ public class OptionList {
                 System.out.println("That is not a valid account!");
             }
         }
-
 
         //WILL READ QUIZINFO.TXT AND ADD PREVIOUS QUIZZES TO "quizzes" ARRAYLIST
         try {
@@ -539,9 +525,6 @@ public class OptionList {
                         int quizNum1 = scan.nextInt();
                         scan.nextLine();
 
-                        //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
-                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName,
-                        // password, k)) {
 
                         System.out.println("Please input the student's username: ");
                         String name = scan.nextLine();
@@ -589,7 +572,6 @@ public class OptionList {
         }
         boolean student = true;
 
-        //int count = 0; //count for attemptNum
 
         if (user.equalsIgnoreCase("Student")) {
             System.out.println("Hello student");
