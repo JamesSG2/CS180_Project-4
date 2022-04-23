@@ -1,8 +1,7 @@
 import javax.swing.*;
 import javax.swing.JButton;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
-import java.util.Objects;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * LoginPage.java
@@ -15,12 +14,37 @@ import java.util.Objects;
  *
  */
 
-public class LoginPage {
-    public static void main (String[] args) {
+// implement to OptionList, login GUI created by shruti
+public class LoginPage implements ActionListener {
+    // instantiating objects
+    static JFrame frame = new JFrame();
+    static JPanel panel = new JPanel();
+    static JButton button = new JButton("Login");
+    static JButton reset = new JButton("Reset");
+    static JTextField userText = new JTextField(20);
+    static JPasswordField passwordInput = new JPasswordField();
+    static JLabel valid = new JLabel("");
+    static JLabel label = new JLabel("Username");
 
-        JFrame frame = new JFrame();
-        JPanel panel = new JPanel();
-        JButton button = new JButton("Login");
+
+
+    /*
+    JFrame frame = new JFrame();
+    JButton loginButton = new JButton("Login");
+    JButton resetButton = new JButton("Reset");
+    JTextField userIDField = new JTextField();
+    JPasswordField userPasswordField = new JPasswordField();
+    JLabel userIDLabel = new JLabel("userID:");
+    JLabel userPasswordLabel = new JLabel("password:");
+    JLabel messageLabel = new JLabel();
+
+
+     */
+
+
+    public static void main (String[] args) {
+        //hasmaps store keys and passwords
+
 
         frame.setSize(300, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,11 +54,9 @@ public class LoginPage {
 
         panel.setLayout(null);
 
-        JLabel label = new JLabel("Username");
         label.setBounds(10, 20, 165, 25);
         panel.add(label);
 
-        JTextField userText = new JTextField(20);
         userText.setBounds(100, 20, 165, 25);
         panel.add(userText);
 
@@ -42,140 +64,65 @@ public class LoginPage {
         passwordText.setBounds(10, 50, 80, 25);
         panel.add(passwordText);
 
-        JPasswordField passwordInput = new JPasswordField();
         passwordInput.setBounds (100, 50, 165, 25);
         panel.add(passwordInput);
 
         button.setBounds(10, 80, 80, 25);
         panel.add(button);
+        button.addActionListener(new LoginPage());
 
-        JLabel valid = new JLabel("");
+
+        reset.setBounds(80, 80, 80, 25);
+        panel.add(reset);
+
+
         valid.setBounds(10, 110, 300, 25);
         panel.add(valid);
+        //valid.setText();
+
+        /*JLabel valid = new JLabel("");
+        valid.setBounds(10, 110, 300, 25);
+        panel.add(valid);
+
+         */
 
 
 
         frame.setVisible(true);
     }
 
-}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String user = userText.getText();
+        String password = passwordInput.getText();
+        //String reSet = reset.getText();
+        System.out.println(user + "," + password);
 
-    /*
+        if (user.equals(userName) && password.equals(password)) {
+            valid.setText("Login Successful!");
+        } else {
+            valid.setText("Login Invalid, please try again!");
+        }
 
-    private JFrame frame;
-    private final JPanel panel;
-    private final JLabel welcomeLabel;
-    private final JTextField usernameTextField;
-    private final JTextField passwordTextField;
-    private final JButton signIn;
-    private final JButton signUp;
-    private final JButton changePassword;
-
-    LoginPage() {
-        GridBagLayout layout = new GridBagLayout();
-
-        this.panel = new JPanel(layout);
-
-        this.welcomeLabel = new JLabel("Welcome");
-
-        this.usernameTextField = new JTextField();
-        this.passwordTextField = new JTextField();
-
-        this.signIn = new JButton("Sign In");
-        this.signUp = new JButton("Sign Up");
-        this.changePassword = new JButton("Change Password");
-    }
-
-    public JFrame getFrame() {
-        return this.frame;
-    }
-
-    public void setFrame(JFrame frame) {
-        this.frame = frame;
-    }
-
-    public JPanel getPanel() {
-        return this.panel;
-    }
-
-    public JTextField getUsernameTextField() {
-        return this.usernameTextField;
-    }
-
-    public JTextField getPasswordTextField() {
-        return this.passwordTextField;
-    }
-
-    public JButton getSignIn() {
-        return this.signIn;
-    }
-
-    public JButton getSignUp() {
-        return this.signUp;
-    }
-
-
-    public JButton getChangePassword() {
-        return this.changePassword;
-    }
-
-    public static LoginPage create() {
-        LoginPage login;
-        TitledBorder usernameBorder;
-        TitledBorder passwordBorder;
-        GridBagConstraints constraints;
-        GridBagLayout layout;
-
-        login = new LoginPage();
-
-        login.frame = new JFrame("Login Page");
-        layout = new GridBagLayout();
-        login.frame.setLayout(layout);
-
-        Objects.requireNonNull(login, "the specified view is null");
-
-        usernameBorder = BorderFactory.createTitledBorder("Username");
-        passwordBorder = BorderFactory.createTitledBorder("Password");
-
-        login.usernameTextField.setBorder(usernameBorder);
-        login.passwordTextField.setBorder(passwordBorder);
-
-        constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.CENTER;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-
-        login.panel.add(login.welcomeLabel, constraints);
-
-        constraints.fill = GridBagConstraints.BOTH;
-
-        constraints.gridy = 1;
-        login.panel.add(login.usernameTextField, constraints);
-        constraints.gridy = 2;
-        login.panel.add(login.passwordTextField, constraints);
-
-        constraints.gridy = 3;
-        login.panel.add(login.signIn, constraints);
-        constraints.gridy = 4;
-        login.panel.add(login.signUp, constraints);
-        constraints.gridy = 5;
-        login.panel.add(login.changePassword, constraints);
-
-        constraints.fill = GridBagConstraints.BOTH;
-
-        login.frame.add(login.panel, constraints);
-        login.frame.pack();
-        login.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        login.frame.setLocationRelativeTo(null);
-        login.frame.setMinimumSize(new Dimension(300, 250));
-
-        return login;
     }
 }
 
-     */
+
+
+//password = password.getText();
+        /*
+        if (userText.equals("") && passwordInput.equals("")) {
+            //username.getText();
+            JOptionPane.showMessageDialog(null, "Login Successful");
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Login is not successful");
+
+         */
+
+
+
+
 
 
 
