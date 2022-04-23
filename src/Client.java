@@ -474,7 +474,6 @@ public class Client {
 
                     //IF TEACHER CHOOSES TO VIEW SUBMISSIONS
                 } else if (options == 6) {
-                    // TODO: Option 6 to be done by Zonglin
 
                     String quizName3 = "";
                     if (quizzes.size() != 0) {
@@ -485,80 +484,43 @@ public class Client {
                         }
                         int quizNum1 = scan.nextInt();
                         scan.nextLine();
+                        writeToServer.println(quizNum1);
+                        writeToServer.flush();
 
-                        //System.out.println("attemptNum.get(quizNum1 - 1) test: " + attemptNum.get(quizNum1 - 1));
-                        //for (ArrayList<String>() a : lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), userName,
-                        // password, k)) {
 
                         System.out.println("Please input the student's username: ");
                         String name = scan.nextLine();
+                        writeToServer.println(name);
+                        writeToServer.flush();
                         System.out.println("Please input the student's password: ");
                         String key = scan.nextLine();
+                        writeToServer.println(key);
+                        writeToServer.flush();
                         System.out.println("Please input the student's attempt number: ");
                         int i = scan.nextInt();
-                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+                        writeToServer.println(i);
+                        writeToServer.flush();
 
-                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
+                        if (readServer.readLine().equals("validInfo")) {
 
-                            System.out.println("Attempt: " + i);
+                            System.out.println(readServer.readLine());
 
                             for (String v : sub) {
-                                System.out.println(v);
+                                System.out.println(readServer.readLine());
                             }
 
+                        //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else {
                             System.out.println("ERROR! THE INFORMATION IS INVALID!");
                         }
 
-                        //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
-                        //}
                     }
                     //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0) {
                         System.out.println("You need to create a quiz before you can see one!");
                     }
 
-                    // TODO: All below needs to be connected with option 1-6 and James's code
-                } else if (options == 6) {
 
-                    String quizName3 = "";
-                    if (quizzes.size() != 0) {
-                        System.out.println("Which quiz would you like to see?");
-                        //PRINTS LIST OF QUIZZES BY NAME
-                        for (int i = 0; i < quizzes.size(); i++) {
-                            System.out.println((i + 1) + ". " + quizzes.get(i).getName());
-                        }
-                        int quizNum1 = scan.nextInt();
-                        scan.nextLine();
-
-
-                        System.out.println("Please input the student's username: ");
-                        String name = scan.nextLine();
-                        System.out.println("Please input the student's password: ");
-                        String key = scan.nextLine();
-                        System.out.println("Please input the student's attempt number: ");
-                        int i = scan.nextInt();
-                        if (lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
-
-                            sub = lo.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
-
-                            System.out.println("Attempt: " + i);
-
-                            for (String v : sub) {
-                                System.out.println(v);
-                            }
-
-                        } else {
-                            System.out.println("ERROR! THE INFORMATION IS INVALID!");
-                        }
-
-                        //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
-                        //}
-                    }
-                    //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
-                    if (quizzes.size() == 0) {
-                        System.out.println("You need to create a quiz before you can see one!");
-                    }
                 } else if (options == 7) {
                     System.out.println("What would you like your new username to be?");
                     String newUser = scan.nextLine();
@@ -670,7 +632,7 @@ public class Client {
                             }
                         }
 
-                        //
+
                         System.out.println("Would you like to submit? (yes/no)");
                         String submit = scan.nextLine();
                         writeToServer.println(submit);
