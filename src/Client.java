@@ -14,7 +14,7 @@ import java.util.Scanner;
  * @version 4/18/2022
  *
  */
-public class ClientM {
+public class Client {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Scanner scan = new Scanner(System.in);
