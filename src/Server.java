@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @version 4/18/2022
  *
  */
-public class ServerM {
+public class Server {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         ServerSocket serverSocket = new ServerSocket(4242);
