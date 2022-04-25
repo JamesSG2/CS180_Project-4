@@ -628,7 +628,7 @@ public class Client implements Serializable {
 
                                 System.out.println("please input the name of the file");
                                 String file = scan.nextLine();
-                                writeToServer.println(quizNum);
+                                writeToServer.println(file);
                                 writeToServer.flush();
 
                             }
