@@ -15,7 +15,6 @@ import java.lang.Runnable;
  */
 public class Server implements Runnable, Serializable {
     Socket socket;
-    private static Object gatekeeper = new Object();
 
     public Server(Socket socket) {
         this.socket = socket;
