@@ -14,7 +14,7 @@ import java.util.Scanner;
  * @version 4/18/2022
  *
  */
-public class Client {
+public class Client implements Serializable {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Scanner scan = new Scanner(System.in);
@@ -23,8 +23,8 @@ public class Client {
         BufferedReader readServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter writeToServer = new PrintWriter(socket.getOutputStream());
 
-        ObjectInputStream serverObjectIn = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream serverObjectOut = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream serverObjectIn = new ObjectInputStream(socket.getInputStream());
 
         // Ian's main method + updated initialization for ArrayList<Questions> quiz = new ArrayList<>();
         //updated parts:
@@ -111,6 +111,9 @@ public class Client {
 
         // WILL ACCESS THE COURSE REQUESTED BY THE USER. TEACHERS CAN CREATE COURSES IF THEY WISH.
         System.out.println("What course would you like to access?");
+        if (userType.equals("Teacher")) {
+            System.out.println("Note: If it's a new course the course will automatically be created.");
+        }
         String courseTitle = scan.nextLine();
 
         writeToServer.println(courseTitle); // SEND COURSE TITLE TO SERVER TO INITIALIZE THE USER'S COURSE
@@ -119,7 +122,6 @@ public class Client {
         boolean isCreated = Boolean.parseBoolean(readServer.readLine());
 
         if (userType.equals("Teacher")) {
-            System.out.println("Note: If it's a new course the course will automatically be created.");
             if (isCreated) {
                 System.out.println("New course created!");
             } else {
@@ -509,7 +511,7 @@ public class Client {
                                 System.out.println(readServer.readLine());
                             }
 
-                        //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
+                            //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else {
                             System.out.println("ERROR! THE INFORMATION IS INVALID!");
                         }
@@ -563,20 +565,20 @@ public class Client {
                 writeToServer.println(options);
                 writeToServer.flush();
 
-                //STUDENT CHOOSES TO QUIT
+                // STUDENT CHOOSES TO QUIT
                 if (options == 1) {
                     System.out.println("Goodbye!");
                     student = false;
-                    //STUDENT CHOOSES TO TAKE A QUIZ
+                    // STUDENT CHOOSES TO TAKE A QUIZ
                 } else if (options == 2) {
                     System.out.println("Which quiz would you like to take?");
-                    //PRINTS LIST OF QUIZZES BY NAME
+                    // PRINTS LIST OF QUIZZES BY NAME
                     for (int i = 0; i < quizzes.size(); i++) {
                         System.out.println((i + 1) + ". " + quizzes.get(i).getName());
                     }
 
 
-                    //QUIZ SELECTED BY STUDENT TO TAKE
+                    // QUIZ SELECTED BY STUDENT TO TAKE
                     int quizNum = scan.nextInt();
                     scan.nextLine();
                     writeToServer.println(quizNum);
@@ -585,7 +587,7 @@ public class Client {
                     if (quizNum > 0 && quizNum <= quizzes.size()) {
                         String longString = "";
                         studentAnswer = new ArrayList<String>();
-                        //PRINTS EACH QUESTION AND OPTIONS, THEN STORES STUDENTS ANSWERS IN ARRAYLIST "STUDENTANSWER"
+                        // PRINTS EACH QUESTION AND OPTIONS, THEN STORES STUDENTS ANSWERS IN ARRAYLIST "STUDENTANSWER"
                         for (int i = 0; i < quizzes.get(quizNum - 1).getQuestions().size(); i++) {
                             boolean askAgain = false;
                             String guess = "";
