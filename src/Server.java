@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @version 4/18/2022
  *
  */
-public class Server {
+public class Server implements Serializable {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         ServerSocket serverSocket = new ServerSocket(4242);
@@ -21,12 +21,11 @@ public class Server {
         Socket socket = serverSocket.accept();
         System.out.println("Client connected!");
 
-
         BufferedReader readClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter writeToClient = new PrintWriter(socket.getOutputStream());
 
-        ObjectInputStream clientObjectIn = new ObjectInputStream(socket.getInputStream());
         ObjectOutputStream clientObjectOut = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream clientObjectIn = new ObjectInputStream(socket.getInputStream());
 
         // Variables necessary from OptionList for the server to work, edited by Zonglin
         ArrayList<Questions> quiz = null;
@@ -34,7 +33,6 @@ public class Server {
         ArrayList<String> correctAnswer = new ArrayList<String>();
         ArrayList<String> submission = new ArrayList<String>();
         ArrayList<String> sub = new ArrayList<String>();
-
 
         String userName = readClient.readLine();
         String password = readClient.readLine();
