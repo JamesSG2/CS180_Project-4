@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 4/15/2022
  *
  */
-public class Course {
+public class Course implements Serializable {
     private String courseTitle;
     private ArrayList<String> coursesData;
     private boolean newCourseCreated;
@@ -78,6 +78,19 @@ public class Course {
             i++;
         }
         return quiz;
+    }
+
+    public ArrayList<String> getCourseQuizTitles() throws IOException {
+        readCoursesDataFile();
+        ArrayList<String> quizzes = new ArrayList<>();
+        int i = getCourseIndex();
+        while (!coursesData.get(i).equals(courseSpacer)) {
+            if (coursesData.get(i - 1).equals(quizSpacer)) {
+                quizzes.add(coursesData.get(i));
+            }
+            i++;
+        }
+        return quizzes;
     }
 
     public void deleteCourse() throws IOException {

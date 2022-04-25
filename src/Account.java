@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 4/10/2022
  *
  */
-public class Account {
+public class Account implements Serializable {
     private boolean valid;
     private boolean teacher;
     private boolean student;

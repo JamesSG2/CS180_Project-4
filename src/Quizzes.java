@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @version 4/11/2022
  *
  */
-public class Quizzes {
+public class Quizzes implements Serializable {
     public ArrayList<Questions> questions;
     public String name;
 
