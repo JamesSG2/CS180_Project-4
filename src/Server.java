@@ -15,6 +15,7 @@ import java.lang.Runnable;
  */
 public class Server implements Runnable, Serializable {
     Socket socket;
+    private static Object gatekeeper = new Object();
 
     public Server(Socket socket) {
         this.socket = socket;
@@ -37,12 +38,11 @@ public class Server implements Runnable, Serializable {
             ArrayList<String> submission = new ArrayList<String>();
             ArrayList<String> sub = new ArrayList<String>();
 
-            String userName = readClient.readLine();
-            String password = readClient.readLine();
-            Account user = new Account(userName, password);
+            String userName = "";
+            String password = "";
+            Account user = new Account(userName, password);  // Initializes account
 
-
-            ArrayList<Quizzes> quizzes = new ArrayList<>(); // JUST AS IN THE CLIENT
+            ArrayList<Quizzes> quizzes = new ArrayList<>();  // JUST AS IN THE CLIENT
 
             boolean start = true;
             String userType = "";
@@ -52,16 +52,17 @@ public class Server implements Runnable, Serializable {
                     userName = readClient.readLine();
                     password = readClient.readLine();
                     Boolean type = Boolean.parseBoolean(readClient.readLine());
-                    CreateAccount createdAccount = new CreateAccount(userName, password, type);
 
-                    boolean create = createdAccount.isCreated();
+                    user = new Account(userName, password, type); // Creates a new account
+
+                    boolean create = user.isCreated();
                     writeToClient.println(create);
                     writeToClient.flush();
                 }
 
                 userName = readClient.readLine();
                 password = readClient.readLine();
-                user = new Account(userName, password);
+                user = new Account(userName, password); // Accesses their account
 
                 boolean valid = user.isValid();
                 boolean teach = user.isTeacher();
@@ -83,24 +84,38 @@ public class Server implements Runnable, Serializable {
                 writeToClient.flush();
             }
 
-            String courseTitle = readClient.readLine();
-            Course usersCourse;
-            if (userType.equals("Teacher")) {
-                usersCourse = new Course(courseTitle);
-            } else {
-                usersCourse = new Course(courseTitle);
-                if (usersCourse.isNewCourseCreated()) {
-                    usersCourse.deleteCourse();
+            Course usersCourse = null;
+            boolean courseInvalid = true;
+            while (courseInvalid) {
+                String courseTitle = readClient.readLine();
+                // SYNCHRONIZES CREATION OR REJECTION OF A COURSE INTERNALLY
+                usersCourse = new Course(courseTitle, userType);
+
+                writeToClient.println(usersCourse.isNewCourseCreated());
+                writeToClient.flush();
+
+                if (userType.equals("Teacher")) {
+                    courseInvalid = false;
+                } else {
+                    if (usersCourse.isNewCourseCreated()) {
+                        courseInvalid = true;
+                    } else {
+                        courseInvalid = false;
+                    }
                 }
             }
-            writeToClient.println(usersCourse.isNewCourseCreated());
-            writeToClient.flush();
 
 
             // FILLS THE QUIZZES ARRAYLIST WITH ALL THE QUIZZES IN THE COURSE.
-            ArrayList<String> courseQuizTitles = usersCourse.getCourseQuizTitles();
+            ArrayList<String> courseQuizTitles;
+            synchronized (gatekeeper) {
+                courseQuizTitles = usersCourse.getCourseQuizTitles();
+            }
             for (String quizTitle : courseQuizTitles) {
-                ArrayList<String> quizText = usersCourse.getQuiz(quizTitle);
+                ArrayList<String> quizText;
+                synchronized (gatekeeper) {
+                    quizText = usersCourse.getQuiz(quizTitle);
+                }
                 ArrayList<Questions> tempQuestions = new ArrayList<>();
 
                 for (int i = 1; i < quizText.size(); i++) {
@@ -130,7 +145,10 @@ public class Server implements Runnable, Serializable {
                     } else if (options == 2) {
                         //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
                         quizzes.add((Quizzes) clientObjectIn.readObject());
-                        boolean added = usersCourse.addQuiz((ArrayList<String>) clientObjectIn.readObject());
+                        boolean added;
+                        synchronized (gatekeeper) {
+                            added = usersCourse.addQuiz((ArrayList<String>) clientObjectIn.readObject());
+                        }
                         writeToClient.println(added);
                         writeToClient.flush();
                     } else if (options == 3) {

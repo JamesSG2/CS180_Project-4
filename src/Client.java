@@ -41,10 +41,6 @@ public class Client implements Serializable {
         //changed by Zonglin:
         String userName = "";
         String password = "";
-        writeToServer.println(userName);
-        writeToServer.flush();
-        writeToServer.println(password);
-        writeToServer.flush();
         // Initialize account in server
 
         boolean start = true;
@@ -109,27 +105,34 @@ public class Client implements Serializable {
             }
         }
 
-        // WILL ACCESS THE COURSE REQUESTED BY THE USER. TEACHERS CAN CREATE COURSES IF THEY WISH.
-        System.out.println("What course would you like to access?");
-        if (userType.equals("Teacher")) {
-            System.out.println("Note: If it's a new course the course will automatically be created.");
-        }
-        String courseTitle = scan.nextLine();
-
-        writeToServer.println(courseTitle); // SEND COURSE TITLE TO SERVER TO INITIALIZE THE USER'S COURSE
-        writeToServer.flush();
-
-        boolean isCreated = Boolean.parseBoolean(readServer.readLine());
-
-        if (userType.equals("Teacher")) {
-            if (isCreated) {
-                System.out.println("New course created!");
-            } else {
-                System.out.println("Old course accessed.");
+        boolean courseInvalid = true;
+        while (courseInvalid) {
+            // WILL ACCESS THE COURSE REQUESTED BY THE USER. TEACHERS CAN CREATE COURSES IF THEY WISH.
+            System.out.println("What course would you like to access?");
+            if (userType.equals("Teacher")) {
+                System.out.println("Note: If it's a new course the course will automatically be created.");
             }
-        } else {
-            if (isCreated) {
-                System.out.println("Error! That course does not exist.");
+            String courseTitle = scan.nextLine();
+
+            writeToServer.println(courseTitle); // SEND COURSE TITLE TO SERVER TO INITIALIZE THE USER'S COURSE
+            writeToServer.flush();
+
+            boolean isCreated = Boolean.parseBoolean(readServer.readLine());
+
+            if (userType.equals("Teacher")) {
+                courseInvalid = false;
+                if (isCreated) {
+                    System.out.println("New course created!");
+                } else {
+                    System.out.println("Old course accessed.");
+                }
+            } else {
+                if (isCreated) {
+                    System.out.println("Error! That course does not exist.");
+                    courseInvalid = true;
+                } else {
+                    courseInvalid = false;
+                }
             }
         }
 

@@ -17,111 +17,126 @@ public class Course implements Serializable {
     private boolean newCourseCreated;
     private String quizSpacer = "--------------------------------------------------";
     private String courseSpacer = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+    private static Object courseGatekeeper = new Object();
 
-    public Course(String courseTitle) throws IOException {
-        this.courseTitle = courseTitle;
-        readCoursesDataFile();
+    public Course(String courseTitle, String userType) throws IOException {
+        synchronized (courseGatekeeper) {
+            this.courseTitle = courseTitle;
+            readCoursesDataFile();
 
-        if (coursesData.isEmpty()) {
-            coursesData.add(courseSpacer);
+            if (coursesData.isEmpty()) {
+                coursesData.add(courseSpacer);
+            }
+
+            int courseIndex = getCourseIndex();
+             if (courseIndex == 0) {
+                newCourseCreated = true;  // True if creating a course was attempted (teacher or student)
+                if (userType.equals("Teacher")) {
+                    coursesData.add(courseTitle);
+                    coursesData.add(quizSpacer);
+                    coursesData.add(courseSpacer);
+                }  // Does not create new Course if the user is a student
+            }
+            writeCoursesDataFile();
         }
-
-        int courseIndex = getCourseIndex();
-        if (courseIndex == 0) {
-            coursesData.add(courseTitle);
-            coursesData.add(quizSpacer);
-            coursesData.add(courseSpacer);
-            newCourseCreated = true;
-        }
-        writeCoursesDataFile();
     }
 
     public boolean addQuiz(ArrayList<String> quiz) throws IOException {
-        readCoursesDataFile();
+        synchronized (courseGatekeeper) {
+            readCoursesDataFile();
 
-        int courseEndIndex = getCourseIndex();
-        while (courseEndIndex < coursesData.size() && !(coursesData.get(courseEndIndex).equals(courseSpacer))) {
-            courseEndIndex++;
-        }
-
-        for (int i = getCourseIndex(); i < courseEndIndex; i++) {
-            if (coursesData.get(i - 1).equals(quizSpacer) && coursesData.get(i).equals(quiz.get(0))) {
-                return false;
+            int courseEndIndex = getCourseIndex();
+            while (courseEndIndex < coursesData.size() && !(coursesData.get(courseEndIndex).equals(courseSpacer))) {
+                courseEndIndex++;
             }
-        }
 
-        for (int j = 0; j < quiz.size(); j++) {
-            coursesData.add(courseEndIndex + j, quiz.get(j));
-        }
-        coursesData.add(courseEndIndex + quiz.size(), quizSpacer);
+            for (int i = getCourseIndex(); i < courseEndIndex; i++) {
+                if (coursesData.get(i - 1).equals(quizSpacer) && coursesData.get(i).equals(quiz.get(0))) {
+                    return false;
+                }
+            }
 
-        writeCoursesDataFile();
-        return true;
+            for (int j = 0; j < quiz.size(); j++) {
+                coursesData.add(courseEndIndex + j, quiz.get(j));
+            }
+            coursesData.add(courseEndIndex + quiz.size(), quizSpacer);
+
+            writeCoursesDataFile();
+            return true;
+        }
     }
 
     public ArrayList<String> getQuiz(String quizTitle) throws IOException {
-        readCoursesDataFile();
+        synchronized (courseGatekeeper) {
+            readCoursesDataFile();
 
-        int quizIndex = getCourseIndex();
-        while (!(coursesData.get(quizIndex).equals(quizTitle) ||
-                (coursesData.get(quizIndex).equals(courseSpacer)))) {
-            quizIndex++;
-        }
-        if (coursesData.get(quizIndex).equals(courseSpacer)) {
-            return null;
-        }
+            int quizIndex = getCourseIndex();
+            while (!(coursesData.get(quizIndex).equals(quizTitle) ||
+                    (coursesData.get(quizIndex).equals(courseSpacer)))) {
+                quizIndex++;
+            }
+            if (coursesData.get(quizIndex).equals(courseSpacer)) {
+                return null;
+            }
 
-        ArrayList<String> quiz = new ArrayList<>();
-        int i = quizIndex;
-        while (!coursesData.get(i).equals(quizSpacer)) {
-            quiz.add(coursesData.get(i));
-            i++;
+            ArrayList<String> quiz = new ArrayList<>();
+            int i = quizIndex;
+            while (!coursesData.get(i).equals(quizSpacer)) {
+                quiz.add(coursesData.get(i));
+                i++;
+            }
+            return quiz;
         }
-        return quiz;
     }
 
     public ArrayList<String> getCourseQuizTitles() throws IOException {
-        readCoursesDataFile();
-        ArrayList<String> quizzes = new ArrayList<>();
-        int i = getCourseIndex();
-        while (!coursesData.get(i).equals(courseSpacer)) {
-            if (coursesData.get(i - 1).equals(quizSpacer)) {
-                quizzes.add(coursesData.get(i));
+        synchronized (courseGatekeeper) {
+            readCoursesDataFile();
+            ArrayList<String> quizzes = new ArrayList<>();
+            int i = getCourseIndex();
+            while (!coursesData.get(i).equals(courseSpacer)) {
+                if (coursesData.get(i - 1).equals(quizSpacer)) {
+                    quizzes.add(coursesData.get(i));
+                }
+                i++;
             }
-            i++;
+            return quizzes;
         }
-        return quizzes;
     }
 
     public void deleteCourse() throws IOException {
-        readCoursesDataFile();
-        int i = getCourseIndex();
-        while (!coursesData.get(i).equals(courseSpacer)) {
+        synchronized (courseGatekeeper) {
+            readCoursesDataFile();
+            int i = getCourseIndex();
+            while (!coursesData.get(i).equals(courseSpacer)) {
+                coursesData.remove(i);
+            }
             coursesData.remove(i);
+            writeCoursesDataFile();
         }
-        coursesData.remove(i);
-        writeCoursesDataFile();
     }
 
     public boolean deleteQuiz(String quizTitle) throws IOException {
-        readCoursesDataFile();
+        synchronized (courseGatekeeper) {
+            readCoursesDataFile();
 
-        int quizIndex = getCourseIndex();
-        while (!(coursesData.get(quizIndex).equals(quizTitle) ||
-                (coursesData.get(quizIndex).equals(courseSpacer)))) {
-            quizIndex++;
-        }
-        if (coursesData.get(quizIndex).equals(courseSpacer)) {
-            return false;
-        }
+            int quizIndex = getCourseIndex();
+            while (!(coursesData.get(quizIndex).equals(quizTitle) ||
+                    (coursesData.get(quizIndex).equals(courseSpacer)))) {
+                quizIndex++;
+            }
+            if (coursesData.get(quizIndex).equals(courseSpacer)) {
+                return false;
+            }
 
-        int i = quizIndex;
-        while (!coursesData.get(i).equals(courseSpacer)) {
-            coursesData.remove(i);
-        }
+            int i = quizIndex;
+            while (!coursesData.get(i).equals(courseSpacer)) {
+                coursesData.remove(i);
+            }
 
-        writeCoursesDataFile();
-        return true;
+            writeCoursesDataFile();
+            return true;
+        }
     }
 
     public boolean isNewCourseCreated() {
