@@ -107,15 +107,11 @@ public class Server implements Runnable, Serializable {
 
 
             // FILLS THE QUIZZES ARRAYLIST WITH ALL THE QUIZZES IN THE COURSE.
-            ArrayList<String> courseQuizTitles;
-            synchronized (gatekeeper) {
-                courseQuizTitles = usersCourse.getCourseQuizTitles();
-            }
+            ArrayList<String> courseQuizTitles = usersCourse.getCourseQuizTitles();
+
             for (String quizTitle : courseQuizTitles) {
-                ArrayList<String> quizText;
-                synchronized (gatekeeper) {
-                    quizText = usersCourse.getQuiz(quizTitle);
-                }
+                ArrayList<String> quizText = usersCourse.getQuiz(quizTitle);
+
                 ArrayList<Questions> tempQuestions = new ArrayList<>();
 
                 for (int i = 1; i < quizText.size(); i++) {
@@ -145,10 +141,8 @@ public class Server implements Runnable, Serializable {
                     } else if (options == 2) {
                         //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
                         quizzes.add((Quizzes) clientObjectIn.readObject());
-                        boolean added;
-                        synchronized (gatekeeper) {
-                            added = usersCourse.addQuiz((ArrayList<String>) clientObjectIn.readObject());
-                        }
+                        boolean added = usersCourse.addQuiz((ArrayList<String>) clientObjectIn.readObject());
+
                         writeToClient.println(added);
                         writeToClient.flush();
                     } else if (options == 3) {
