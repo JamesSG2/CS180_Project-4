@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 4/15/2022
  *
  */
-public class Course {
+public class Course implements Serializable {
     private String courseTitle;
     private ArrayList<String> coursesData;
     private boolean newCourseCreated;

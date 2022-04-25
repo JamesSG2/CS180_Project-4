@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @version 4/10/2022
  *
  */
-public class CreateAccount {
+public class CreateAccount implements Serializable {
     private boolean created;
     private ArrayList<String> accountsData;
 

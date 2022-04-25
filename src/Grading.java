@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -15,7 +12,7 @@ import java.util.ArrayList;
  * @version 4/11/2022
  *
  */
-public class Grading {
+public class Grading implements Serializable {
     //public boolean[] isCorrect;
     public ArrayList<Questions> questions;
     public ArrayList<String> correctAnswer;

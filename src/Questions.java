@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * Questions
  * <p>
@@ -8,7 +10,7 @@
  * @version 4/11/2022
  *
  */
-public class Questions {
+public class Questions implements Serializable {
     public String question;
     public String option1;
     public String option2;
