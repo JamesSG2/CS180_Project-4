@@ -521,11 +521,14 @@ public class Client implements Serializable {
                         writeToServer.println(i);
                         writeToServer.flush();
 
-                        if (readServer.readLine().equals("validInfo")) {
+                        boolean isValidSubmission = Boolean.parseBoolean(readServer.readLine());
 
-                            System.out.println(readServer.readLine());
+                        if (isValidSubmission) {
 
-                            for (String v : sub) {
+                            System.out.println(readServer.readLine());  // Prints Attempt #_
+
+                            int submissionLength = Integer.parseInt(readServer.readLine());
+                            for (int j = 0; j < submissionLength; j++) {
                                 System.out.println(readServer.readLine());
                             }
 
@@ -684,9 +687,6 @@ public class Client implements Serializable {
                         writeToServer.println(quizNum1);
                         writeToServer.flush();
 
-                        String name = userName;
-                        String key = password;
-
                         System.out.println("Please input the attempt number: ");
                         int i = scan.nextInt();
 
@@ -695,11 +695,11 @@ public class Client implements Serializable {
 
                         if (Boolean.parseBoolean(readServer.readLine())) {  // isValid submission
 
-                            System.out.println(readServer.readLine());
+                            System.out.println(readServer.readLine());  // Prints Attempt #_
 
-                            sub = (ArrayList<String>) serverObjectIn.readObject();
-                            for (String v : sub) {
-                                System.out.println(v);
+                            int submissionLength = Integer.parseInt(readServer.readLine());
+                            for (int j = 0; j < submissionLength; j++) {
+                                System.out.println(readServer.readLine());
                             }
 
                         } else {

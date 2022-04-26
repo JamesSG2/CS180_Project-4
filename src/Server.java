@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.lang.Runnable;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Server
@@ -28,6 +29,7 @@ public class Server implements Runnable, Serializable {
             PrintWriter writeToClient = new PrintWriter(socket.getOutputStream());
 
             ObjectOutputStream clientObjectOut = new ObjectOutputStream(socket.getOutputStream());
+            //GZIPOutputStream clientObjectOut = new GZIPOutputStream(new ObjectOutputStream(socket.getOutputStream()));
             ObjectInputStream clientObjectIn = new ObjectInputStream(socket.getInputStream());
 
             // Variables necessary from OptionList for the server to work, edited by Zonglin
@@ -129,7 +131,6 @@ public class Server implements Runnable, Serializable {
             clientObjectOut.writeObject(quizzes);
             clientObjectOut.flush();
 
-
             boolean teacher = true;
             if (userType.equalsIgnoreCase("Teacher")) {
                 while (teacher) {
@@ -188,20 +189,22 @@ public class Server implements Runnable, Serializable {
                             writeToClient.flush();
                         }
                     } else if (options == 6) {
-                        // TODO: Option 6 to be done by Zonglin
                         int quizNum1 = Integer.parseInt(readClient.readLine());
                         String name = readClient.readLine();
                         String key = readClient.readLine();
                         int i = Integer.parseInt(readClient.readLine());
 
-                        if (user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+                        boolean isValidSubmission = user.getSubmission(quizzes.get(quizNum1 - 1)
+                                .getName(), name, key, i) != null;
+                        writeToClient.println(isValidSubmission);
+                        writeToClient.flush();
 
-                            writeToClient.println("validInfo");
-                            writeToClient.flush();
+                        if (isValidSubmission) {
                             sub = user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
 
-                            //System.out.println("Attempt: " + i);
                             writeToClient.println("Attempt: " + i);
+                            writeToClient.flush();
+                            writeToClient.println(sub.size());
                             writeToClient.flush();
 
                             for (String v : sub) {
@@ -359,8 +362,13 @@ public class Server implements Runnable, Serializable {
 
                                     writeToClient.println("Attempt: " + i);
                                     writeToClient.flush();
-                                    clientObjectOut.writeObject(sub);
-                                    clientObjectOut.flush();
+                                    writeToClient.println(sub.size());
+                                    writeToClient.flush();
+
+                                    for (String v : sub) {
+                                        writeToClient.println(v);
+                                        writeToClient.flush();
+                                    }
                                 }
 
                             } else if (options == 4) {
