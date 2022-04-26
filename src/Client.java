@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -41,25 +42,37 @@ public class Client implements Serializable {
         //changed by Zonglin:
         String userName = "";
         String password = "";
+        int ts = -1;
         // Initialize account in server
+        JFrame frame = new JFrame();
 
         boolean start = true;
         while (start) {
-            System.out.println("What would you like to do?\n1. Sign up\n2. Log in");
-            int sl = scan.nextInt();
-            writeToServer.println(sl);
+
+            int s1 = 0;
+            String[] signLog = {"Sign up", "Log in"};
+            s1 = JOptionPane.showOptionDialog(frame.getContentPane(), "What would you like to do?",
+                    "Start Menu", 0, JOptionPane.INFORMATION_MESSAGE, null, signLog, null);
+            s1 += 1;
+            writeToServer.println(s1);
             writeToServer.flush();
 
-            if (sl == 1) {
-                System.out.println("What would like your username to be?");
-                scan.nextLine();
-                userName = scan.nextLine();
-                System.out.println("What would like your password to be?");
-                password = scan.nextLine();
+            if (s1 == 0) {
+                JOptionPane.showMessageDialog(null, "Goodbye!", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
+                start = false;
+            }
+
+            if (s1 == 1) {
+                userName = JOptionPane.showInputDialog(null, "What would like your username to be?", "Sign Up", JOptionPane.QUESTION_MESSAGE);
+                password = JOptionPane.showInputDialog(null, "What would like your password to be?", "Sign Up", JOptionPane.QUESTION_MESSAGE);
+
                 boolean type = false;
-                System.out.println("Are you a teacher or student?\n1. Teacher\n2. Student");
-                int ts = scan.nextInt();
-                if (ts == 1) {
+
+                String[] teachStud = {"Teacher", "Student"};
+                ts = JOptionPane.showOptionDialog(frame.getContentPane(), "Are you a teacher or student?", "Sign Up",
+                        0, JOptionPane.INFORMATION_MESSAGE, null, teachStud, null);
+
+                if (ts == JOptionPane.YES_OPTION) {
                     type = true;
                 }
 
@@ -71,18 +84,19 @@ public class Client implements Serializable {
                 writeToServer.flush();
                 // Send to server to create account
 
+                //CreateAccount ca = new CreateAccount(userName, password, type);
+
+                //boolean create = ca.isCreated();
                 boolean created = Boolean.parseBoolean(readServer.readLine()); // was account created
                 if (!created) {
-                    System.out.println("The username is already taken! Account was not created.");
+                    JOptionPane.showMessageDialog(null, "The username is already taken! Account was not created.", "Sign Up", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Account created!", "Sign Up", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
 
-            System.out.println("LOG IN");
-            System.out.println("What is your username?");
-            scan.nextLine();
-            userName = scan.nextLine();
-            System.out.println("What is your password?");
-            password = scan.nextLine();
+            userName = JOptionPane.showInputDialog(null, "What is your username?", "Log In", JOptionPane.QUESTION_MESSAGE);
+            password = JOptionPane.showInputDialog(null, "What is your password?", "Log In", JOptionPane.QUESTION_MESSAGE);
 
             writeToServer.println(userName);
             writeToServer.flush();
@@ -101,15 +115,16 @@ public class Client implements Serializable {
                 }
                 start = false;
             } else {
-                System.out.println("That is not a valid account!");
+                JOptionPane.showMessageDialog(null, "That is not a valid account!", "Log In", JOptionPane.ERROR_MESSAGE);
             }
         }
+        System.out.println("hbn");
 
         boolean courseInvalid = true;
         while (courseInvalid) {
             // WILL ACCESS THE COURSE REQUESTED BY THE USER. TEACHERS CAN CREATE COURSES IF THEY WISH.
             System.out.println("What course would you like to access?");
-            if (userType.equals("Teacher")) {
+            if (userType.equalsIgnoreCase("Teacher")) {
                 System.out.println("Note: If it's a new course the course will automatically be created.");
             }
             String courseTitle = scan.nextLine();
@@ -119,12 +134,12 @@ public class Client implements Serializable {
 
             boolean isCreated = Boolean.parseBoolean(readServer.readLine());
 
-            if (userType.equals("Teacher")) {
+            if (userType.equalsIgnoreCase("Teacher")) {
                 courseInvalid = false;
                 if (isCreated) {
                     System.out.println("New course created!");
                 } else {
-                    System.out.println("Old course accessed.");
+                    System.out.println("Course accessed.");
                 }
             } else {
                 if (isCreated) {
