@@ -220,7 +220,7 @@ public class Server implements Runnable, Serializable {
 
                     }
                 }
-
+            }
                 // TODO: All options for students (Zonglin)
                 boolean student = true;
 
@@ -351,21 +351,18 @@ public class Server implements Runnable, Serializable {
                                 //int i = scan.nextInt();
                                 int i = Integer.parseInt(readClient.readLine());
 
-                                if (user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i) != null) {
+                                boolean validSubmission = user.getSubmission(quizzes.get(quizNum1 - 1).getName(),
+                                        name, key, i) != null;
+                                writeToClient.println(validSubmission);
+                                writeToClient.flush();
+                                if (validSubmission) {
 
-                                    writeToClient.println("validInfo");
-                                    writeToClient.flush();
                                     sub = user.getSubmission(quizzes.get(quizNum1 - 1).getName(), name, key, i);
 
-                                    //System.out.println("Attempt: " + i);
                                     writeToClient.println("Attempt: " + i);
                                     writeToClient.flush();
-
-                                    for (String v : sub) {
-                                        writeToClient.println(v);
-                                        writeToClient.flush();
-                                    }
-
+                                    clientObjectOut.writeObject(sub);
+                                    clientObjectOut.flush();
                                 }
 
                             } else if (options == 4) {
@@ -382,27 +379,26 @@ public class Server implements Runnable, Serializable {
                             }
                         }
                     }
-
-                    writeToClient.close();
-                    readClient.close();
-                    socket.close();
                 }
-            }
+                writeToClient.close();
+                readClient.close();
+                System.out.println("A client disconnected!");
+                socket.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        // allocate server socket at given port...
         try {
+            // Initialize server socket for port 4242
             ServerSocket serverSocket = new ServerSocket(4242);
-            System.out.printf("socket open, waiting for connections on %s\n",
+            System.out.printf("Waiting for connections on %s\n",
                     serverSocket);
-            // infinite server loop: accept connection,
-            // spawn thread to handle...
+            // Infinite server loop to accept a connection and create thread for that client
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("A client connected!");
                 Server server = new Server(socket);
                 new Thread(server).start();
             }

@@ -678,14 +678,13 @@ public class Client implements Serializable {
                         writeToServer.println(i);
                         writeToServer.flush();
 
-
-                        // TODO: check the condition for Client to print the right thing
-                        if (readServer.readLine().equals("validInfo")) {
+                        if (Boolean.parseBoolean(readServer.readLine())) {  // isValid submission
 
                             System.out.println(readServer.readLine());
 
+                            sub = (ArrayList<String>) serverObjectIn.readObject();
                             for (String v : sub) {
-                                System.out.println(readServer.readLine());
+                                System.out.println(v);
                             }
 
                         } else {
@@ -703,9 +702,7 @@ public class Client implements Serializable {
                     writeToServer.println(newPass);
                     writeToServer.flush();
 
-                    //lo.editAccount(newUser, newPass);
                 } else if (options == 5) {
-                    //lo.deleteAccount();
                     System.out.println("Account Deleted.\nGoodbye!");
                     student = false;
                 } else {

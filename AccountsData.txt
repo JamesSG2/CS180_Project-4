@@ -5,4 +5,16 @@ Status: teacher
 stu 321
 Status: student
 --------------------------------------------------
+math quiz
+Time Stamp: 2022-04-25 20:07:35.798
+Question #1:
+The student's answer: d
+The correct answer: d
+Point Value: 2
+Question #2:
+The student's answer: b
+The correct answer: c
+Point Value: 3
+Student stu's grade: 40.00%
+--------------------------------------------------
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||
