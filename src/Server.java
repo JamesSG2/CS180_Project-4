@@ -299,12 +299,12 @@ public class Server implements Runnable, Serializable {
 
                                     }
                                 }
-                                System.out.println("Would you like to submit? (yes/no)");
+                                //System.out.println("Would you like to submit? (yes/no)");
                                 String submit = readClient.readLine();
 
 
                                 if (submit.equalsIgnoreCase("no") || submit.equalsIgnoreCase("n")) {
-                                    System.out.println("Alright. Your quiz will not be submitted.");
+                                    //System.out.println("Alright. Your quiz will not be submitted.");
                                     //studentAnswers.remove(index);
                                     continue;
                                 } else {
@@ -325,20 +325,18 @@ public class Server implements Runnable, Serializable {
                                     user.addSubmission(submission);
 
                                 }
-
-                                System.out.println("Quiz submitted!");
                             }
 
                             if (quizNum < 1 || quizNum > quizzes.size()) {
-                                System.out.println("That is not a valid option!");
+                                //System.out.println("That is not a valid option!");
                             }
                         } else if (options == 3) {
 
                             if (quizzes.size() != 0) {
-                                System.out.println("Which quiz would you like to see?");
+                                //System.out.println("Which quiz would you like to see?");
                                 //PRINTS LIST OF QUIZZES BY NAME
                                 for (int i = 0; i < quizzes.size(); i++) {
-                                    System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                                    //System.out.println((i + 1) + ". " + quizzes.get(i).getName());
                                 }
                                 //int quizNum1 = scan.nextInt();
                                 int quizNum1 = Integer.parseInt(readClient.readLine());
@@ -347,7 +345,7 @@ public class Server implements Runnable, Serializable {
                                 String name = userName;
                                 String key = password;
 
-                                System.out.println("Please input the attempt number: ");
+                                //System.out.println("Please input the attempt number: ");
                                 //int i = scan.nextInt();
                                 int i = Integer.parseInt(readClient.readLine());
 
