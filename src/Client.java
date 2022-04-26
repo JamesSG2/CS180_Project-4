@@ -49,20 +49,20 @@ public class Client implements Serializable {
         boolean start = true;
         while (start) {
 
-            int begin = -1;
+            int s1 = 0;
             String[] signLog = {"Sign up", "Log in"};
-            begin = JOptionPane.showOptionDialog(frame.getContentPane(), "What would you like to do?",
+            s1 = JOptionPane.showOptionDialog(frame.getContentPane(), "What would you like to do?",
                     "Start Menu", 0, JOptionPane.INFORMATION_MESSAGE, null, signLog, null);
-
-            writeToServer.println(begin);
+            s1 += 1;
+            writeToServer.println(s1);
             writeToServer.flush();
 
-            if (begin == -1) {
+            if (s1 == 0) {
                 JOptionPane.showMessageDialog(null, "Goodbye!", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
                 start = false;
             }
 
-            if (begin == 0) {
+            if (s1 == 1) {
                 userName = JOptionPane.showInputDialog(null, "What would like your username to be?", "Sign Up", JOptionPane.QUESTION_MESSAGE);
                 password = JOptionPane.showInputDialog(null, "What would like your password to be?", "Sign Up", JOptionPane.QUESTION_MESSAGE);
 
@@ -72,7 +72,7 @@ public class Client implements Serializable {
                 ts = JOptionPane.showOptionDialog(frame.getContentPane(), "Are you a teacher or student?", "Sign Up",
                         0, JOptionPane.INFORMATION_MESSAGE, null, teachStud, null);
 
-                if (ts == 0) {
+                if (ts == JOptionPane.YES_OPTION) {
                     type = true;
                 }
 
@@ -92,34 +92,30 @@ public class Client implements Serializable {
                     JOptionPane.showMessageDialog(null, "The username is already taken! Account was not created.", "Sign Up", JOptionPane.ERROR_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "Account created!", "Sign Up", JOptionPane.INFORMATION_MESSAGE);
-
                 }
-
             }
 
-            if(begin == 1) {
-                userName = JOptionPane.showInputDialog(null, "What is your username?", "Log In", JOptionPane.QUESTION_MESSAGE);
-                password = JOptionPane.showInputDialog(null, "What is your password?", "Log In", JOptionPane.QUESTION_MESSAGE);
+            userName = JOptionPane.showInputDialog(null, "What is your username?", "Log In", JOptionPane.QUESTION_MESSAGE);
+            password = JOptionPane.showInputDialog(null, "What is your password?", "Log In", JOptionPane.QUESTION_MESSAGE);
 
-                writeToServer.println(userName);
-                writeToServer.flush();
-                writeToServer.println(password);
-                writeToServer.flush();
+            writeToServer.println(userName);
+            writeToServer.flush();
+            writeToServer.println(password);
+            writeToServer.flush();
 
-                boolean valid = Boolean.parseBoolean(readServer.readLine());
-                boolean teach = Boolean.parseBoolean(readServer.readLine());
-                boolean stud = Boolean.parseBoolean(readServer.readLine());
+            boolean valid = Boolean.parseBoolean(readServer.readLine());
+            boolean teach = Boolean.parseBoolean(readServer.readLine());
+            boolean stud = Boolean.parseBoolean(readServer.readLine());
 
-                if (valid) {
-                    if (teach) {
-                        userType = "Teacher";
-                    } else if (stud) {
-                        userType = "Student";
-                    }
-                    start = false;
-                } else {
-                    JOptionPane.showMessageDialog(null, "That is not a valid account!", "Log In", JOptionPane.ERROR_MESSAGE);
+            if (valid) {
+                if (teach) {
+                    userType = "Teacher";
+                } else if (stud) {
+                    userType = "Student";
                 }
+                start = false;
+            } else {
+                JOptionPane.showMessageDialog(null, "That is not a valid account!", "Log In", JOptionPane.ERROR_MESSAGE);
             }
         }
         System.out.println("hbn");
