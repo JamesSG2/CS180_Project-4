@@ -13,7 +13,7 @@ import java.util.Scanner;
  * @author James Gilliam, Ian Fienberg L15
  * @version 4/18/2022
  */
-public class Client implements Serializable {
+public class ClientIan implements Serializable {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Scanner scan = new Scanner(System.in);
@@ -212,11 +212,10 @@ public class Client implements Serializable {
 
                         //below is changed by Zonglin to prompt the teacher if they want files as submission
                         String answer = JOptionPane.showInputDialog(null, "Which option is the correct answer (a, b, c, d)."
-                                        + "Or, if answer should be a file, please enter \"file\"", "Create Quiz",
+                                        + "\nOr, if answer should be a file, please enter \"file\"", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
 
-                        //I DON'T KNOW WHAT THE POINT OF THIS CODE IS BELOW
-                        //if the teacher enter 'file', they should input a String of correct answer allowing AutoGrading
+                        // I DON'T KNOW WHAT THE POINT OF THIS CODE IS BELOW
                         if (answer.equals("file")) {
                             System.out.println("/****************");
                             System.out.println("*Please Add '/' for each new line. For example, " +
@@ -302,7 +301,7 @@ public class Client implements Serializable {
                                                 + " if student should submit a file, please enter \"file\")", "Edit Quiz",
                                         JOptionPane.QUESTION_MESSAGE);
 
-                                //AGAIN, NOT SURE WHAT THIS IS FOR
+                                // TEACHER FILE UPLOADS FOR ANSWER
                                 if (answer.equals("file")) {
                                     System.out.println("/****************");
                                     System.out.println("*Please Add '/' for each new line. For example, " +
