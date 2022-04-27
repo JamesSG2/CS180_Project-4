@@ -198,7 +198,7 @@ public class Client implements Serializable {
 
                     int numOfQuestions = Integer.parseInt(JOptionPane.showInputDialog(null, "How many questions will there be in this quiz?", "Create Quiz",
                             JOptionPane.QUESTION_MESSAGE));
-
+                     boolean numErr = false;
                     for (int i = 1; i <= numOfQuestions; i++) {
                         String question = JOptionPane.showInputDialog(null, "What is question " + i + "?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
@@ -228,9 +228,15 @@ public class Client implements Serializable {
                         }
 
                         quizText.add(answer);
-
-                        int points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Create Quiz",
-                                JOptionPane.QUESTION_MESSAGE));
+                        int points = 0;
+                        try {
+                            points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Create Quiz",
+                                    JOptionPane.QUESTION_MESSAGE));
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null, "Error! The point value must be an integer.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
+                            numErr = true;
+                            break;
+                        }
                         quizText.add("" + points);
 
                         //ADDS QUESTION TO QUIZ ARRAYLIST
@@ -239,22 +245,26 @@ public class Client implements Serializable {
                         //just for test:
                         //studentAnswer.add(answer);
                     }
+                     if (!numErr) {
+                         //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
+                         quizzes.add(new Quizzes(quiz, quizName));
 
-                    //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
-                    quizzes.add(new Quizzes(quiz, quizName));
+                         serverObjectOut.writeObject(new Quizzes(quiz, quizName));
+                         serverObjectOut.flush();
+                         writeToServer.println(quizText.size());
+                         writeToServer.flush();
+                         for (String line : quizText) {
+                             writeToServer.println(line);
+                             writeToServer.flush();
+                         }
 
-                    serverObjectOut.writeObject(new Quizzes(quiz, quizName));
-                    serverObjectOut.flush();
-                    serverObjectOut.writeObject(quizText);
-                    serverObjectOut.flush();
-
-                    boolean added = Boolean.parseBoolean(readServer.readLine());
-                    if (!added) {
-                        JOptionPane.showMessageDialog(null, "Error! That quiz already exists in this course.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Quiz created!", "Create Quiz", JOptionPane.INFORMATION_MESSAGE);
-                    }
-
+                         boolean added = Boolean.parseBoolean(readServer.readLine());
+                         if (!added) {
+                             JOptionPane.showMessageDialog(null, "Error! That quiz already exists in this course.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
+                         } else {
+                             JOptionPane.showMessageDialog(null, "Quiz created!", "Create Quiz", JOptionPane.INFORMATION_MESSAGE);
+                         }
+                     }
                 }
                 // IF A TEACHER WOULD LIKE TO EDIT A QUIZ
                 else if (reply.equalsIgnoreCase("Edit quiz")) {
@@ -267,7 +277,11 @@ public class Client implements Serializable {
                     }
                     for (int i = 0; i < quizzes.size(); i++) {
                         if (quizzes.get(i).getName().equalsIgnoreCase(quizName)) {
-                            ArrayList<String> quizText = (ArrayList<String>) serverObjectIn.readObject();
+                            ArrayList<String> quizText = new ArrayList<>();
+                            int quizLength = Integer.parseInt(readServer.readLine());
+                            for (int j = 0; j < quizLength; j++) {
+                                quizText.add(readServer.readLine());
+                            }
 
                             String[] change = {"Name", "Question"};
                             int alter = JOptionPane.showOptionDialog(frame.getContentPane(), "What would you like to change?", "Edit Quiz",
@@ -343,9 +357,12 @@ public class Client implements Serializable {
                                 // quizzes.add(new Quizzes(quiz, quizName));
                                 JOptionPane.showMessageDialog(null, "Quiz edited!", "Edit Quiz", JOptionPane.INFORMATION_MESSAGE);
                             }
-
-                            serverObjectOut.writeObject(quizText);
-                            serverObjectOut.flush();
+                            writeToServer.println(quizText.size());
+                            writeToServer.flush();
+                            for (String line : quizText) {
+                                writeToServer.println(line);
+                                writeToServer.flush();
+                            }
                             serverObjectOut.writeObject(quizzes);
                             serverObjectOut.flush();
 
@@ -488,8 +505,12 @@ public class Client implements Serializable {
                                 p = buf.readLine();
                             }
 
-                            serverObjectOut.writeObject(quizText);  // SERVER SAVES QUIZ TO THE COURSE
-                            serverObjectOut.flush();
+                            writeToServer.println(quizText.size());
+                            writeToServer.flush();
+                            for (String line : quizText) {  // SERVER SAVES QUIZ TO THE COURSE
+                                writeToServer.println(line);
+                                writeToServer.flush();
+                            }
                             serverObjectOut.writeObject(quizzes);
                             serverObjectOut.flush();
 
@@ -740,9 +761,10 @@ public class Client implements Serializable {
 
                             System.out.println(readServer.readLine());
 
-                            sub = (ArrayList<String>) serverObjectIn.readObject();
-                            for (String v : sub) {
-                                System.out.println(v);
+                            sub = new ArrayList<>();
+                            int subLength = Integer.parseInt(readServer.readLine());
+                            for (int j = 0; j < subLength; j++) {
+                                System.out.println(readServer.readLine());  // Prints each line of the submission
                             }
 
                         } else {

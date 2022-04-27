@@ -141,7 +141,12 @@ public class Server implements Runnable, Serializable {
                     } else if (options == 2) {
                         //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
                         quizzes.add((Quizzes) clientObjectIn.readObject());
-                        boolean added = usersCourse.addQuiz((ArrayList<String>) clientObjectIn.readObject());
+                        ArrayList<String> quizText = new ArrayList<>();
+                        int quizLength = Integer.parseInt(readClient.readLine());
+                        for (int j = 0; j < quizLength; j++) {
+                            quizText.add(readClient.readLine());
+                        }
+                        boolean added = usersCourse.addQuiz(quizText);
 
                         writeToClient.println(added);
                         writeToClient.flush();
@@ -153,11 +158,19 @@ public class Server implements Runnable, Serializable {
                         for (int i = 0; i < quizzes.size(); i++) {
                             if (quizzes.get(i).getName().equalsIgnoreCase(quizName)) {
                                 ArrayList<String> quizText = usersCourse.getQuiz(quizName);
-                                clientObjectOut.writeObject(quizText);
-                                clientObjectOut.flush();
+                                writeToClient.println(quizText.size());
+                                writeToClient.flush();
+                                for (String line : quizText) {
+                                    writeToClient.println(line);
+                                    writeToClient.flush();
+                                }
 
                                 usersCourse.deleteQuiz(quizName);
-                                quizText = (ArrayList<String>) clientObjectIn.readObject();
+                                quizText = new ArrayList<String>();
+                                int quizLength = Integer.parseInt(readClient.readLine());
+                                for (int j = 0; j < quizLength; j++) {
+                                    quizText.add(readClient.readLine());
+                                }
                                 usersCourse.addQuiz(quizText);
 
                                 quizzes = (ArrayList<Quizzes>) clientObjectIn.readObject();
@@ -181,7 +194,11 @@ public class Server implements Runnable, Serializable {
                         }
                     } else if (options == 5) {
                         if (Boolean.parseBoolean(readClient.readLine())) {   // IF TEACHER'S FILE EXISTS
-                            ArrayList quizText = (ArrayList) clientObjectIn.readObject();  // READS FILE QUIZ TEXT
+                            ArrayList<String> quizText = new ArrayList<>();  // READS FILE QUIZ TEXT
+                            int quizLength = Integer.parseInt(readClient.readLine());
+                            for (int j = 0; j < quizLength; j++) {
+                                quizText.add(readClient.readLine());
+                            }
                             quizzes = (ArrayList<Quizzes>) clientObjectIn.readObject();  // READS UPDATED QUIZZES
 
                             boolean added = usersCourse.addQuiz(quizText); // SAVES QUIZ TO THE COURSE
