@@ -762,7 +762,7 @@ public class Client implements Serializable {
                                     JOptionPane.showInputDialog("Which quiz would you like to see?");
                                     JOptionPane.showInputDialog(null,
                                             "Please input the attempt number: ", "Attempt Number", JOptionPane.QUESTION_MESSAGE);
-                                               //int i = scan.nextInt();
+                                    //int i = scan.nextInt();
                                     for (int i = 0; i < availQuizzes.length; i++) {
                                         if (availQuizzes[i].equals(whichQuiz)) {
                                             quizNum1 = (i + 1);
@@ -771,7 +771,7 @@ public class Client implements Serializable {
                                             availQuizzes[j] = quizzes.get(i).getName();
                                         }
 
-                                                //PRINTS LIST OF QUIZZES BY NAME
+                                        //PRINTS LIST OF QUIZZES BY NAME
                                 /*
                                 for (int i = 0; i < quizzes.size(); i++) {
                                     JOptionPane.showConfirmDialog(null, (i + 1) + ". " + quizzes.get(i).getName(), "Quiz", JOptionPane.INFORMATION_MESSAGE);
@@ -779,8 +779,8 @@ public class Client implements Serializable {
 
                                  */
 
-                                                //STUDENT'S CHOICE ON WHICH QUIZ TO SEE
-                                                //int quizNum1 = scan.nextInt();
+                                        //STUDENT'S CHOICE ON WHICH QUIZ TO SEE
+                                        //int quizNum1 = scan.nextInt();
                                         writeToServer.println(quizNum1);
                                         writeToServer.flush();
 
@@ -788,7 +788,7 @@ public class Client implements Serializable {
                                         writeToServer.flush();
 
                                         String name = JOptionPane.showInputDialog(null,
-                                                        "Please input the student's username.", "View Submissions", JOptionPane.QUESTION_MESSAGE);
+                                                "Please input the student's username.", "View Submissions", JOptionPane.QUESTION_MESSAGE);
                                         writeToServer.println(name);
                                         writeToServer.flush();
                                         String key = JOptionPane.showInputDialog(null,
@@ -798,17 +798,17 @@ public class Client implements Serializable {
 
                                         if (readServer.readLine().equals("validInfo")) {
                                             JOptionPane.showMessageDialog(null, readServer.readLine(),
-                                                            "View Submissions", JOptionPane.INFORMATION_MESSAGE);
+                                                    "View Submissions", JOptionPane.INFORMATION_MESSAGE);
                                             for (String v : sub) {
                                                 JOptionPane.showMessageDialog(null, readServer.readLine(),
-                                                                "View Submissions", JOptionPane.INFORMATION_MESSAGE);
+                                                        "View Submissions", JOptionPane.INFORMATION_MESSAGE);
                                             }
 
-                                                    //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY THAT THE STUDENT IS TRYING TO SEARCH FOR
+                                            //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY THAT THE STUDENT IS TRYING TO SEARCH FOR
                                         } else {
                                             JOptionPane.showMessageDialog(null,
-                                                            "ERROR! THE INFORMATION IS INVALID!",
-                                                            "View Submissions", JOptionPane.ERROR_MESSAGE);
+                                                    "ERROR! THE INFORMATION IS INVALID!",
+                                                    "View Submissions", JOptionPane.ERROR_MESSAGE);
                                         }
 
                                     }
@@ -828,37 +828,37 @@ public class Client implements Serializable {
 
                      */
 
-                                        if (Boolean.parseBoolean(readServer.readLine())) {  // isValid submission
+                                if (Boolean.parseBoolean(readServer.readLine())) {  // isValid submission
 
-                                            JOptionPane.showInputDialog(null, readServer.readLine(), "read file", JOptionPane.INFORMATION_MESSAGE);
+                                    JOptionPane.showInputDialog(null, readServer.readLine(), "read file", JOptionPane.INFORMATION_MESSAGE);
 
-                                            sub = (ArrayList<String>) serverObjectIn.readObject();
-                                            for (String v : sub) {
-                                                JOptionPane.showMessageDialog(null, v, "read file", JOptionPane.INFORMATION_MESSAGE);
-                                            }
+                                    sub = (ArrayList<String>) serverObjectIn.readObject();
+                                    for (String v : sub) {
+                                        JOptionPane.showMessageDialog(null, v, "read file", JOptionPane.INFORMATION_MESSAGE);
+                                    }
 
-                                        } else {
-                                            JOptionPane.showMessageDialog(null, "ERROR! INFORMATION IS INVALID! ", "title", JOptionPane.ERROR_MESSAGE);
-                                        }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "ERROR! INFORMATION IS INVALID! ", "title", JOptionPane.ERROR_MESSAGE);
+                                }
 
                             } else if (welcome.equalsIgnoreCase("Edit account")) {
-                                        String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
-                                                JOptionPane.QUESTION_MESSAGE);
-                                        String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
-                                                JOptionPane.QUESTION_MESSAGE);
+                                String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
+                                        JOptionPane.QUESTION_MESSAGE);
 
-                                        // STUDENT'S ACCOUNT EDITED BY SERVER
-                                        writeToServer.println(newUser);
-                                        writeToServer.flush();
-                                        writeToServer.println(newPass);
-                                        writeToServer.flush();
+                                // STUDENT'S ACCOUNT EDITED BY SERVER
+                                writeToServer.println(newUser);
+                                writeToServer.flush();
+                                writeToServer.println(newPass);
+                                writeToServer.flush();
 
-                                        // IF STUDENT WANTS TO DELETE ACCOUNT
+                                // IF STUDENT WANTS TO DELETE ACCOUNT
                             } else if (welcome.equalsIgnoreCase("Delete account")) {
-                                        // STUDENT'S ACCOUNT DELETED BY SERVER
-                                        JOptionPane.showMessageDialog(null, "Account deleted.",
-                                                "Delete Account", JOptionPane.INFORMATION_MESSAGE);
-                                        student = false;
+                                // STUDENT'S ACCOUNT DELETED BY SERVER
+                                JOptionPane.showMessageDialog(null, "Account deleted.",
+                                        "Delete Account", JOptionPane.INFORMATION_MESSAGE);
+                                student = false;
 
 
                                     /*
@@ -875,11 +875,9 @@ public class Client implements Serializable {
 
                                      */
 
-                                    }
-                                }
-                                socket.close();
                             }
                         }
+                        socket.close();
                     }
                 }
             }
