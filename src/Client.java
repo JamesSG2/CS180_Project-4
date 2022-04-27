@@ -6,14 +6,13 @@ import java.util.Scanner;
 
 /**
  * Client
- *
+ * 
  * Handles the GUI and all interactions with the user. Performs most computations except for
  * storage and file manipulation which is done by the server.
  *
  * @author James Gilliam, Ian Fienberg L15
- *
  * @version 4/18/2022
- *
+ * 
  */
 public class Client implements Serializable {
 
@@ -46,10 +45,10 @@ public class Client implements Serializable {
         // Initialize account in server
         JFrame frame = new JFrame();
 
+        int s1 = 0;
         boolean start = true;
         while (start) {
 
-            int s1 = 0;
             String[] signLog = {"Sign up", "Log in"};
             s1 = JOptionPane.showOptionDialog(frame.getContentPane(), "What would you like to do?",
                     "Start Menu", 0, JOptionPane.INFORMATION_MESSAGE, null, signLog, null);
@@ -84,9 +83,6 @@ public class Client implements Serializable {
                 writeToServer.flush();
                 // Send to server to create account
 
-                //CreateAccount ca = new CreateAccount(userName, password, type);
-
-                //boolean create = ca.isCreated();
                 boolean created = Boolean.parseBoolean(readServer.readLine()); // was account created
                 if (!created) {
                     JOptionPane.showMessageDialog(null, "The username is already taken! Account was not created.", "Sign Up", JOptionPane.ERROR_MESSAGE);
@@ -118,16 +114,21 @@ public class Client implements Serializable {
                 JOptionPane.showMessageDialog(null, "That is not a valid account!", "Log In", JOptionPane.ERROR_MESSAGE);
             }
         }
-        System.out.println("hbn");
+
 
         boolean courseInvalid = true;
-        while (courseInvalid) {
+        while (courseInvalid && s1 != 0) {
             // WILL ACCESS THE COURSE REQUESTED BY THE USER. TEACHERS CAN CREATE COURSES IF THEY WISH.
-            System.out.println("What course would you like to access?");
+            String courseTitle;
             if (userType.equalsIgnoreCase("Teacher")) {
-                System.out.println("Note: If it's a new course the course will automatically be created.");
+                courseTitle = JOptionPane.showInputDialog(null,
+                        "What course would you like to access?\n" +
+                                "Note: If it's a new course the course will automatically be created.",
+                        "Course", JOptionPane.QUESTION_MESSAGE);
+            } else {
+                courseTitle = JOptionPane.showInputDialog(null,
+                        "What course would you like to access?", "Course", JOptionPane.QUESTION_MESSAGE);
             }
-            String courseTitle = scan.nextLine();
 
             writeToServer.println(courseTitle); // SEND COURSE TITLE TO SERVER TO INITIALIZE THE USER'S COURSE
             writeToServer.flush();
@@ -137,13 +138,13 @@ public class Client implements Serializable {
             if (userType.equalsIgnoreCase("Teacher")) {
                 courseInvalid = false;
                 if (isCreated) {
-                    System.out.println("New course created!");
+                    JOptionPane.showMessageDialog(null, "New course created!", "Course", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    System.out.println("Course accessed.");
+                    JOptionPane.showMessageDialog(null, "Course accessed.", "Course", JOptionPane.INFORMATION_MESSAGE);
                 }
             } else {
                 if (isCreated) {
-                    System.out.println("Error! That course does not exist.");
+                    JOptionPane.showMessageDialog(null, "Error! That course does not exist.", "Course", JOptionPane.ERROR_MESSAGE);
                     courseInvalid = true;
                 } else {
                     courseInvalid = false;
@@ -156,69 +157,70 @@ public class Client implements Serializable {
 
         boolean teacher = true;
         if (userType.equalsIgnoreCase("Teacher")) {
-            System.out.println("Hello teacher");
             while (teacher) {
-                System.out.println("What would you like to do?");
-                //updated parts:
-                System.out.println("1. Log out\n" + "2. Create a new quiz\n" + "3. Edit a quiz\n"
-                        + "4. Delete a quiz\n"
-                        + "5. Upload a quiz\n" + "6. View submissions\n"
-                        + "7. Edit account\n" + "8. Delete account");
-                int options = scan.nextInt();
-                scan.nextLine();
 
-                writeToServer.println(options);  // Server needs option selected to follow the client
-                writeToServer.flush();
+                //DISPLAYS MAIN MENU FOR TEACHERS
+                //JFrame frame2 = new JFrame();
+                String[] options = {"Log out", "Create new quiz", "Edit quiz", "Delete quiz", "Upload quiz",
+                        "View submissions", "Edit account", "Delete account"};
+                String reply = (String) JOptionPane.showInputDialog(null,
+                        "Hi Teacher! What would you like to do?", "Main Menu",
+                        JOptionPane.PLAIN_MESSAGE, null, options, null);
+
+                //SERVER WANTS AN INT FROM OPTIONS, SO THIS WILL WRITE AN INT INSTEAD OF THE STRING
+                for (int i = 0; i < options.length; i++) {
+                    if (reply.equals(options[i])) {
+                        writeToServer.println((i + 1));  // Server needs option selected to follow the client
+                        writeToServer.flush();
+                    }
+                }
 
                 //assuming option 1 for teachers is to create a quiz
                 //updated: added a while loop for user to choose option until they want to quit
 
                 //TEACHER CHOOSES TO QUIT
-                if (options == 1) {
-                    System.out.println("Goodbye!");
+                if (reply == null || reply.equalsIgnoreCase("Log out")) {
+                    JOptionPane.showMessageDialog(null, "Goodbye!", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
                     teacher = false;
                 }
                 //while (options != 0) {
                 //TEACHER CHOOSES TO CREATE A QUIZ
-                else if (options == 2) {
+                else if (reply.equalsIgnoreCase("Create new quiz")) {
                     quiz = new ArrayList<Questions>();
+                    String courseName = "";
+                    String quizName = "";
+                    boolean rest = true;
                     ArrayList<String> quizText = new ArrayList<>();
 
-                    System.out.println("Enter what you want to call the quiz.");
-                    String quizName = scan.nextLine();
+                    quizName = JOptionPane.showInputDialog(null, "Please enter the quiz name.", "Create Quiz",
+                            JOptionPane.QUESTION_MESSAGE);
                     quizText.add(quizName);
 
-                    System.out.println("How many questions will there be in this quiz?");
-                    int numOfQuestions = scan.nextInt();
+                    int numOfQuestions = Integer.parseInt(JOptionPane.showInputDialog(null, "How many questions will there be in this quiz?", "Create Quiz",
+                            JOptionPane.QUESTION_MESSAGE));
 
                     for (int i = 1; i <= numOfQuestions; i++) {
-                        System.out.println("What is question " + i + "?");
-                        scan.nextLine();
-                        String question = scan.nextLine();
-                        quizText.add(question);
-                        System.out.println("What is option 1?");
-                        String option1 = scan.nextLine();
-                        quizText.add(option1);
-                        System.out.println("What is option 2?");
-                        String option2 = scan.nextLine();
-                        quizText.add(option2);
-                        System.out.println("What is option 3?");
-                        String option3 = scan.nextLine();
-                        quizText.add(option3);
-                        System.out.println("What is option 4?");
-                        String option4 = scan.nextLine();
-                        quizText.add(option4);
+                        String question = JOptionPane.showInputDialog(null, "What is question " + i + "?", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
+                        String option1 = JOptionPane.showInputDialog(null, "What is option 1?", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
+                        String option2 = JOptionPane.showInputDialog(null, "What is option 2?", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
+                        String option3 = JOptionPane.showInputDialog(null, "What is option 3?", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
+                        String option4 = JOptionPane.showInputDialog(null, "What is option 4?", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
 
                         //below is changed by Zonglin to prompt the teacher if they want files as submission
-                        System.out.println("Which option is the correct answer (a, b, c, d, "
-                                + "or otherwise if student should submit a file, please enter 'file')");
-                        String answer = scan.nextLine();
+                        String answer = JOptionPane.showInputDialog(null, "Which option is the correct answer (a, b, c, d)."
+                                        + "\nOr, if answer should be a file, please enter \"file\"", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
 
-                        //if the teacher enter 'file', they should input a String of correct answer allowing AutoGrading
+                        // I DON'T KNOW WHAT THE POINT OF THIS CODE IS BELOW
                         if (answer.equals("file")) {
                             System.out.println("/****************");
                             System.out.println("*Please Add '/' for each new line. For example, " +
-                                    "the correct answer of:\n*Bright \n*space\n"  +
+                                    "the correct answer of:\n*Bright \n*space\n" +
                                     "*should be written as 'Bright/space/' as there are two lines");
                             System.out.println("/****************");
                             System.out.println("Please enter the correct answer:");
@@ -227,8 +229,8 @@ public class Client implements Serializable {
 
                         quizText.add(answer);
 
-                        System.out.println("How many points is this question worth?");
-                        int points = scan.nextInt();
+                        int points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE));
                         quizText.add("" + points);
 
                         //ADDS QUESTION TO QUIZ ARRAYLIST
@@ -248,18 +250,18 @@ public class Client implements Serializable {
 
                     boolean added = Boolean.parseBoolean(readServer.readLine());
                     if (!added) {
-                        System.out.println("Error! That quiz already exists in this course.");
+                        JOptionPane.showMessageDialog(null, "Error! That quiz already exists in this course.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        System.out.println("Quiz created!");
+                        JOptionPane.showMessageDialog(null, "Quiz created!", "Create Quiz", JOptionPane.INFORMATION_MESSAGE);
                     }
 
                 }
                 // IF A TEACHER WOULD LIKE TO EDIT A QUIZ
-                else if (options == 3) {
+                else if (reply.equalsIgnoreCase("Edit quiz")) {
                     String quizName = "";
                     if (quizzes.size() != 0) {
-                        System.out.println("Enter the quiz title of the quiz you want to edit.");
-                        quizName = scan.nextLine();
+                        quizName = JOptionPane.showInputDialog(null, "Enter the name of the quiz you want to edit.", "Edit Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
                         writeToServer.println(quizName);
                         writeToServer.flush();
                     }
@@ -267,55 +269,55 @@ public class Client implements Serializable {
                         if (quizzes.get(i).getName().equalsIgnoreCase(quizName)) {
                             ArrayList<String> quizText = (ArrayList<String>) serverObjectIn.readObject();
 
-                            System.out.println("What would you like to change?");
-                            System.out.println("1. Name\n2. Question");
-                            int alter = scan.nextInt();
+                            String[] change = {"Name", "Question"};
+                            int alter = JOptionPane.showOptionDialog(frame.getContentPane(), "What would you like to change?", "Edit Quiz",
+                                    0, JOptionPane.INFORMATION_MESSAGE, null, change, null);
+                            alter++;
 
                             // TO CHANGE THE NAME OF A QUIZ
                             if (alter == 1) {
-                                System.out.println("What name would you like to change it to?");
-                                scan.nextLine();
-                                String newName = scan.nextLine();
+                                String newName = JOptionPane.showInputDialog(null, "What name would you like to change it to?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE);
                                 quizzes.get(i).setName(newName);
 
                                 quizText.set(0, newName);
 
-                                System.out.println("Name changed!");
-                                // System.out.println(quizzes.toArray());
-                                // break;
-                                // TO CHANGE AN ENTIRE QUESTION ON A QUIZ
+                                JOptionPane.showMessageDialog(null, "Name changed!", "Edit Quiz", JOptionPane.INFORMATION_MESSAGE);
 
                             } else if (alter == 2) {
-                                System.out.println("Which question would you like to change?");
-                                int qnum = scan.nextInt();
-                                System.out.println("What should this question be?");
-                                scan.nextLine();
-                                String question = scan.nextLine();
-                                System.out.println("What is option 1?");
-                                String option1 = scan.nextLine();
-                                System.out.println("What is option 2?");
-                                String option2 = scan.nextLine();
-                                System.out.println("What is option 3?");
-                                String option3 = scan.nextLine();
-                                System.out.println("What is option 4?");
-                                String option4 = scan.nextLine();
-                                System.out.println("Which option is the correct answer (a, b, c, d, "
-                                        + "or otherwise if student should submit a file, please enter 'file')");
-                                String answer = scan.nextLine();
+                                // TO CHANGE AN ENTIRE QUESTION ON A QUIZ
+                                int qnum = Integer.parseInt(JOptionPane.showInputDialog(null, "Which question would you like to change?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE));
+                                String question = JOptionPane.showInputDialog(null, "What should this question be?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                String option1 = JOptionPane.showInputDialog(null, "What is option 1?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                String option2 = JOptionPane.showInputDialog(null, "What is option 2?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                String option3 = JOptionPane.showInputDialog(null, "What is option 3?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                String option4 = JOptionPane.showInputDialog(null, "What is option 4?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                String answer = JOptionPane.showInputDialog(null, "Which option is the correct answer (a, b, c, d). Or,"
+                                                + " if student should submit a file, please enter \"file\")", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE);
 
+                                // TEACHER FILE UPLOADS FOR ANSWER
                                 if (answer.equals("file")) {
                                     System.out.println("/****************");
                                     System.out.println("*Please Add '/' for each new line. For example, " +
-                                            "the correct answer of:\n*Bright \n*space\n"  +
+                                            "the correct answer of:\n*Bright \n*space\n" +
                                             "*should be written as 'Bright/space/' as there are two lines");
                                     System.out.println("/****************");
                                     System.out.println("Please enter the correct answer:");
                                     answer = scan.nextLine();
                                 }
-                                System.out.println("How many points is this question worth?");
-                                int points = scan.nextInt();
+
+                                int points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Edit Quiz",
+                                        JOptionPane.QUESTION_MESSAGE));
 
                                 int questionIndex = 1 + (qnum - 1) * 7;
+                                //NULL POINTER EXCEPTION
                                 quizText.set(questionIndex, question);
                                 quizText.set(++questionIndex, option1);
                                 quizText.set(++questionIndex, option2);
@@ -339,8 +341,7 @@ public class Client implements Serializable {
                                 // just for test:
                                 // studentAnswer.set(qnum - 1, answer);
                                 // quizzes.add(new Quizzes(quiz, quizName));
-                                System.out.println("Quiz edited!");
-                                // break;
+                                JOptionPane.showMessageDialog(null, "Quiz edited!", "Edit Quiz", JOptionPane.INFORMATION_MESSAGE);
                             }
 
                             serverObjectOut.writeObject(quizText);
@@ -352,23 +353,28 @@ public class Client implements Serializable {
 
                             // IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else if (i == quizzes.size() - 1) {
-                            System.out.println("That is not a name of a current quiz!");
+                            JOptionPane.showMessageDialog(null,
+                                    "That is not a name of a current quiz!", "Edit Quiz",
+                                    JOptionPane.ERROR_MESSAGE);
+
                         }
                     }
 
                     // IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0) {
-                        System.out.println("You need to create a quiz before you can edit one!");
+                        JOptionPane.showMessageDialog(null,
+                                "You need to create a quiz before you can edit one!", "Edit Quiz",
+                                JOptionPane.ERROR_MESSAGE);
                     }
 
                 }
 
                 // IF A TEACHER WOULD LIKE TO DELETE AN ENTIRE QUIZ
-                else if (options == 4) {
+                else if (reply.equalsIgnoreCase("Delete quiz")) {
                     String quizName2 = "";
                     if (quizzes.size() != 0) {
-                        System.out.println("Enter the quiz title of the quiz you want to delete.");
-                        quizName2 = scan.nextLine();
+                        quizName2 = JOptionPane.showInputDialog(null, "Enter the name of the quiz you want to delete.", "Delete Quiz",
+                                JOptionPane.QUESTION_MESSAGE);
 
                         writeToServer.println(quizName2);
                         writeToServer.flush();
@@ -376,36 +382,44 @@ public class Client implements Serializable {
                     int p = -1;
                     for (int i = 0; i < quizzes.size(); i++) {
                         if (quizzes.get(i).getName().equalsIgnoreCase(quizName2)) {
-                            System.out.println("Are you sure you would like to delete this quiz? (yes/no)");
-                            String sure = scan.nextLine();
+                            int sure = JOptionPane.showConfirmDialog(frame, "Are you sure you would like to delete this quiz?",
+                                    "Delete Quiz", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
                             writeToServer.println(sure);
                             writeToServer.flush();
-                            if (!sure.equalsIgnoreCase("no")) {
+                            if (sure == 0) {
                                 quizzes.remove(i);
                                 // DELETES QUIZ FROM THE COURSE IN SERVER
-                                System.out.println("Quiz deleted!");
-
+                                JOptionPane.showMessageDialog(null,
+                                        "Quiz deleted!", "Delete Quiz",
+                                        JOptionPane.INFORMATION_MESSAGE);
                                 break;
                             } else {
-                                System.out.println("Okay. Your quiz will not be deleted.");
+                                JOptionPane.showMessageDialog(null,
+                                        "Your quiz will not be deleted.", "Delete Quiz",
+                                        JOptionPane.INFORMATION_MESSAGE);
                             }
                             p = i;
                             break;
 
                             // IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else if (i == quizzes.size() - 1) {
-                            System.out.println("That is not a name of a current quiz!");
+                            JOptionPane.showMessageDialog(null,
+                                    "That is not a name of a current quiz!", "Delete Quiz",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                         p = i;
                     }
 
                     // IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0 && p != 0) {
-                        System.out.println("You need to create a quiz before you can delete one!");
+                        JOptionPane.showMessageDialog(null,
+                                "You need to create a quiz before you can delete one!", "Delete Quiz",
+                                JOptionPane.ERROR_MESSAGE);
                     }
+
+                } else if (reply.equalsIgnoreCase("Upload quiz")) {
                     // IF A TEACHER WOULD LIKE TO UPLOAD A QUIZ FILE
-                } else if (options == 5) {
                     System.out.println("Note: the file must follow the format of quiz title first then for each \n" +
                             "question: the question, the 4 choices, the correct answer, then the point value." +
                             "\nAt the end of the quiz:" +
@@ -455,7 +469,9 @@ public class Client implements Serializable {
                                         try {
                                             points = Integer.parseInt(buf.readLine());
                                         } catch (NumberFormatException e) {
-                                            System.out.println("Error! Point value must be an integer.");
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Error! Point value must be an integer.",
+                                                    "Upload Quiz", JOptionPane.ERROR_MESSAGE);
                                             break;
                                         }
                                         quizText.add("" + points);
@@ -479,13 +495,17 @@ public class Client implements Serializable {
 
                             boolean added = Boolean.parseBoolean(readServer.readLine());
                             if (!added) {
-                                System.out.println("Error! That quiz already exists in this course.");
+                                JOptionPane.showMessageDialog(null,
+                                        "Error! That quiz already exists in this course.",
+                                        "Upload Quiz", JOptionPane.ERROR_MESSAGE);
                             }
                             //writer.write("END OF QUIZ\n");
                             buf.close();
                             //writer.close();
                         } else {
-                            System.out.println("Error! File Not Found.");
+                            JOptionPane.showMessageDialog(null,
+                                    "Error! File Not Found.",
+                                    "Upload Quiz", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -493,62 +513,78 @@ public class Client implements Serializable {
                     //System.out.println(quizzes.get(1).getQuestions().get(1).getQuestion());
 
                     //IF TEACHER CHOOSES TO VIEW SUBMISSIONS
-                } else if (options == 6) {
+                } else if (reply.equalsIgnoreCase("View submissions")) {
 
                     String quizName3 = "";
                     if (quizzes.size() != 0) {
-                        System.out.println("Which quiz would you like to see?");
+                        /*System.out.println("Which quiz would you like to see?");
                         //PRINTS LIST OF QUIZZES BY NAME
                         for (int i = 0; i < quizzes.size(); i++) {
                             System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                        }*/
+                        int quizNum1 = 0;
+                        String[] availQuizzes = new String[quizzes.size()];
+
+                        for (int i = 0; i < quizzes.size(); i++) {
+                            availQuizzes[i] = quizzes.get(i).getName();
                         }
-                        int quizNum1 = scan.nextInt();
-                        scan.nextLine();
+
+                        String whichQuiz = (String) JOptionPane.showInputDialog(null,
+                                "Which quiz would you like to see?", "View Submissions",
+                                JOptionPane.PLAIN_MESSAGE, null, availQuizzes, null);
+
+                        for (int i = 0; i < availQuizzes.length; i++) {
+                            if (availQuizzes[i].equals(whichQuiz)) {
+                                quizNum1 = (i + 1);
+                            }
+                        }
+
                         writeToServer.println(quizNum1);
                         writeToServer.flush();
 
-
-                        System.out.println("Please input the student's username: ");
-                        String name = scan.nextLine();
+                        String name = JOptionPane.showInputDialog(null,
+                                "Please input the student's username.", "View Submissions", JOptionPane.QUESTION_MESSAGE);
                         writeToServer.println(name);
                         writeToServer.flush();
-                        System.out.println("Please input the student's password: ");
-                        String key = scan.nextLine();
+                        String key = JOptionPane.showInputDialog(null,
+                                "Please input the student's password.", "View Submissions", JOptionPane.QUESTION_MESSAGE);
                         writeToServer.println(key);
                         writeToServer.flush();
-                        System.out.println("Please input the student's attempt number: ");
-                        int i = scan.nextInt();
-                        writeToServer.println(i);
+                        int attemptNum = Integer.parseInt(JOptionPane.showInputDialog(null,
+                                "Please input the student's attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE));
+                        writeToServer.println(attemptNum);
                         writeToServer.flush();
 
-                        boolean isValidSubmission = Boolean.parseBoolean(readServer.readLine());
+                        if (readServer.readLine().equals("validInfo")) {
+                            JOptionPane.showMessageDialog(null, readServer.readLine(),
+                                    "View Submissions", JOptionPane.INFORMATION_MESSAGE);
 
-                        if (isValidSubmission) {
-
-                            System.out.println(readServer.readLine());  // Prints Attempt #_
-
-                            int submissionLength = Integer.parseInt(readServer.readLine());
-                            for (int j = 0; j < submissionLength; j++) {
-                                System.out.println(readServer.readLine());
+                            for (String v : sub) {
+                                JOptionPane.showMessageDialog(null, readServer.readLine(),
+                                        "View Submissions", JOptionPane.INFORMATION_MESSAGE);
                             }
 
                             //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else {
-                            System.out.println("ERROR! THE INFORMATION IS INVALID!");
+                            JOptionPane.showMessageDialog(null,
+                                    "ERROR! THE INFORMATION IS INVALID!",
+                                    "View Submissions", JOptionPane.ERROR_MESSAGE);
                         }
 
                     }
                     //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0) {
-                        System.out.println("You need to create a quiz before you can see one!");
+                        JOptionPane.showMessageDialog(null,
+                                "You need to create a quiz before you can view one!",
+                                "View Submissions", JOptionPane.ERROR_MESSAGE);
                     }
 
 
-                } else if (options == 7) {
-                    System.out.println("What would you like your new username to be?");
-                    String newUser = scan.nextLine();
-                    System.out.println("What would you like your new password to be?");
-                    String newPass = scan.nextLine();
+                } else if (reply.equalsIgnoreCase("Edit account")) {
+                    String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
+                            JOptionPane.QUESTION_MESSAGE);
+                    String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
+                            JOptionPane.QUESTION_MESSAGE);
 
                     // USER'S ACCOUNT EDITED BY SERVER
                     writeToServer.println(newUser);
@@ -556,12 +592,16 @@ public class Client implements Serializable {
                     writeToServer.println(newPass);
                     writeToServer.flush();
 
-                } else if (options == 8) {
+                } else if (reply.equalsIgnoreCase("Delete account")) {
                     // USER'S ACCOUNT DELETED BY SERVER
-                    System.out.println("Account Deleted.\nGoodbye!");
+                    JOptionPane.showMessageDialog(null, "Account deleted.",
+                            "Delete Account", JOptionPane.INFORMATION_MESSAGE);
                     teacher = false;
                 } else {
-                    System.out.println("That is not a valid option! Please enter a number 1-7.");
+                    //I DON'T THINK WE EVEN NEED THIS ANYMORE
+                    JOptionPane.showMessageDialog(null,
+                            "That is not a valid option!",
+                            "Menu", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
@@ -687,6 +727,9 @@ public class Client implements Serializable {
                         writeToServer.println(quizNum1);
                         writeToServer.flush();
 
+                        String name = userName;
+                        String key = password;
+
                         System.out.println("Please input the attempt number: ");
                         int i = scan.nextInt();
 
@@ -695,11 +738,11 @@ public class Client implements Serializable {
 
                         if (Boolean.parseBoolean(readServer.readLine())) {  // isValid submission
 
-                            System.out.println(readServer.readLine());  // Prints Attempt #_
+                            System.out.println(readServer.readLine());
 
-                            int submissionLength = Integer.parseInt(readServer.readLine());
-                            for (int j = 0; j < submissionLength; j++) {
-                                System.out.println(readServer.readLine());
+                            sub = (ArrayList<String>) serverObjectIn.readObject();
+                            for (String v : sub) {
+                                System.out.println(v);
                             }
 
                         } else {
