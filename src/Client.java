@@ -237,6 +237,7 @@ public class Client implements Serializable {
                             numErr = true;
                             break;
                         }
+
                         quizText.add("" + points);
 
                         //ADDS QUESTION TO QUIZ ARRAYLIST
@@ -245,6 +246,9 @@ public class Client implements Serializable {
                         //just for test:
                         //studentAnswer.add(answer);
                     }
+                    writeToServer.println(numErr);
+                    writeToServer.flush();
+
                      if (!numErr) {
                          //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
                          quizzes.add(new Quizzes(quiz, quizName));

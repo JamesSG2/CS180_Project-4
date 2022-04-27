@@ -140,16 +140,18 @@ public class Server implements Runnable, Serializable {
                         teacher = false;
                     } else if (options == 2) {
                         //ADDS QUIZ ARRAYLIST AND QUIZ NAME TO QUIZZES ARRAYLIST. ALSO SAVES IT TO THE COURSE
-                        quizzes.add((Quizzes) clientObjectIn.readObject());
-                        ArrayList<String> quizText = new ArrayList<>();
-                        int quizLength = Integer.parseInt(readClient.readLine());
-                        for (int j = 0; j < quizLength; j++) {
-                            quizText.add(readClient.readLine());
-                        }
-                        boolean added = usersCourse.addQuiz(quizText);
+                        if (!Boolean.parseBoolean(readClient.readLine())) {  // if Number Format error
+                            quizzes.add((Quizzes) clientObjectIn.readObject());
+                            ArrayList<String> quizText = new ArrayList<>();
+                            int quizLength = Integer.parseInt(readClient.readLine());
+                            for (int j = 0; j < quizLength; j++) {
+                                quizText.add(readClient.readLine());
+                            }
+                            boolean added = usersCourse.addQuiz(quizText);
 
-                        writeToClient.println(added);
-                        writeToClient.flush();
+                            writeToClient.println(added);
+                            writeToClient.flush();
+                        }
                     } else if (options == 3) {
                         String quizName = "";
                         if (quizzes.size() != 0) {
