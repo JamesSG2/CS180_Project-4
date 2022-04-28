@@ -644,7 +644,7 @@ public class Client implements Serializable {
             //String welcome = "";
             while (student) {
                 String[] optionsStudent = {"1. Log out\n" + "2. Take a quiz\n" + "3. See your submission\n" +
-                        "4. Edit account\n" + "5. Delete account" };
+                        "4. Edit account\n" + "5. Delete account"};
                 String welcome = (String) JOptionPane.showInputDialog(null,
                         "Hello Student! What would you like to do?", "Main Menu",
                         JOptionPane.PLAIN_MESSAGE, null, optionsStudent, null);
@@ -671,7 +671,7 @@ public class Client implements Serializable {
                     JOptionPane.showMessageDialog(null, "Goodbye!", "Goodbye", JOptionPane.INFORMATION_MESSAGE);
                     student = false;
                 }
-                    // STUDENT CHOOSES TO TAKE A QUIZ
+                // STUDENT CHOOSES TO TAKE A QUIZ
                 else if (welcome.equalsIgnoreCase("Take a Quiz")) {
                     JOptionPane.showInputDialog(null, "Which Quiz would you like to take?", "Take Quiz",
                             JOptionPane.QUESTION_MESSAGE);
@@ -757,70 +757,80 @@ public class Client implements Serializable {
                         JOptionPane.showMessageDialog(null, "this is not a valid option!", "Quiz", JOptionPane.ERROR_MESSAGE);
                     }
                 } else if (welcome.equalsIgnoreCase("See your Submission")) {
+                    int quizNum1 = 0;
 
                     if (quizzes.size() != 0) {
-                        JOptionPane.showInputDialog(null,
-                                "Which quiz would you like to see?", "View Submission", JOptionPane.QUESTION_MESSAGE);
-                        //PRINTS LIST OF QUIZZES BY NAME
+                        int quizNumOne = 0;
+                        String[] availQuizzes = new String[quizzes.size()];
+
                         for (int i = 0; i < quizzes.size(); i++) {
-                            int view_submission = JOptionPane.showConfirmDialog(null, (i + 1) + ". " + quizzes.get(i).getName(), "View Submission", JOptionPane.PLAIN_MESSAGE);
+                            availQuizzes[i] = quizzes.get(i).getName();
+                        }
+
+                        //PRINTS LIST OF QUIZZES BY NAME
+
+                        String quizOptions = (String) JOptionPane.showInputDialog(null,
+                                "Which quiz would you like to see?", "View Submissions",
+                                JOptionPane.PLAIN_MESSAGE, null, availQuizzes, null);
+
+                        for (int i = 0; i < availQuizzes.length; i++) {
+                            if (availQuizzes[i].equals(quizOptions)) {
+                                quizNum1 = (i + 1);
+                            }
                         }
 
                         //STUDENT'S CHOICE ON WHICH QUIZ TO SEE
-                        int quizNum1 = scan.nextInt();
                         writeToServer.println(quizNum1);
                         writeToServer.flush();
 
-                        String name = userName;
-                        String key = password;
-
-                        int i = Integer.parseInt(JOptionPane.showInputDialog(null,
-                                "Please input your attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE));
-                        scan.nextInt();
-                        writeToServer.println(i);
+                        int attemptNum = Integer.parseInt(JOptionPane.showInputDialog(null,
+                                "Please input the attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE));
+                        writeToServer.println(attemptNum);
                         writeToServer.flush();
 
-                        if (Boolean.parseBoolean(readServer.readLine())) {  // isValid submission
+                        if (Boolean.parseBoolean(readServer.readLine())) {  // isValid Submission
+                            String attemptNumString = readServer.readLine();
 
-                            System.out.println(readServer.readLine());
-
-                            sub = new ArrayList<>();
-                            int subLength = Integer.parseInt(readServer.readLine());
-                            for (int j = 0; j < subLength; j++) {
-                                System.out.println(readServer.readLine());  // Prints each line of the submission
+                            int submissionLength = Integer.parseInt(readServer.readLine());
+                            String submissionText = "";
+                            for (int j = 0; j < submissionLength; j++) {
+                                submissionText += readServer.readLine() + "\n";
                             }
-
+                            JOptionPane.showMessageDialog(null, submissionText,
+                                    "View Submissions - " + availQuizzes[quizNum1 - 1] + " - "
+                                            + attemptNumString, JOptionPane.INFORMATION_MESSAGE);
+                            //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else {
                             JOptionPane.showMessageDialog(null,
                                     "ERROR! THE INFORMATION IS INVALID!",
                                     "View Submissions", JOptionPane.ERROR_MESSAGE);
                         }
+
+                    } else if (welcome.equalsIgnoreCase("Edit Account")) {
+                        String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
+                                JOptionPane.QUESTION_MESSAGE);
+                        // user's account edited by server
+                        writeToServer.println(newUser);
+                        writeToServer.flush();
+                        String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
+                                JOptionPane.QUESTION_MESSAGE);
+                        writeToServer.println(newPass);
+                        writeToServer.flush();
+
+                    } else if (welcome.equalsIgnoreCase("Delete account")) {
+                        // USER'S ACCOUNT DELETED BY SERVER
+                        JOptionPane.showMessageDialog(null, "Account deleted.",
+                                "Delete Account", JOptionPane.INFORMATION_MESSAGE);
+                        student = false;
+                    } else {
+                        // no need due to the try catch made earlier
+                        JOptionPane.showMessageDialog(null,
+                                "That is not a valid option!",
+                                "Menu", JOptionPane.ERROR_MESSAGE);
                     }
-
-                } else if (welcome.equalsIgnoreCase("Edit Account")) {
-                    String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
-                            JOptionPane.QUESTION_MESSAGE);
-                    // user's account edited by server
-                    writeToServer.println(newUser);
-                    writeToServer.flush();
-                    String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
-                            JOptionPane.QUESTION_MESSAGE);
-                    writeToServer.println(newPass);
-                    writeToServer.flush();
-
-                } else if (welcome.equalsIgnoreCase("Delete account")) {
-                    // USER'S ACCOUNT DELETED BY SERVER
-                    JOptionPane.showMessageDialog(null, "Account deleted.",
-                            "Delete Account", JOptionPane.INFORMATION_MESSAGE);
-                    student = false;
-                } else {
-                    // no need due to the try catch made earlier
-                    JOptionPane.showMessageDialog(null,
-                            "That is not a valid option!",
-                            "Menu", JOptionPane.ERROR_MESSAGE);
                 }
             }
+            socket.close();
         }
-        socket.close();
     }
 }
