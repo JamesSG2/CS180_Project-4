@@ -202,14 +202,19 @@ public class Client implements Serializable {
                     for (int i = 1; i <= numOfQuestions; i++) {
                         String question = JOptionPane.showInputDialog(null, "What is question " + i + "?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(question);
                         String option1 = JOptionPane.showInputDialog(null, "What is option 1?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option1);
                         String option2 = JOptionPane.showInputDialog(null, "What is option 2?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option2);
                         String option3 = JOptionPane.showInputDialog(null, "What is option 3?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option3);
                         String option4 = JOptionPane.showInputDialog(null, "What is option 4?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option4);
 
                         //below is changed by Zonglin to prompt the teacher if they want files as submission
                         String answer = JOptionPane.showInputDialog(null, "Which option is the correct answer (a, b, c, d)."
