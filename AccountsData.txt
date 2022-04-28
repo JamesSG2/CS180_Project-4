@@ -17,6 +17,18 @@ The correct answer: c
 Point Value: 3
 Student stu's grade: 40.00%
 --------------------------------------------------
+math quiz
+Time Stamp: 2022-04-27 16:51:10.762
+Question #1:
+The student's answer: d
+The correct answer: d
+Point Value: 2
+Question #2:
+The student's answer: c
+The correct answer: c
+Point Value: 3
+Student stu's grade: 100.00%
+--------------------------------------------------
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 jim 456
 Status: student

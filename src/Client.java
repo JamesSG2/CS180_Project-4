@@ -540,13 +540,7 @@ public class Client implements Serializable {
                     //IF TEACHER CHOOSES TO VIEW SUBMISSIONS
                 } else if (reply.equalsIgnoreCase("View submissions")) {
 
-                    String quizName3 = "";
                     if (quizzes.size() != 0) {
-                        /*System.out.println("Which quiz would you like to see?");
-                        //PRINTS LIST OF QUIZZES BY NAME
-                        for (int i = 0; i < quizzes.size(); i++) {
-                            System.out.println((i + 1) + ". " + quizzes.get(i).getName());
-                        }*/
                         int quizNum1 = 0;
                         String[] availQuizzes = new String[quizzes.size()];
 
@@ -554,6 +548,7 @@ public class Client implements Serializable {
                             availQuizzes[i] = quizzes.get(i).getName();
                         }
 
+                        // PRINTS LIST OF QUIZZES BY NAME
                         String whichQuiz = (String) JOptionPane.showInputDialog(null,
                                 "Which quiz would you like to see?", "View Submissions",
                                 JOptionPane.PLAIN_MESSAGE, null, availQuizzes, null);
@@ -580,22 +575,23 @@ public class Client implements Serializable {
                         writeToServer.println(attemptNum);
                         writeToServer.flush();
 
-                        if (readServer.readLine().equals("validInfo")) {
-                            JOptionPane.showMessageDialog(null, readServer.readLine(),
-                                    "View Submissions", JOptionPane.INFORMATION_MESSAGE);
+                        if (Boolean.parseBoolean(readServer.readLine())) {  // isValid Submission
+                            String attemptNumString = readServer.readLine();
 
-                            for (String v : sub) {
-                                JOptionPane.showMessageDialog(null, readServer.readLine(),
-                                        "View Submissions", JOptionPane.INFORMATION_MESSAGE);
+                            int submissionLength = Integer.parseInt(readServer.readLine());
+                            String submissionText = "";
+                            for (int j = 0; j < submissionLength; j++) {
+                                submissionText += readServer.readLine() + "\n";
                             }
-
+                            JOptionPane.showMessageDialog(null, submissionText,
+                                    "View Submissions - " + availQuizzes[quizNum1 - 1] + " - " + name + ": "
+                                            + attemptNumString, JOptionPane.INFORMATION_MESSAGE);
                             //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else {
                             JOptionPane.showMessageDialog(null,
                                     "ERROR! THE INFORMATION IS INVALID!",
                                     "View Submissions", JOptionPane.ERROR_MESSAGE);
                         }
-
                     }
                     //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0) {
@@ -741,39 +737,55 @@ public class Client implements Serializable {
                 } else if (options == 3) {
 
                     if (quizzes.size() != 0) {
-                        System.out.println("Which quiz would you like to see?");
-                        //PRINTS LIST OF QUIZZES BY NAME
+                        int quizNum1 = 0;
+                        String[] availQuizzes = new String[quizzes.size()];
+
                         for (int i = 0; i < quizzes.size(); i++) {
-                            System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                            availQuizzes[i] = quizzes.get(i).getName();
                         }
 
-                        //STUDENT'S CHOICE ON WHICH QUIZ TO SEE
-                        int quizNum1 = scan.nextInt();
+                        // PRINTS LIST OF QUIZZES BY NAME
+                        String whichQuiz = (String) JOptionPane.showInputDialog(null,
+                                "Which quiz would you like to see?", "View Submissions",
+                                JOptionPane.PLAIN_MESSAGE, null, availQuizzes, null);
+
+                        for (int i = 0; i < availQuizzes.length; i++) {
+                            if (availQuizzes[i].equals(whichQuiz)) {
+                                quizNum1 = (i + 1);
+                            }
+                        }
+
                         writeToServer.println(quizNum1);
                         writeToServer.flush();
 
-                        String name = userName;
-                        String key = password;
-
-                        System.out.println("Please input the attempt number: ");
-                        int i = scan.nextInt();
-
-                        writeToServer.println(i);
+                        int attemptNum = Integer.parseInt(JOptionPane.showInputDialog(null,
+                                "Please input the attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE));
+                        writeToServer.println(attemptNum);
                         writeToServer.flush();
 
-                        if (Boolean.parseBoolean(readServer.readLine())) {  // isValid submission
+                        if (Boolean.parseBoolean(readServer.readLine())) {  // isValid Submission
+                            String attemptNumString = readServer.readLine();
 
-                            System.out.println(readServer.readLine());
-
-                            sub = new ArrayList<>();
-                            int subLength = Integer.parseInt(readServer.readLine());
-                            for (int j = 0; j < subLength; j++) {
-                                System.out.println(readServer.readLine());  // Prints each line of the submission
+                            int submissionLength = Integer.parseInt(readServer.readLine());
+                            String submissionText = "";
+                            for (int j = 0; j < submissionLength; j++) {
+                                submissionText += readServer.readLine() + "\n";
                             }
-
+                            JOptionPane.showMessageDialog(null, submissionText,
+                                    "View Submissions - " + availQuizzes[quizNum1 - 1] + " - "
+                                            + attemptNumString, JOptionPane.INFORMATION_MESSAGE);
+                            //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else {
-                            System.out.println("ERROR! THE INFORMATION IS INVALID!");
+                            JOptionPane.showMessageDialog(null,
+                                    "ERROR! THE INFORMATION IS INVALID!",
+                                    "View Submissions", JOptionPane.ERROR_MESSAGE);
                         }
+                    }
+                    //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
+                    if (quizzes.size() == 0) {
+                        JOptionPane.showMessageDialog(null,
+                                "You need to create a quiz before you can view one!",
+                                "View Submissions", JOptionPane.ERROR_MESSAGE);
                     }
 
                 } else if (options == 4) {
