@@ -442,13 +442,17 @@ public class Client implements Serializable {
 
                 } else if (reply.equalsIgnoreCase("Upload quiz")) {
                     // IF A TEACHER WOULD LIKE TO UPLOAD A QUIZ FILE
-                    System.out.println("Note: the file must follow the format of quiz title first then for each \n" +
+                    // updated by Shruti
+                    JOptionPane.showMessageDialog(null, "Note: the file must follow the format of quiz title first then for each \n" +
                             "question: the question, the 4 choices, the correct answer, then the point value." +
                             "\nAt the end of the quiz:" +
                             "type \"--------------------------------------------------\". \nEverything is separated " +
                             "with a new line. See CoursesData.txt\n" +
-                            "to look at past quizzes made by this program. Follow that format.");
-                    System.out.println("What is the name of the quiz file you would like to upload?");
+                            "to look at past quizzes made by this program. Follow that format.", "Upload quiz", JOptionPane.PLAIN_MESSAGE);
+                    String quizInp = JOptionPane.showInputDialog(null,
+                            "What is the name of the quiz file you would like to upload?", "View Submissions", JOptionPane.QUESTION_MESSAGE);
+                    writeToServer.println(quizInp);
+                    writeToServer.flush();
                     // System.out.println(quizzes.get(0).getQuestions().get(0).getQuestion());
                     String fileName = scan.nextLine();
 
@@ -635,7 +639,7 @@ public class Client implements Serializable {
 
 
         // TODO: All codes below are for the student to input
-        // Shruti's addition
+        // all of Shruti's addition
         boolean student = true;
 
         //int count = 0; //count for attemptNum
@@ -650,10 +654,6 @@ public class Client implements Serializable {
                         JOptionPane.PLAIN_MESSAGE, null, optionsStudent, null);
 
                 // options for student -- not sure is we need this anymore though
-                int options = scan.nextInt();
-                scan.nextLine();
-                writeToServer.println(options);
-                writeToServer.flush();
 
 
                 // STUDENT CHOOSES TO QUIT
@@ -664,6 +664,16 @@ public class Client implements Serializable {
                         writeToServer.flush();
                     }
                 }
+
+                /*
+
+                int options = scan.nextInt();
+                scan.nextLine();
+                writeToServer.println(options);
+                writeToServer.flush();
+                
+                 */
+
 
 
                 //STUDENT CHOOSES TO QUIT
@@ -809,11 +819,12 @@ public class Client implements Serializable {
                     } else if (welcome.equalsIgnoreCase("Edit Account")) {
                         String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
                                 JOptionPane.QUESTION_MESSAGE);
+                        String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
+                                JOptionPane.QUESTION_MESSAGE);
+
                         // user's account edited by server
                         writeToServer.println(newUser);
                         writeToServer.flush();
-                        String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
-                                JOptionPane.QUESTION_MESSAGE);
                         writeToServer.println(newPass);
                         writeToServer.flush();
 
