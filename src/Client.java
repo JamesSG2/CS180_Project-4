@@ -42,7 +42,6 @@ public class Client implements Serializable {
         String userName = "";
         String password = "";
         int ts = -1;
-        // Initialize account in server
         JFrame frame = new JFrame();
 
         int s1 = 0;
@@ -829,6 +828,7 @@ public class Client implements Serializable {
                 }
             }
         }
+        frame.dispose();
         writeToServer.close();
         readServer.close();
         serverObjectIn.close();
