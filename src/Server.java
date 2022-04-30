@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.lang.Runnable;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Server
@@ -49,6 +48,9 @@ public class Server implements Runnable, Serializable {
             String userType = "";
             while (start) {
                 String sl = readClient.readLine();
+                if (sl.equals("0")) {
+                    return;
+                }
                 if (sl.equals("1")) {
                     userName = readClient.readLine();
                     password = readClient.readLine();
@@ -88,6 +90,7 @@ public class Server implements Runnable, Serializable {
             Course usersCourse = null;
             boolean courseInvalid = true;
             while (courseInvalid) {
+
                 String courseTitle = readClient.readLine();
                 // SYNCHRONIZES CREATION OR REJECTION OF A COURSE INTERNALLY
                 usersCourse = new Course(courseTitle, userType);
@@ -404,8 +407,10 @@ public class Server implements Runnable, Serializable {
             }
             writeToClient.close();
             readClient.close();
-            System.out.println("A client disconnected!");
+            clientObjectIn.close();
+            clientObjectOut.close();
             socket.close();
+            System.out.println("A client disconnected!");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

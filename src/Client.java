@@ -2,17 +2,17 @@ import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 /**
  * Client
- * <p>
+ *
  * Handles the GUI and all interactions with the user. Performs most computations except for
  * storage and file manipulation which is done by the server.
  *
  * @author James Gilliam, Ian Fienberg  L15
  * @version 4/28/2022
+ *
  */
 public class Client implements Serializable {
 
@@ -206,14 +206,19 @@ public class Client implements Serializable {
                     for (int i = 1; i <= numOfQuestions; i++) {
                         String question = JOptionPane.showInputDialog(null, "What is question " + i + "?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(question);
                         String option1 = JOptionPane.showInputDialog(null, "What is option 1?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option1);
                         String option2 = JOptionPane.showInputDialog(null, "What is option 2?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option2);
                         String option3 = JOptionPane.showInputDialog(null, "What is option 3?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option3);
                         String option4 = JOptionPane.showInputDialog(null, "What is option 4?", "Create Quiz",
                                 JOptionPane.QUESTION_MESSAGE);
+                        quizText.add(option4);
 
                         //below is changed by Zonglin to prompt the teacher if they want files as submission
                         String answer = JOptionPane.showInputDialog(null, "Which option is the correct answer (a, b, c, d)."
@@ -655,8 +660,12 @@ public class Client implements Serializable {
                         JOptionPane.PLAIN_MESSAGE, null, options, null);
 
                 //SERVER WANTS AN INT FROM OPTIONS, SO THIS WILL WRITE AN INT INSTEAD OF THE STRING
+                if (response == null) {
+                    writeToServer.println(1);  // Server needs option selected to follow the client
+                    writeToServer.flush();
+                }
                 for (int i = 0; i < options.length; i++) {
-                    if (response.equals(options[i])) {
+                    if (response != null && response.equals(options[i])) {
                         writeToServer.println((i + 1));  // Server needs option selected to follow the client
                         writeToServer.flush();
                     }
@@ -697,14 +706,19 @@ public class Client implements Serializable {
                         // PRINTS EACH QUESTION AND OPTIONS, THEN STORES STUDENTS ANSWERS IN ARRAYLIST "STUDENTANSWER"
                         for (int i = 0; i < quizzes.get(quizNum - 1).getQuestions().size(); i++) {
 
-                            guess = JOptionPane.showInputDialog(null,
-                                    "Question " + (i + 1) + ": " +
-                                            quizzes.get(quizNum - 1).getQuestions().get(i).getQuestion() + "\na) " +
-                                            quizzes.get(quizNum - 1).getQuestions().get(i).getOption1() + "\nb) " +
-                                            quizzes.get(quizNum - 1).getQuestions().get(i).getOption2() + "\nc) " +
-                                            quizzes.get(quizNum - 1).getQuestions().get(i).getOption3() + "\nd) " +
-                                            quizzes.get(quizNum - 1).getQuestions().get(i).getOption4() + "\n(If you'd like to attach a file, enter \"file\")",
-                                    "Take a Quiz", JOptionPane.QUESTION_MESSAGE);
+                            String[] ansChoices = {"a) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption1(),
+                                    "b) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption2(),
+                                    "c) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption3(),
+                                    "d) " + quizzes.get(quizNum - 1).getQuestions().get(i).getOption4(),
+                                    "File Upload"};
+                            guess = ((String) JOptionPane.showInputDialog(null,
+                                    "Question " + (i + 1) + ":\n" +
+                                            quizzes.get(quizNum - 1).getQuestions().get(i).getQuestion(),
+                                    "Take a Quiz", JOptionPane.QUESTION_MESSAGE, null, ansChoices,
+                                    null)).substring(0, 1);
+                            if (guess.equals("F")) {
+                                guess = "file";
+                            }
 
                             writeToServer.println(guess);
                             writeToServer.flush();
@@ -814,7 +828,11 @@ public class Client implements Serializable {
                     }
                 }
             }
-            socket.close();
         }
+        writeToServer.close();
+        readServer.close();
+        serverObjectIn.close();
+        serverObjectOut.close();
+        socket.close();
     }
 }
