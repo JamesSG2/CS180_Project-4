@@ -676,6 +676,7 @@ public class Client implements Serializable {
 
 
         // TODO: All codes below are for the student to input
+        // Shruti input
         boolean student = true;
 
         if (userType.equalsIgnoreCase("Student")) {
