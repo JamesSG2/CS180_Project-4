@@ -226,13 +226,13 @@ public class Client implements Serializable {
 
                         // I DON'T KNOW WHAT THE POINT OF THIS CODE IS BELOW
                         if (answer.equals("file")) {
-                            System.out.println("/****************");
-                            System.out.println("*Please Add '/' for each new line. For example, " +
-                                    "the correct answer of:\n*Bright \n*space\n" +
-                                    "*should be written as 'Bright/space/' as there are two lines");
-                            System.out.println("/****************");
-                            System.out.println("Please enter the correct answer:");
-                            answer = scan.nextLine();
+
+                            answer = JOptionPane.showInputDialog(null,
+                                    "Please Add '/' for each new line. For example, " +
+                                            "the correct answer of:\nBright \nspace\n" +
+                                            "should be written as 'Bright/space/' as there are two lines"
+                                            + "Please enter the correct answer:",
+                                    JOptionPane.QUESTION_MESSAGE);
                         }
 
                         quizText.add(answer);
@@ -330,13 +330,12 @@ public class Client implements Serializable {
 
                                 // TEACHER FILE UPLOADS FOR ANSWER
                                 if (answer.equals("file")) {
-                                    System.out.println("/****************");
-                                    System.out.println("*Please Add '/' for each new line. For example, " +
-                                            "the correct answer of:\n*Bright \n*space\n" +
-                                            "*should be written as 'Bright/space/' as there are two lines");
-                                    System.out.println("/****************");
-                                    System.out.println("Please enter the correct answer:");
-                                    answer = scan.nextLine();
+                                    answer = JOptionPane.showInputDialog(null,
+                                            "Please Add '/' for each new line. For example, " +
+                                                    "the correct answer of:\nBright \nspace\n" +
+                                                    "should be written as 'Bright/space/' as there are two lines"
+                                                    + "Please enter the correct answer:",
+                                            JOptionPane.QUESTION_MESSAGE);
                                 }
 
                                 int points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Edit Quiz",
