@@ -172,13 +172,14 @@ public class Client implements Serializable {
 
                 //SERVER WANTS AN INT FROM OPTIONS, SO THIS WILL WRITE AN INT INSTEAD OF THE STRING
                 for (int i = 0; i < options.length; i++) {
-                    if (reply.equals(options[i])) {
+                    if (reply == null || reply.equals(options[i])) {
                         writeToServer.println((i + 1));  // Server needs option selected to follow the client
                         writeToServer.flush();
+                        break;
                     }
                 }
 
-                //assuming option 1 for teachers is to create a quiz
+                //assuming option 2 for teachers is to create a quiz
                 //updated: added a while loop for user to choose option until they want to quit
 
                 //TEACHER CHOOSES TO QUIT
@@ -664,14 +665,11 @@ public class Client implements Serializable {
                         JOptionPane.PLAIN_MESSAGE, null, options, null);
 
                 //SERVER WANTS AN INT FROM OPTIONS, SO THIS WILL WRITE AN INT INSTEAD OF THE STRING
-                if (response == null) {
-                    writeToServer.println(1);  // Server needs option selected to follow the client
-                    writeToServer.flush();
-                }
                 for (int i = 0; i < options.length; i++) {
-                    if (response != null && response.equals(options[i])) {
+                    if (response == null || response.equals(options[i])) {
                         writeToServer.println((i + 1));  // Server needs option selected to follow the client
                         writeToServer.flush();
+                        break;
                     }
                 }
 
