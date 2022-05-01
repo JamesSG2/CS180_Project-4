@@ -137,7 +137,11 @@ public class Server implements Runnable, Serializable {
             boolean teacher = true;
             if (userType.equalsIgnoreCase("Teacher")) {
                 while (teacher) {
-                    int options = Integer.parseInt(readClient.readLine());
+                    int options = 0;
+                    try {
+                        options = Integer.parseInt(readClient.readLine());
+                    } catch (NumberFormatException e) {
+                    }
 
                     if (options == 1) {
                         teacher = false;
@@ -170,15 +174,18 @@ public class Server implements Runnable, Serializable {
                                     writeToClient.flush();
                                 }
 
-                                usersCourse.deleteQuiz(quizName);
-                                quizText = new ArrayList<String>();
-                                int quizLength = Integer.parseInt(readClient.readLine());
-                                for (int j = 0; j < quizLength; j++) {
-                                    quizText.add(readClient.readLine());
-                                }
-                                usersCourse.addQuiz(quizText);
+                                boolean numErr = Boolean.parseBoolean(readClient.readLine());
+                                if (!numErr) {
+                                    usersCourse.deleteQuiz(quizName);
+                                    quizText = new ArrayList<String>();
+                                    int quizLength = Integer.parseInt(readClient.readLine());
+                                    for (int j = 0; j < quizLength; j++) {
+                                        quizText.add(readClient.readLine());
+                                    }
+                                    usersCourse.addQuiz(quizText);
 
-                                quizzes = (ArrayList<Quizzes>) clientObjectIn.readObject();
+                                    quizzes = (ArrayList<Quizzes>) clientObjectIn.readObject();
+                                }
                                 break;
                             }
                         }
@@ -215,10 +222,17 @@ public class Server implements Runnable, Serializable {
                             int quizNum1 = Integer.parseInt(readClient.readLine());
                             String name = readClient.readLine();
                             String key = readClient.readLine();
-                            int i = Integer.parseInt(readClient.readLine());
-
-                            boolean isValidSubmission = user.getSubmission(quizzes.get(quizNum1 - 1)
-                                    .getName(), name, key, i) != null;
+                            boolean isValidSubmission = true;
+                            int i = 0;
+                            try {
+                                i = Integer.parseInt(readClient.readLine());
+                            } catch (NumberFormatException e) {
+                                isValidSubmission = false;
+                            }
+                            if (isValidSubmission) {
+                                isValidSubmission = user.getSubmission(quizzes.get(quizNum1 - 1)
+                                        .getName(), name, key, i) != null;
+                            }
                             writeToClient.println(isValidSubmission);
                             writeToClient.flush();
 
@@ -370,12 +384,17 @@ public class Server implements Runnable, Serializable {
                             String name = userName;
                             String key = password;
 
-                            //System.out.println("Please input the attempt number: ");
-                            //int i = scan.nextInt();
-                            int i = Integer.parseInt(readClient.readLine());
-
-                            boolean validSubmission = user.getSubmission(quizzes.get(quizNum1 - 1).getName(),
-                                    name, key, i) != null;
+                            boolean validSubmission = true;
+                            int i = 0;
+                            try {
+                                i = Integer.parseInt(readClient.readLine());
+                            } catch (NumberFormatException e) {
+                                validSubmission = false;
+                            }
+                            if (validSubmission) {
+                                validSubmission = user.getSubmission(quizzes.get(quizNum1 - 1)
+                                        .getName(), name, key, i) != null;
+                            }
                             writeToClient.println(validSubmission);
                             writeToClient.flush();
                             if (validSubmission) {

@@ -195,66 +195,72 @@ public class Client implements Serializable {
                     String courseName = "";
                     String quizName = "";
                     boolean rest = true;
+                    boolean numErr = false;
                     ArrayList<String> quizText = new ArrayList<>();
 
                     quizName = JOptionPane.showInputDialog(null, "Please enter the quiz name.", "Create Quiz",
                             JOptionPane.QUESTION_MESSAGE);
                     quizText.add(quizName);
-
-                    int numOfQuestions = Integer.parseInt(JOptionPane.showInputDialog(null, "How many questions will there be in this quiz?", "Create Quiz",
-                            JOptionPane.QUESTION_MESSAGE));
-                    boolean numErr = false;
-                    for (int i = 1; i <= numOfQuestions; i++) {
-                        String question = JOptionPane.showInputDialog(null, "What is question " + i + "?", "Create Quiz",
-                                JOptionPane.QUESTION_MESSAGE);
-                        quizText.add(question);
-                        String option1 = JOptionPane.showInputDialog(null, "What is option 1?", "Create Quiz",
-                                JOptionPane.QUESTION_MESSAGE);
-                        quizText.add(option1);
-                        String option2 = JOptionPane.showInputDialog(null, "What is option 2?", "Create Quiz",
-                                JOptionPane.QUESTION_MESSAGE);
-                        quizText.add(option2);
-                        String option3 = JOptionPane.showInputDialog(null, "What is option 3?", "Create Quiz",
-                                JOptionPane.QUESTION_MESSAGE);
-                        quizText.add(option3);
-                        String option4 = JOptionPane.showInputDialog(null, "What is option 4?", "Create Quiz",
-                                JOptionPane.QUESTION_MESSAGE);
-                        quizText.add(option4);
-
-                        //below is changed by Zonglin to prompt the teacher if they want files as submission
-                        String answer = JOptionPane.showInputDialog(null, "Which option is the correct answer (a, b, c, d)."
-                                        + "\nOr, if answer should be a file, please enter \"file\"", "Create Quiz",
-                                JOptionPane.QUESTION_MESSAGE);
-
-                        // I DON'T KNOW WHAT THE POINT OF THIS CODE IS BELOW
-                        if (answer.equals("file")) {
-
-                            answer = JOptionPane.showInputDialog(null,
-                                    "Please Add '/' for each new line. For example, " +
-                                            "the correct answer of:\nBright \nspace\n" +
-                                            "should be written as 'Bright/space/' as there are two lines"
-                                            + "Please enter the correct answer:",
+                    int numOfQuestions = 0;
+                    try {
+                        numOfQuestions = Integer.parseInt(JOptionPane.showInputDialog(null, "How many questions will there be in this quiz?", "Create Quiz",
+                                JOptionPane.QUESTION_MESSAGE));
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Error! The number of questions must be an integer.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
+                        numErr = true;
+                    }
+                    if (!numErr) {
+                        for (int i = 1; i <= numOfQuestions; i++) {
+                            String question = JOptionPane.showInputDialog(null, "What is question " + i + "?", "Create Quiz",
                                     JOptionPane.QUESTION_MESSAGE);
+                            quizText.add(question);
+                            String option1 = JOptionPane.showInputDialog(null, "What is option 1?", "Create Quiz",
+                                    JOptionPane.QUESTION_MESSAGE);
+                            quizText.add(option1);
+                            String option2 = JOptionPane.showInputDialog(null, "What is option 2?", "Create Quiz",
+                                    JOptionPane.QUESTION_MESSAGE);
+                            quizText.add(option2);
+                            String option3 = JOptionPane.showInputDialog(null, "What is option 3?", "Create Quiz",
+                                    JOptionPane.QUESTION_MESSAGE);
+                            quizText.add(option3);
+                            String option4 = JOptionPane.showInputDialog(null, "What is option 4?", "Create Quiz",
+                                    JOptionPane.QUESTION_MESSAGE);
+                            quizText.add(option4);
+
+                            //below is changed by Zonglin to prompt the teacher if they want files as submission
+                            String answer = JOptionPane.showInputDialog(null, "Which option is the correct answer (a, b, c, d)."
+                                            + "\nOr, if answer should be a file, please enter \"file\"", "Create Quiz",
+                                    JOptionPane.QUESTION_MESSAGE);
+
+                            if (answer.equals("file")) {
+
+                                answer = JOptionPane.showInputDialog(null,
+                                        "Please Add '/' for each new line. For example, " +
+                                                "the correct answer of:\nBright \nspace\n" +
+                                                "should be written as 'Bright/space/' as there are two lines"
+                                                + "Please enter the correct answer:",
+                                        JOptionPane.QUESTION_MESSAGE);
+                            }
+
+                            quizText.add(answer);
+                            int points = 0;
+                            try {
+                                points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Create Quiz",
+                                        JOptionPane.QUESTION_MESSAGE));
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(null, "Error! The point value must be an integer.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
+                                numErr = true;
+                                break;
+                            }
+
+                            quizText.add("" + points);
+
+                            //ADDS QUESTION TO QUIZ ARRAYLIST
+                            quiz.add(new Questions(question, option1, option2, option3, option4, answer, points));
+                            correctAnswer.add(answer);
+                            //just for test:
+                            //studentAnswer.add(answer);
                         }
-
-                        quizText.add(answer);
-                        int points = 0;
-                        try {
-                            points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Create Quiz",
-                                    JOptionPane.QUESTION_MESSAGE));
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(null, "Error! The point value must be an integer.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
-                            numErr = true;
-                            break;
-                        }
-
-                        quizText.add("" + points);
-
-                        //ADDS QUESTION TO QUIZ ARRAYLIST
-                        quiz.add(new Questions(question, option1, option2, option3, option4, answer, points));
-                        correctAnswer.add(answer);
-                        //just for test:
-                        //studentAnswer.add(answer);
                     }
                     writeToServer.println(numErr);
                     writeToServer.flush();
@@ -289,6 +295,7 @@ public class Client implements Serializable {
                         writeToServer.println(quizName);
                         writeToServer.flush();
                     }
+                    boolean numErr = false;
                     for (int i = 0; i < quizzes.size(); i++) {
                         if (quizzes.get(i).getName().equalsIgnoreCase(quizName)) {
                             ArrayList<String> quizText = new ArrayList<>();
@@ -314,8 +321,15 @@ public class Client implements Serializable {
 
                             } else if (alter == 2) {
                                 // TO CHANGE AN ENTIRE QUESTION ON A QUIZ
-                                int qnum = Integer.parseInt(JOptionPane.showInputDialog(null, "Which question would you like to change?", "Edit Quiz",
-                                        JOptionPane.QUESTION_MESSAGE));
+                                int qnum = 0;
+                                try {
+                                    qnum = Integer.parseInt(JOptionPane.showInputDialog(null, "Which question (number) would you like to change?", "Edit Quiz",
+                                            JOptionPane.QUESTION_MESSAGE));
+                                } catch (NumberFormatException e) {
+                                    JOptionPane.showMessageDialog(null, "Error! The question number value must be an integer.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
+                                    numErr = true;
+                                    break;
+                                }
                                 String question = JOptionPane.showInputDialog(null, "What should this question be?", "Edit Quiz",
                                         JOptionPane.QUESTION_MESSAGE);
                                 String option1 = JOptionPane.showInputDialog(null, "What is option 1?", "Edit Quiz",
@@ -340,8 +354,15 @@ public class Client implements Serializable {
                                             JOptionPane.QUESTION_MESSAGE);
                                 }
 
-                                int points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Edit Quiz",
-                                        JOptionPane.QUESTION_MESSAGE));
+                                int points = 0;
+                                try {
+                                    points = Integer.parseInt(JOptionPane.showInputDialog(null, "How many points is this question worth?", "Create Quiz",
+                                            JOptionPane.QUESTION_MESSAGE));
+                                } catch (NumberFormatException e) {
+                                    JOptionPane.showMessageDialog(null, "Error! The point value must be an integer.", "Create Quiz", JOptionPane.ERROR_MESSAGE);
+                                    numErr = true;
+                                    break;
+                                }
 
                                 int questionIndex = 1 + (qnum - 1) * 7;
                                 //NULL POINTER EXCEPTION
@@ -370,6 +391,7 @@ public class Client implements Serializable {
                                 // quizzes.add(new Quizzes(quiz, quizName));
                                 JOptionPane.showMessageDialog(null, "Quiz edited!", "Edit Quiz", JOptionPane.INFORMATION_MESSAGE);
                             }
+
                             writeToServer.println(quizText.size());
                             writeToServer.flush();
                             for (String line : quizText) {
@@ -389,6 +411,8 @@ public class Client implements Serializable {
 
                         }
                     }
+                    writeToServer.println(numErr);
+                    writeToServer.flush();
 
                     // IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
                     if (quizzes.size() == 0) {
@@ -588,8 +612,8 @@ public class Client implements Serializable {
                                 "Please input the student's password.", "View Submissions", JOptionPane.QUESTION_MESSAGE);
                         writeToServer.println(key);
                         writeToServer.flush();
-                        int attemptNum = Integer.parseInt(JOptionPane.showInputDialog(null,
-                                "Please input the student's attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE));
+                        String attemptNum = JOptionPane.showInputDialog(null,
+                                "Please input the student's attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE);
                         writeToServer.println(attemptNum);
                         writeToServer.flush();
 
@@ -647,16 +671,12 @@ public class Client implements Serializable {
                             "That is not a valid option!",
                             "Menu", JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         }
 
 
         // TODO: All codes below are for the student to input
         boolean student = true;
-
-        //int count = 0; //count for attemptNum
-        //userType = "student";
 
         if (userType.equalsIgnoreCase("Student")) {
             while (student) {
@@ -751,11 +771,6 @@ public class Client implements Serializable {
                         JOptionPane.showMessageDialog(null, "Quiz Submitted!", "Take a Quiz", JOptionPane.INFORMATION_MESSAGE);
                     }
 
-
-                /*int quizNum = 0;
-                    if (quizNum < 1 || quizNum > quizzes.size()) {
-                        JOptionPane.showMessageDialog(null, "this is not a valid option!", "Quiz", JOptionPane.ERROR_MESSAGE);
-                    }*/
                 } else if (response.equalsIgnoreCase("View Submissions")) {
                     int quizNum1 = 0;
 
@@ -782,8 +797,8 @@ public class Client implements Serializable {
                         writeToServer.println(quizNum1);
                         writeToServer.flush();
 
-                        int attemptNum = Integer.parseInt(JOptionPane.showInputDialog(null,
-                                "Please input the attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE));
+                        String attemptNum = JOptionPane.showInputDialog(null,
+                                "Please input the attempt number.", "View Submissions", JOptionPane.QUESTION_MESSAGE);
                         writeToServer.println(attemptNum);
                         writeToServer.flush();
 
