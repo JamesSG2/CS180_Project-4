@@ -6,12 +6,13 @@ import java.util.Scanner;
 
 /**
  * Client
- * <p>
+ * 
  * Handles the GUI and all interactions with the user. Performs most computations except for
  * storage and file manipulation which is done by the server.
  *
  * @author James Gilliam, Ian Fienberg  L15
  * @version 4/28/2022
+ *
  */
 public class Client implements Serializable {
 
