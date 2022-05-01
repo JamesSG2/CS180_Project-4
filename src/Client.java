@@ -459,10 +459,10 @@ public class Client implements Serializable {
                             "to look at past quizzes made by this program. Follow that format.", "Upload quiz", JOptionPane.PLAIN_MESSAGE);
                     String quizInp = JOptionPane.showInputDialog(null,
                             "What is the name of the quiz file you would like to upload?", "View Submissions", JOptionPane.QUESTION_MESSAGE);
-                    writeToServer.println(quizInp);
-                    writeToServer.flush();
+                    //writeToServer.println(quizInp);
+                    //writeToServer.flush();
                     // System.out.println(quizzes.get(0).getQuestions().get(0).getQuestion());
-                    String fileName = scan.nextLine();
+                    String fileName = quizInp;
 
                     // WILL READ THE TEACHER'S FILE AND ADD THEIR QUIZ TO "quizzes" ARRAYLIST
                     ArrayList<String> quizText = new ArrayList<>();
@@ -536,6 +536,10 @@ public class Client implements Serializable {
                                 JOptionPane.showMessageDialog(null,
                                         "Error! That quiz already exists in this course.",
                                         "Upload Quiz", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "Quiz Successfully Added",
+                                        "Upload Quiz", JOptionPane.INFORMATION_MESSAGE);
                             }
                             //writer.write("END OF QUIZ\n");
                             buf.close();
