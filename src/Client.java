@@ -640,11 +640,6 @@ public class Client implements Serializable {
                     JOptionPane.showMessageDialog(null, "Account deleted.",
                             "Delete Account", JOptionPane.INFORMATION_MESSAGE);
                     teacher = false;
-                } else {
-                    //I DON'T THINK WE EVEN NEED THIS ANYMORE
-                    JOptionPane.showMessageDialog(null,
-                            "That is not a valid option!",
-                            "Menu", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
