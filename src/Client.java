@@ -6,13 +6,12 @@ import java.util.Scanner;
 
 /**
  * Client
- *
+ * <p>
  * Handles the GUI and all interactions with the user. Performs most computations except for
  * storage and file manipulation which is done by the server.
  *
  * @author James Gilliam, Ian Fienberg  L15
  * @version 4/28/2022
- *
  */
 public class Client implements Serializable {
 
@@ -89,28 +88,30 @@ public class Client implements Serializable {
                     JOptionPane.showMessageDialog(null, "Account created!", "Sign Up", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
+            if (s1 != 0) {
 
-            userName = JOptionPane.showInputDialog(null, "What is your username?", "Log In", JOptionPane.QUESTION_MESSAGE);
-            password = JOptionPane.showInputDialog(null, "What is your password?", "Log In", JOptionPane.QUESTION_MESSAGE);
+                userName = JOptionPane.showInputDialog(null, "What is your username?", "Log In", JOptionPane.QUESTION_MESSAGE);
+                password = JOptionPane.showInputDialog(null, "What is your password?", "Log In", JOptionPane.QUESTION_MESSAGE);
 
-            writeToServer.println(userName);
-            writeToServer.flush();
-            writeToServer.println(password);
-            writeToServer.flush();
+                writeToServer.println(userName);
+                writeToServer.flush();
+                writeToServer.println(password);
+                writeToServer.flush();
 
-            boolean valid = Boolean.parseBoolean(readServer.readLine());
-            boolean teach = Boolean.parseBoolean(readServer.readLine());
-            boolean stud = Boolean.parseBoolean(readServer.readLine());
+                boolean valid = Boolean.parseBoolean(readServer.readLine());
+                boolean teach = Boolean.parseBoolean(readServer.readLine());
+                boolean stud = Boolean.parseBoolean(readServer.readLine());
 
-            if (valid) {
-                if (teach) {
-                    userType = "Teacher";
-                } else if (stud) {
-                    userType = "Student";
+                if (valid) {
+                    if (teach) {
+                        userType = "Teacher";
+                    } else if (stud) {
+                        userType = "Student";
+                    }
+                    start = false;
+                } else {
+                    JOptionPane.showMessageDialog(null, "That is not a valid account!", "Log In", JOptionPane.ERROR_MESSAGE);
                 }
-                start = false;
-            } else {
-                JOptionPane.showMessageDialog(null, "That is not a valid account!", "Log In", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -640,6 +641,11 @@ public class Client implements Serializable {
                     JOptionPane.showMessageDialog(null, "Account deleted.",
                             "Delete Account", JOptionPane.INFORMATION_MESSAGE);
                     teacher = false;
+                } else {
+                    //I DON'T THINK WE EVEN NEED THIS ANYMORE
+                    JOptionPane.showMessageDialog(null,
+                            "That is not a valid option!",
+                            "Menu", JOptionPane.ERROR_MESSAGE);
                 }
 
             }
@@ -799,31 +805,32 @@ public class Client implements Serializable {
                                     "View Submissions", JOptionPane.ERROR_MESSAGE);
                         }
 
-                    } else if (response.equalsIgnoreCase("Edit Account")) {
-                        String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
-                                JOptionPane.QUESTION_MESSAGE);
-                        // user's account edited by server
-                        writeToServer.println(newUser);
-                        writeToServer.flush();
-                        String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
-                                JOptionPane.QUESTION_MESSAGE);
-                        writeToServer.println(newPass);
-                        writeToServer.flush();
-                        JOptionPane.showMessageDialog(null, "Account edited.",
-                                "Edit Account", JOptionPane.INFORMATION_MESSAGE);
-
-                    } else if (response.equalsIgnoreCase("Delete account")) {
-                        // USER'S ACCOUNT DELETED BY SERVER
-                        JOptionPane.showMessageDialog(null, "Account deleted.",
-                                "Delete Account", JOptionPane.INFORMATION_MESSAGE);
-                        student = false;
-                    } else {
-                        // no need due to the try catch made earlier
-                        JOptionPane.showMessageDialog(null,
-                                "That is not a valid option!",
-                                "Menu", JOptionPane.ERROR_MESSAGE);
                     }
+                } else if (response.equalsIgnoreCase("Edit Account")) {
+                    String newUser = JOptionPane.showInputDialog(null, "What would you like your new username to be?", "Edit Account",
+                            JOptionPane.QUESTION_MESSAGE);
+                    // user's account edited by server
+                    writeToServer.println(newUser);
+                    writeToServer.flush();
+                    String newPass = JOptionPane.showInputDialog(null, "What would you like your new password to be?", "Edit Account",
+                            JOptionPane.QUESTION_MESSAGE);
+                    writeToServer.println(newPass);
+                    writeToServer.flush();
+                    JOptionPane.showMessageDialog(null, "Account edited.",
+                            "Edit Account", JOptionPane.INFORMATION_MESSAGE);
+
+                } else if (response.equalsIgnoreCase("Delete account")) {
+                    // USER'S ACCOUNT DELETED BY SERVER
+                    JOptionPane.showMessageDialog(null, "Account deleted.",
+                            "Delete Account", JOptionPane.INFORMATION_MESSAGE);
+                    student = false;
+                } else {
+                    // no need due to the try catch made earlier
+                    JOptionPane.showMessageDialog(null,
+                            "That is not a valid option!",
+                            "Menu", JOptionPane.ERROR_MESSAGE);
                 }
+
             }
         }
         frame.dispose();
