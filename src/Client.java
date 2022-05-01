@@ -591,14 +591,19 @@ public class Client implements Serializable {
                         writeToServer.println(attemptNum);
                         writeToServer.flush();
 
-                        if (readServer.readLine().equals("validInfo")) {
-                            JOptionPane.showMessageDialog(null, readServer.readLine(),
-                                    "View Submissions", JOptionPane.INFORMATION_MESSAGE);
+                        if (Boolean.parseBoolean(readServer.readLine())) {
 
-                            for (String v : sub) {
-                                JOptionPane.showMessageDialog(null, readServer.readLine(),
-                                        "View Submissions", JOptionPane.INFORMATION_MESSAGE);
+                            String attemptNumString = readServer.readLine();
+
+                            int submissionLength = Integer.parseInt(readServer.readLine());
+
+                            String submissionText = "";
+                            for (int j = 0; j < submissionLength; j++) {
+                                submissionText += readServer.readLine() + "\n";
                             }
+                            JOptionPane.showMessageDialog(null, submissionText,
+                                    "View Submissions - " + availQuizzes[quizNum1 - 1] + " - "
+                                            + attemptNumString, JOptionPane.INFORMATION_MESSAGE);
 
                             //IF THERE ARE QUIZZES, BUT THE INPUTTED NAME DOESN'T MATCH ANY
                         } else {
@@ -606,6 +611,7 @@ public class Client implements Serializable {
                                     "ERROR! THE INFORMATION IS INVALID!",
                                     "View Submissions", JOptionPane.ERROR_MESSAGE);
                         }
+
 
                     }
                     //IF THE ARRAYLIST OF QUIZZES IS SIZE 0, PRINT AN ERROR MESSAGE AND TRY AGAIN
