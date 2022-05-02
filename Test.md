@@ -69,6 +69,16 @@ Steps:
 2. Teacher selects the "Delete quiz" option from the dropdown and selects the "Ok" button
 3. Teacher enters the name of the quiz they would like to delete and selects the "Ok" button
 4. Teacher selects "yes" if they would like to delete the quiz or "no" if they would not like it deleted
+5. Teacher selects the "Ok" button on the confirmation window
+Expected result: Application deletes the quiz from CourseData.txt and sends Teacher to main menu. 
+Test Status: Passed. 
+
+Test 5: Teacher uploads a quiz
+Steps:
+1. Teacher logs in (See test 2).
+2. Teacher selects the "Upload quiz" option from the dropdown and selects the "Ok" button
+3. Teacher selects the "Ok" button on the description window
+4. Teacher selects "yes" if they would like to delete the quiz or "no" if they would not like it deleted
 5. Teacher selects "Ok" button on confirmation window
 Expected result: Application deletes the quiz from CourseData.txt and sends Teacher to main menu. 
 Test Status: Passed. 
