@@ -42,3 +42,33 @@ Steps:
 14. Teacher selects "Ok" button on confirmation window
 Expected result: Application adds the quiz to CourseData.txt and sends Teacher to main menu. 
 Test Status: Passed. 
+
+Test 4: Teacher edits a quiz
+Steps:
+1. Teacher logs in (See test 2).
+2. Teacher selects the "Edit quiz" option from the dropdown and selects the "Ok" button
+3. Teacher enters the name of the quiz they would like to edit and selects the "Ok" button
+4. Teacher selects either the "Name" (step 5) or "Question" (steps 6-14) button depending on which they would like to change 
+5. Teacher enters the new name of the quiz and selects the "Ok" button
+6. Teacher enters which question number they would like to change
+7. Teacher enters a new question they would like on their quiz and selects the "Ok" button
+8. Teacher enters option (a) and selects the "Ok" button
+9. Teacher enters option (b) and selects the "Ok" button
+10. Teacher enters option (c) and selects the "Ok" button
+11. Teacher enters option (d) and selects the "Ok" button
+12. Teacher either enters which option is correct or enters the word "file" if the response should be a file
+13. Teacher selects the "Ok" button
+14. Teacher enters how many points the question is worth and selects the "Ok" button
+15. Teacher selects "Ok" button on confirmation window
+Expected result: Application edits the quiz in CourseData.txt and sends Teacher to main menu. 
+Test Status: Passed. 
+
+Test 5: Teacher deletes a quiz
+Steps:
+1. Teacher logs in (See test 2).
+2. Teacher selects the "Delete quiz" option from the dropdown and selects the "Ok" button
+3. Teacher enters the name of the quiz they would like to delete and selects the "Ok" button
+4. Teacher selects "yes" if they would like to delete the quiz or "no" if they would not like it deleted
+5. Teacher selects "Ok" button on confirmation window
+Expected result: Application deletes the quiz from CourseData.txt and sends Teacher to main menu. 
+Test Status: Passed. 
