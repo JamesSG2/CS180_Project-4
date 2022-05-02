@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -241,17 +242,69 @@ public class Server implements Runnable, Serializable {
                             }
                         }
                     } else if (options == 5) {
-                        if (Boolean.parseBoolean(readClient.readLine())) {   // IF TEACHER'S FILE EXISTS
-                            ArrayList<String> quizText = new ArrayList<>();  // READS FILE QUIZ TEXT
-                            int quizLength = Integer.parseInt(readClient.readLine());
-                            for (int j = 0; j < quizLength; j++) {
-                                quizText.add(readClient.readLine());
-                            }
-                            quizzes = (ArrayList<Quizzes>) clientObjectIn.readObject();  // READS UPDATED QUIZZES
+                        String filename = readClient.readLine();
 
+                        // WILL READ THE TEACHER'S FILE AND ADD THEIR QUIZ TO "quizzes" ARRAYLIST
+                        ArrayList<String> quizText = new ArrayList<>();
+
+                        File fi = new File(filename);
+                        if (fi.exists()) {
+                            BufferedReader buf = new BufferedReader(new FileReader(fi));
+                            String p = buf.readLine();
+                            String quizName = p;
+                            quizText.add(quizName);
+                            boolean q = true;
+                            while (p != null) {
+                                if (p.length() > 0) {
+                                    String maybe = "";
+                                    ArrayList<Questions> tempQuestions = new ArrayList<>();
+                                    for (int i = 0; i < 1; i++) {
+                                        String question;
+                                        if (q) {
+                                            question = buf.readLine();
+                                            quizText.add(question);
+                                        } else {
+                                            question = maybe;
+                                        }
+                                        String option1 = buf.readLine();
+                                        String option2 = buf.readLine();
+                                        String option3 = buf.readLine();
+                                        String option4 = buf.readLine();
+                                        String answer = buf.readLine();
+                                        quizText.add(option1);
+                                        quizText.add(option2);
+                                        quizText.add(option3);
+                                        quizText.add(option4);
+                                        quizText.add(answer);
+
+                                        int points;
+                                        try {
+                                            points = Integer.parseInt(buf.readLine());
+                                        } catch (NumberFormatException e) {
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Error! Point value must be an integer.",
+                                                    "Upload Quiz", JOptionPane.ERROR_MESSAGE);
+                                            break;
+                                        }
+                                        quizText.add("" + points);
+                                        maybe = buf.readLine();
+                                        if (!maybe.equals("--------------------------------------------------")) {
+                                            q = false;
+                                            i--;
+                                        }
+                                        tempQuestions.add(new Questions(question, option1, option2, option3, option4,
+                                                answer, points));
+                                    }
+                                    quizzes.add(new Quizzes(tempQuestions, quizName));
+                                }
+                                p = buf.readLine();
+                            }
+                            buf.close();
                             boolean added = usersCourse.addQuiz(quizText); // SAVES QUIZ TO THE COURSE
                             writeToClient.println(added);
                             writeToClient.flush();
+                            clientObjectOut.writeObject(quizzes);
+                            clientObjectOut.flush();
                         }
                     } else if (options == 6) {
                         if (quizzes.size() != 0) {

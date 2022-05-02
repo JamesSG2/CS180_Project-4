@@ -502,7 +502,6 @@ public class Client implements Serializable {
 
                 } else if (reply.equalsIgnoreCase("Upload quiz")) {
                     // IF A TEACHER WOULD LIKE TO UPLOAD A QUIZ FILE
-                    // updated by Shruti
                     JOptionPane.showMessageDialog(null, "Note: the file must follow the format of quiz title first then for each \n" +
                             "question: the question, the 4 choices, the correct answer, then the point value." +
                             "\nAt the end of the quiz:" +
@@ -515,90 +514,26 @@ public class Client implements Serializable {
                     writeToServer.flush();
 
                     // WILL READ THE TEACHER'S FILE AND ADD THEIR QUIZ TO "quizzes" ARRAYLIST
-                    ArrayList<String> quizText = new ArrayList<>();
-                    try {
-                        File fi = new File(quizInp);
-                        writeToServer.println(fi.exists());
-                        writeToServer.flush();
-                        if (fi.exists()) {
-                            BufferedReader buf = new BufferedReader(new FileReader(fi));
-                            String p = buf.readLine();
-                            String quizName = p;
-                            quizText.add(quizName);
-                            boolean q = true;
-                            while (p != null) {
-                                if (p.length() > 0) {
-                                    String maybe = "";
-                                    ArrayList<Questions> tempQuestions = new ArrayList<>();
-                                    for (int i = 0; i < 1; i++) {
-                                        String question;
-                                        if (q) {
-                                            question = buf.readLine();
-                                            quizText.add(question);
-                                        } else {
-                                            question = maybe;
-                                        }
-                                        String option1 = buf.readLine();
-                                        String option2 = buf.readLine();
-                                        String option3 = buf.readLine();
-                                        String option4 = buf.readLine();
-                                        String answer = buf.readLine();
-                                        quizText.add(option1);
-                                        quizText.add(option2);
-                                        quizText.add(option3);
-                                        quizText.add(option4);
-                                        quizText.add(answer);
+                        File f = new File(quizInp);
 
-                                        int points;
-                                        try {
-                                            points = Integer.parseInt(buf.readLine());
-                                        } catch (NumberFormatException e) {
-                                            JOptionPane.showMessageDialog(null,
-                                                    "Error! Point value must be an integer.",
-                                                    "Upload Quiz", JOptionPane.ERROR_MESSAGE);
-                                            break;
-                                        }
-                                        quizText.add("" + points);
-                                        maybe = buf.readLine();
-                                        if (!maybe.equals("--------------------------------------------------")) {
-                                            q = false;
-                                            i--;
-                                        }
-                                        tempQuestions.add(new Questions(question, option1, option2, option3, option4,
-                                                answer, points));
-                                    }
-                                    quizzes.add(new Quizzes(tempQuestions, quizName));
-                                }
-                                p = buf.readLine();
-                            }
-
-                            writeToServer.println(quizText.size());
-                            writeToServer.flush();
-                            for (String line : quizText) {  // SERVER SAVES QUIZ TO THE COURSE
-                                writeToServer.println(line);
-                                writeToServer.flush();
-                            }
-                            serverObjectOut.writeObject(quizzes);
-                            serverObjectOut.flush();
-
+                        if (f.exists()) {
                             boolean added = Boolean.parseBoolean(readServer.readLine());
                             if (!added) {
                                 JOptionPane.showMessageDialog(null,
                                         "Error! That quiz already exists in this course.",
                                         "Upload Quiz", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "Quiz uploaded to the course!",
+                                        "Upload Quiz", JOptionPane.INFORMATION_MESSAGE);
                             }
-                            //writer.write("END OF QUIZ\n");
-                            buf.close();
-                            //writer.close();
                         } else {
                             JOptionPane.showMessageDialog(null,
                                     "Error! File Not Found.",
                                     "Upload Quiz", JOptionPane.ERROR_MESSAGE);
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //System.out.println(quizzes.get(1).getQuestions().get(1).getQuestion());
+                        quizzes = (ArrayList<Quizzes>) serverObjectIn.readObject();
+
 
                     //IF TEACHER CHOOSES TO VIEW SUBMISSIONS
                 } else if (reply.equalsIgnoreCase("View submissions")) {
