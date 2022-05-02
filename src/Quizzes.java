@@ -1,6 +1,17 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Quizzes {
+/**
+ * Question
+ *
+ * Creates a constructor containing the information for one quiz
+ *
+ * @author Ian Fienberg, L15
+ *
+ * @version 4/11/2022
+ *
+ */
+public class Quizzes implements Serializable {
     public ArrayList<Questions> questions;
     public String name;
 

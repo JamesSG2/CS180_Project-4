@@ -1,4 +1,16 @@
-public class Questions {
+import java.io.Serializable;
+
+/**
+ * Questions
+ *
+ * Creates a constructor containing the information for one question
+ *
+ * @author Ian Fienberg, L15
+ *
+ * @version 4/11/2022
+ *
+ */
+public class Questions implements Serializable {
     public String question;
     public String option1;
     public String option2;
