@@ -11,7 +11,7 @@ Steps:
 Expected result: Application adds the user's username and password and sends user to log in.
 Test Status: Passed. 
 
-Test 2: User log up
+Test 2: User log in
 Steps:
 1. User launches application.
 2. User selects the "log in" button. 
@@ -73,12 +73,42 @@ Steps:
 Expected result: Application deletes the quiz from CourseData.txt and sends Teacher to main menu. 
 Test Status: Passed. 
 
-Test 5: Teacher uploads a quiz
+Test 6: Teacher uploads a quiz
 Steps:
 1. Teacher logs in (See test 2).
 2. Teacher selects the "Upload quiz" option from the dropdown and selects the "Ok" button
 3. Teacher selects the "Ok" button on the description window
-4. Teacher selects "yes" if they would like to delete the quiz or "no" if they would not like it deleted
-5. Teacher selects "Ok" button on confirmation window
-Expected result: Application deletes the quiz from CourseData.txt and sends Teacher to main menu. 
+4. Teacher enters the name of the file with the quiz and selects the "Ok" button
+5. Teacher selects the "Ok" button on the confirmation window
+Expected result: Application adds the quiz to CourseData.txt and sends Teacher to main menu. 
+Test Status: Passed. 
+
+Test 7: Teacher views a student submission
+Steps:
+1. Teacher logs in (See test 2).
+2. Teacher selects the "View Submissions" option from the dropdown and selects the "Ok" button
+3. Teacher selects the quiz they would like to see a submussion from and selects the "Ok" button
+4. Teacher enters the username of the student whose submission they would like to view and selects the "Ok" button
+5. Teacher enters the password of the student whose submission they would like to view and selects the "Ok" button
+6. Teacher enters which submission they would like to see and selects the "Ok" button
+Expected result: Application displays the student's quiz response with a timestamp of their submisson. 
+Test Status: Passed. 
+
+Test 8: User edits their account
+Steps:
+1. User logs in (See test 2).
+2. User selects the "Edit Account" option from the dropdown and selects the "Ok" button
+3. User enters new username via the keyboard.
+4. User selects the "Ok" button.
+5. User enters new password via the keyboard.
+6. User selects the "Ok" button.
+Expected result: Application edits the account information in AccountData.txt and sends user to their main menu. 
+Test Status: Passed. 
+
+Test 8: User deletes their account
+Steps:
+1. User logs in (See test 2).
+2. User selects the "Delete Account" option from the dropdown and selects the "Ok" button
+3. User selects the "Ok" button on the confirmation window
+Expected result: Application deletes the account information in AccountData.txt and sends user to their main menu. 
 Test Status: Passed. 
