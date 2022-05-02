@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 /**
  * Question
- * <p>
+ *
  * Creates a constructor containing the information for one quiz
  *
  * @author Ian Fienberg, L15

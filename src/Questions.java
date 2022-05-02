@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 /**
  * Questions
- * <p>
+ *
  * Creates a constructor containing the information for one question
  *
  * @author Ian Fienberg, L15

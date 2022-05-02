@@ -45,11 +45,19 @@ public class Account implements Serializable {
     public Account(String userName, String password, boolean isTeacher) throws IOException {
         synchronized (accountGatekeeper) {
             readAccountsDataFile();
-            for (String line : accountsData) {
+
+            if (accountsData.isEmpty()) {
+                accountsData.add(accountSpacer);
+            }
+
+            for (int i = 1; i < accountsData.size(); i++) {
+                String line = accountsData.get(i);
                 if (line.length() >= userName.length()) {
                     if (line.substring(0, userName.length()).equals(userName)) {
-                        created = false;
-                        return;
+                        if (accountsData.get(i - 1).equals(accountSpacer)) {
+                            created = false;
+                            return;
+                        }
                     }
                 }
             }
@@ -230,11 +238,13 @@ public class Account implements Serializable {
 
     private int getAccountIndex(String userName, String password) {
         int accountIndex = 0;
-        for (int i = 0; i < accountsData.size(); i++) {
-            if (accountsData.get(i).equals(userName + " " + password)) {
-                accountIndex = i;
-                valid = true;
-                break;
+        for (int i = 1; i < accountsData.size(); i++) {
+            if (accountsData.get(i - 1).equals(accountSpacer)) {
+                if (accountsData.get(i).equals(userName + " " + password)) {
+                    accountIndex = i;
+                    valid = true;
+                    break;
+                }
             }
         }
         return accountIndex;

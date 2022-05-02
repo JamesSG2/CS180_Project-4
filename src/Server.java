@@ -10,7 +10,7 @@ import java.lang.Runnable;
  *
  * @author James Gilliam, L15
  *
- * @version 4/18/2022
+ * @version 5/2/2022
  *
  */
 public class Server implements Runnable, Serializable {
@@ -54,6 +54,15 @@ public class Server implements Runnable, Serializable {
                 if (sl.equals("1")) {
                     userName = readClient.readLine();
                     password = readClient.readLine();
+                    if (userName == null || password == null) {
+                        writeToClient.close();
+                        readClient.close();
+                        clientObjectIn.close();
+                        clientObjectOut.close();
+                        socket.close();
+                        System.out.println("A client disconnected!");
+                        return;
+                    }
                     Boolean type = Boolean.parseBoolean(readClient.readLine());
 
                     user = new Account(userName, password, type); // Creates a new account
@@ -65,6 +74,15 @@ public class Server implements Runnable, Serializable {
 
                 userName = readClient.readLine();
                 password = readClient.readLine();
+                if (userName == null || password == null) {
+                    writeToClient.close();
+                    readClient.close();
+                    clientObjectIn.close();
+                    clientObjectOut.close();
+                    socket.close();
+                    System.out.println("A client disconnected!");
+                    return;
+                }
                 user = new Account(userName, password); // Accesses their account
 
                 boolean valid = user.isValid();
@@ -92,6 +110,15 @@ public class Server implements Runnable, Serializable {
             while (courseInvalid) {
 
                 String courseTitle = readClient.readLine();
+                if (courseTitle == null) {
+                    writeToClient.close();
+                    readClient.close();
+                    clientObjectIn.close();
+                    clientObjectOut.close();
+                    socket.close();
+                    System.out.println("A client disconnected!");
+                    return;
+                }
                 // SYNCHRONIZES CREATION OR REJECTION OF A COURSE INTERNALLY
                 usersCourse = new Course(courseTitle, userType);
 
@@ -163,6 +190,15 @@ public class Server implements Runnable, Serializable {
                         String quizName = "";
                         if (quizzes.size() != 0) {
                             quizName = readClient.readLine();
+                        }
+                        if (quizName == null) {
+                            writeToClient.close();
+                            readClient.close();
+                            clientObjectIn.close();
+                            clientObjectOut.close();
+                            socket.close();
+                            System.out.println("A client disconnected!");
+                            return;
                         }
                         for (int i = 0; i < quizzes.size(); i++) {
                             if (quizzes.get(i).getName().equalsIgnoreCase(quizName)) {
@@ -253,14 +289,17 @@ public class Server implements Runnable, Serializable {
                     } else if (options == 7) {
                         String newUser = readClient.readLine();
                         String newPass = readClient.readLine();
-                        user.editAccount(newUser, newPass);
+                        if (newUser != null && newPass != null) {
+                            user.editAccount(newUser, newPass);
+                        }
                     } else if (options == 8) {
                         user.deleteAccount();
                         teacher = false;
                     }
                 }
             }
-            // TODO: All options for students (Zonglin)
+
+
             boolean student = true;
 
             if (userType.equalsIgnoreCase("Student")) {
@@ -277,8 +316,7 @@ public class Server implements Runnable, Serializable {
                     } else if (options == 2) {
 
                         int quizNum = Integer.parseInt(readClient.readLine());
-                        //scan.nextLine();
-
+                        boolean cancel = false;
                         if (quizNum > 0 && quizNum <= quizzes.size()) {
                             String longString = "";
                             studentAnswer = new ArrayList<String>();
@@ -291,9 +329,12 @@ public class Server implements Runnable, Serializable {
                                     askAgain = false;
                                     guess = readClient.readLine();
 
-                                    if (!(guess.equals("a") || guess.equals("b") || guess.equals("c") ||
-                                            guess.equals("d") || guess.equals("file"))) {
+                                    if (guess != null && !(guess.equals("a") || guess.equals("b") || guess.equals("c") ||
+                                            guess.equals("d") || guess.equals("file") || guess.equals("cancel"))) {
                                         askAgain = true;
+                                    } else if (guess.equals("cancel")) {
+                                        cancel = true;
+                                        break;
                                     }
                                 } while (askAgain);
 
@@ -338,44 +379,43 @@ public class Server implements Runnable, Serializable {
 
                                 }
                             }
-                            //System.out.println("Would you like to submit? (yes/no)");
-                            String submit = readClient.readLine();
+
+                            if (!cancel) {
+                                //System.out.println("Would you like to submit? (yes/no)");
+                                String submit = readClient.readLine();
 
 
-                            if (submit.equalsIgnoreCase("no") || submit.equalsIgnoreCase("n")) {
-                                //System.out.println("Alright. Your quiz will not be submitted.");
-                                //studentAnswers.remove(index);
-                                continue;
-                            } else {
-                                //Setup input for the quiz to be automatically graded
-                                ArrayList<String> correctAnswerList = new ArrayList<String>();
-                                ArrayList<Integer> PointList = new ArrayList<Integer>();
+                                if (submit.equalsIgnoreCase("no") || submit.equalsIgnoreCase("n")) {
+                                    //System.out.println("Alright. Your quiz will not be submitted.");
+                                    //studentAnswers.remove(index);
+                                    continue;
+                                } else {
+                                    //Setup input for the quiz to be automatically graded
+                                    ArrayList<String> correctAnswerList = new ArrayList<String>();
+                                    ArrayList<Integer> PointList = new ArrayList<Integer>();
 
-                                for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
-                                    correctAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
-                                    PointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
+                                    for (int j = 0; j < quizzes.get(quizNum - 1).getQuestions().size(); j++) {
+                                        correctAnswerList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getAnswer());
+                                        PointList.add(quizzes.get(quizNum - 1).getQuestions().get(j).getPoints());
+                                    }
+
+                                    Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(),
+                                            correctAnswerList, PointList);
+                                    submission = testGrade.autoGrade(studentAnswer,
+                                            quizzes.get(quizNum - 1).getName(), userName);
+
+                                    user.addSubmission(submission);
+
                                 }
-
-                                Grading testGrade = new Grading(quizzes.get(quizNum - 1).getQuestions(),
-                                        correctAnswerList, PointList);
-                                submission = testGrade.autoGrade(studentAnswer,
-                                        quizzes.get(quizNum - 1).getName(), userName);
-
-                                user.addSubmission(submission);
-
                             }
-                        }
-
-                        if (quizNum < 1 || quizNum > quizzes.size()) {
-                            //System.out.println("That is not a valid option!");
                         }
                     } else if (options == 3) {
 
                         if (quizzes.size() != 0) {
-                            //System.out.println("Which quiz would you like to see?");
-                            //PRINTS LIST OF QUIZZES BY NAME
+                            // System.out.println("Which quiz would you like to see?");
+                            // PRINTS LIST OF QUIZZES BY NAME
                             for (int i = 0; i < quizzes.size(); i++) {
-                                //System.out.println((i + 1) + ". " + quizzes.get(i).getName());
+                                // System.out.println((i + 1) + ". " + quizzes.get(i).getName());
                             }
                             //int quizNum1 = scan.nextInt();
                             int quizNum1 = Integer.parseInt(readClient.readLine());
@@ -416,8 +456,9 @@ public class Server implements Runnable, Serializable {
 
                         String newUser = readClient.readLine();
                         String newPass = readClient.readLine();
-                        user.editAccount(newUser, newPass);
-
+                        if (newUser != null && newPass != null) {
+                            user.editAccount(newUser, newPass);
+                        }
                     } else if (options == 5) {
                         user.deleteAccount();
                         student = false;
