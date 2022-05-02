@@ -105,10 +105,30 @@ Steps:
 Expected result: Application edits the account information in AccountData.txt and sends user to their main menu. 
 Test Status: Passed. 
 
-Test 8: User deletes their account
+Test 9: User deletes their account
 Steps:
 1. User logs in (See test 2).
 2. User selects the "Delete Account" option from the dropdown and selects the "Ok" button
 3. User selects the "Ok" button on the confirmation window
 Expected result: Application deletes the account information in AccountData.txt and sends user to their main menu. 
+Test Status: Passed. 
+
+Test 10: Student takes a quiz
+Steps:
+1. Student logs in (See test 2).
+2. Student selects the "Take a quiz" option from the dropdown and selects the "Ok" button
+3. Student selects which quiz they would like to take from the dropdown and selects the "Ok" button
+4. Student takes the quiz by selecting the option from the dropdown they think is correct and selecting the "Ok" button
+5. Student selects "Yes" when prompted to submit the quiz
+6. Student selects the "Ok" button on the confirmation window
+Expected result: Application writes the student answers and results of the quiz to AccountData.txt and sends student to main menu. 
+Test Status: Passed. 
+
+Test 11: Student views their submission
+Steps:
+1. Student logs in (See test 2).
+2. Student selects the "View submission" option from the dropdown and selects the "Ok" button
+3. Student selects which quiz they would like to take from the dropdown and selects the "Ok" button
+4. Student enters the attempt number they would like to see their score for and selects the "Ok" button
+Expected result: Application displays the student's quiz response with a timestamp of their submisson. 
 Test Status: Passed. 
